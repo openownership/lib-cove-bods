@@ -1,1 +1,2 @@
-# openownership-lib-cove-bods-alpha
+# Lib Cove BODS
+

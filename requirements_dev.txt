@@ -1,0 +1,5 @@
+-e git+https://github.com/OpenDataServices/flatten-tool.git@v0.5.0#egg=flattentool
+-e git+https://github.com/OpenDataServices/lib-cove.git@master#egg=libcove
+-e .
+pytest
+flake8
