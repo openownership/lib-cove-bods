@@ -23,5 +23,7 @@ setup(
     ],
     classifiers=[
             'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
-    ]
+    ],
+    entry_points='''[console_scripts]
+libcovebods = libcovebods.cli.__main__:main''',
 )
