@@ -1,7 +1,9 @@
+import json
 from libcove.lib.tools import get_file_type
 from libcovebods.common_checks import common_checks_bods
 from libcovebods.lib.api import context_api_transform
 from libcovebods.config import LibCoveBODSConfig
+from libcovebods.schema import SchemaBODS
 
 
 class APIException(Exception):
@@ -18,8 +20,22 @@ def bods_json_output(output_dir, file, file_type=None, json_data=None,
         file_type = get_file_type(file)
     context = {"file_type": file_type}
 
+    if file_type == 'json':
+        if not json_data:
+            with open(file, encoding='utf-8') as fp:
+                try:
+                    json_data = json.load(fp)
+                except ValueError:
+                    raise APIException('The file looks like invalid json')
+
+        schema_bods = SchemaBODS(lib_cove_bods_config=lib_cove_bods_config)
+
+    else:
+
+        raise Exception("JSON only for now, sorry!")
+
     context = context_api_transform(
-        common_checks_bods(context)
+        common_checks_bods(context, output_dir, json_data, schema_bods)
     )
 
     return context
