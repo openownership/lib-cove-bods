@@ -4,6 +4,8 @@ def get_statistics(json_data):
     count_entity_statements = 0
     count_person_statements = 0
     count_ownership_or_control_statement = 0
+    count_ownership_or_control_statement_interested_party_with_person = 0
+    count_ownership_or_control_statement_interested_party_with_entity = 0
 
     for statement in json_data:
         statement_type = statement.get('statementType')
@@ -13,11 +15,19 @@ def get_statistics(json_data):
             count_person_statements += 1
         elif statement_type == 'ownershipOrControlStatement':
             count_ownership_or_control_statement += 1
+            interested_party = statement.get('interestedParty')
+            if isinstance(interested_party, dict):
+                if interested_party.get('describedByEntityStatement'):
+                    count_ownership_or_control_statement_interested_party_with_entity += 1
+                if interested_party.get('describedByPersonStatement'):
+                    count_ownership_or_control_statement_interested_party_with_person += 1
 
     return {
         'count_entity_statements': count_entity_statements,
         'count_person_statements': count_person_statements,
         'count_ownership_or_control_statement': count_ownership_or_control_statement,
+        'count_ownership_or_control_statement_interested_party_with_person': count_ownership_or_control_statement_interested_party_with_person, # noqa
+        'count_ownership_or_control_statement_interested_party_with_entity': count_ownership_or_control_statement_interested_party_with_entity, # noqa
     }
 
 
