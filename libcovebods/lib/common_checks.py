@@ -38,12 +38,15 @@ class RunAdditionalChecks:
         self.person_statements_seen = []
         self.entity_statements_seen = []
         self.output = []
+        self.possible_out_of_order_statements = []
 
     def run(self):
         self.person_statements_seen = []
         self.entity_statements_seen = []
         self.output = []
+        self.possible_out_of_order_statements = []
 
+        # First Pass
         for statement in self.json_data:
             statement_type = statement.get('statementType')
             statement_id = statement.get('statementID')
@@ -52,21 +55,74 @@ class RunAdditionalChecks:
 
             if statement_id:
                 if statement_type == 'entityStatement':
-                    self._check_entity_statement(statement)
+                    self._check_entity_statement_first_pass(statement)
                 elif statement_type == 'personStatement':
-                    self._check_person_statement(statement)
+                    self._check_person_statement_first_pass(statement)
                 elif statement_type == 'ownershipOrControlStatement':
-                    self._check_ownership_or_control_statement(statement)
+                    self._check_ownership_or_control_statement_first_pass(statement)
+
+        # Second Pass
+        for statement in self.json_data:
+            statement_type = statement.get('statementType')
+            statement_id = statement.get('statementID')
+
+            # TODO here check statement_id is a valid Id
+
+            if statement_id:
+                if statement_type == 'ownershipOrControlStatement':
+                    self._check_ownership_or_control_statement_second_pass(statement)
+
+        # Turn checks into output
+        for possible_out_of_order_statement in self.possible_out_of_order_statements:
+            if possible_out_of_order_statement['type'] == 'entity_statement_out_of_order':
+                if possible_out_of_order_statement['entity_statement_out_of_order'] in self.entity_statements_seen:
+                    self.output.append(possible_out_of_order_statement)
+            else:
+                if possible_out_of_order_statement['person_statement_out_of_order'] in self.person_statements_seen:
+                    self.output.append(possible_out_of_order_statement)
 
         return self.output
 
-    def _check_entity_statement(self, statement):
+    def _check_entity_statement_first_pass(self, statement):
         self.entity_statements_seen.append(statement.get('statementID'))
 
-    def _check_person_statement(self, statement):
+    def _check_person_statement_first_pass(self, statement):
         self.person_statements_seen.append(statement.get('statementID'))
 
-    def _check_ownership_or_control_statement(self, statement):
+    def _check_ownership_or_control_statement_first_pass(self, statement):
+        interested_party = statement.get('interestedParty')
+        if isinstance(interested_party, dict):
+            interested_party_described_by_entity_statement = interested_party.get('describedByEntityStatement')
+            interested_party_described_by_person_statement = interested_party.get('describedByPersonStatement')
+            if interested_party_described_by_entity_statement:
+                if interested_party_described_by_entity_statement not in self.entity_statements_seen:
+                    self.possible_out_of_order_statements.append({
+                        'type': 'entity_statement_out_of_order',
+                        'referenced_from': 'interestedParty',
+                        'entity_statement_out_of_order': interested_party_described_by_entity_statement,
+                        'seen_in_ownership_or_control_statement': statement.get('statementID'),
+                    })
+            if interested_party_described_by_person_statement:
+                if interested_party_described_by_person_statement not in self.person_statements_seen:
+                    self.possible_out_of_order_statements.append({
+                        'type': 'person_statement_out_of_order',
+                        'referenced_from': 'interestedParty',
+                        'person_statement_out_of_order': interested_party_described_by_person_statement,
+                        'seen_in_ownership_or_control_statement': statement.get('statementID'),
+                    })
+        subject = statement.get('subject')
+        if isinstance(subject, dict):
+            subject_described_by_entity_statement = subject.get('describedByEntityStatement')
+            if subject_described_by_entity_statement:
+                if subject_described_by_entity_statement not in self.entity_statements_seen:
+                    self.possible_out_of_order_statements.append({
+                        'type': 'entity_statement_out_of_order',
+                        'referenced_from': 'subject',
+                        'entity_statement_out_of_order': subject_described_by_entity_statement,
+                        'seen_in_ownership_or_control_statement': statement.get('statementID'),
+                    })
+
+    def _check_ownership_or_control_statement_second_pass(self, statement):
         interested_party = statement.get('interestedParty')
         if isinstance(interested_party, dict):
             interested_party_described_by_entity_statement = interested_party.get('describedByEntityStatement')
