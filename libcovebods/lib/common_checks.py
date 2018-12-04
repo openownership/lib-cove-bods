@@ -1,3 +1,4 @@
+from libcove.lib.common import get_orgids_prefixes
 
 
 def get_statistics(json_data):
@@ -41,6 +42,7 @@ class RunAdditionalChecks:
         self.entity_statements_seen_in_ownership_or_control_statement = []
         self.output = []
         self.possible_out_of_order_statements = []
+        self.orgids_prefixes = []
 
     def run(self):
         self.person_statements_seen = []
@@ -49,6 +51,7 @@ class RunAdditionalChecks:
         self.entity_statements_seen_in_ownership_or_control_statement = []
         self.output = []
         self.possible_out_of_order_statements = []
+        self.orgids_prefixes = get_orgids_prefixes()
 
         # First Pass
         for statement in self.json_data:
@@ -93,6 +96,16 @@ class RunAdditionalChecks:
 
     def _check_entity_statement_first_pass(self, statement):
         self.entity_statements_seen.append(statement.get('statementID'))
+        identifiers = statement.get('identifiers')
+        if isinstance(identifiers, list):
+            for identifier in identifiers:
+                if isinstance(identifier, dict):
+                    if not identifier.get('scheme') in self.orgids_prefixes:
+                        self.output.append({
+                            'type': 'entity_identifier_scheme_not_known',
+                            'scheme': identifier.get('scheme'),
+                            'entity_statement': statement.get('statementID'),
+                        })
 
     def _check_person_statement_first_pass(self, statement):
         self.person_statements_seen.append(statement.get('statementID'))
