@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Additional Checks: Person or entity statements should be used in an ownership-or-control statement
 - Statistic: % of Interests of each type
 
+### Changed
+
+- Upgrades lib-cove needed to 0.3.1
+
 ## [0.1.0] - 2018-11-22
 
 First Release
