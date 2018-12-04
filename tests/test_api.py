@@ -55,13 +55,16 @@ def test_basic_extra_entity_statement_1():
 
     assert results['validation_errors_count'] == 0
     assert results['additional_fields_count'] == 0
-    assert results['additional_checks_count'] == 0
+    assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 2
     assert results['statistics']['count_person_statements'] == 1
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+
+    assert results['additional_checks'][0]['type'] == 'entity_statement_not_used_in_ownership_or_control_statement'
+    assert results['additional_checks'][0]['entity_statement'] == '9bf27aa7-f372-41d7-9429-1bcd8b0f475d'
 
 
 def test_basic_extra_person_statement_1():
@@ -75,13 +78,16 @@ def test_basic_extra_person_statement_1():
 
     assert results['validation_errors_count'] == 0
     assert results['additional_fields_count'] == 0
-    assert results['additional_checks_count'] == 0
+    assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
     assert results['statistics']['count_person_statements'] == 2
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+
+    assert results['additional_checks'][0]['type'] == 'person_statement_not_used_in_ownership_or_control_statement'
+    assert results['additional_checks'][0]['person_statement'] == '891298d0-9b97-4d46-b776-d98927d72580'
 
 
 def test_basic_extra_ownership_or_control_statement_1():

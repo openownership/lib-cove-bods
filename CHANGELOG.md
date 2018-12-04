@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Additional Checks: All relevant statements are present
 - Additional Checks: All relevant statements are in correct order
+- Additional Checks: Person or entity statements should be used in an ownership-or-control statement
 - Statistic: % of Interests of each type
 
 ## [0.1.0] - 2018-11-22
