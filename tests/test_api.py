@@ -134,6 +134,53 @@ def test_basic_missing_statement_ids():
         assert "'statementID' is missing but required" in validation_error_data['message']
 
 
+def test_basic_statement_id_and_type_errors():
+
+    cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
+    json_filename = os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_statement_id_and_type_errors.json'
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    assert results['file_type'] == 'json'
+    assert results['validation_errors_count'] == 5
+    assert results['additional_fields_count'] == 0
+    assert results['additional_checks_count'] == 1
+    assert results['statistics']['count_entity_statements'] == 1
+    assert results['statistics']['count_person_statements'] == 1
+    assert results['statistics']['count_ownership_or_control_statement'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+
+    def unpack_validation_error(validation_error_result):
+        validation_error, data = validation_error_result
+        validation_error_data = json.loads(validation_error)
+        return validation_error_data, data
+
+    validation_error_data, data = unpack_validation_error(results['validation_errors'][0])
+    assert "'shortID' is too short" in validation_error_data['message']
+    assert data[0]['path'] == '1/statementID'
+    assert data[0]['value'] == 'shortID'
+
+    validation_error_data, data = unpack_validation_error(results['validation_errors'][1])
+    assert "'statementID' is missing but required" in validation_error_data['message']
+    assert data[0]['path'] == '0'
+    assert data[1]['path'] == '2'
+
+    validation_error_data, data = unpack_validation_error(results['validation_errors'][2])
+    assert "'statementType' is missing but required" in validation_error_data['message']
+    assert data[0]['path'] == '3'
+
+    validation_error_data, data = unpack_validation_error(results['validation_errors'][3])
+    assert "Invalid code found in 'statementType'" in validation_error_data['message']
+    assert data[0]['path'] == '4/statementType'
+    assert data[0]['value'] == 'test'
+
+    assert results['additional_checks'][0]['type'] == 'person_statement_not_used_in_ownership_or_control_statement'
+    assert results['additional_checks'][0]['person_statement'] == 'shortID'
+
+
 def test_additional_fields_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
