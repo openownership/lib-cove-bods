@@ -1,5 +1,5 @@
 -e git+https://github.com/OpenDataServices/flatten-tool.git@v0.5.0#egg=flattentool
--e git+https://github.com/OpenDataServices/lib-cove.git@v0.3.1#egg=libcove
+-e git+https://github.com/OpenDataServices/lib-cove.git@e1a6132fecdc2000ed03d82da9c2cc4dae3bd442#egg=libcove
 -e .
 pytest
 flake8

@@ -131,7 +131,7 @@ def test_basic_missing_statement_ids():
 
     for validation_error, data in results['validation_errors']:
         validation_error_data = json.loads(validation_error)
-        assert 'is not valid under any of the given schemas' in validation_error_data['message']
+        assert "'statementID' is missing but required" in validation_error_data['message']
 
 
 def test_additional_fields_1():
