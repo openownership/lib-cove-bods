@@ -12,10 +12,13 @@
 {"statementType": "personStatement", "statementDate": "not a date"},
 {"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "personType": "bad person type"},
 {"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "birthDate": "not a date"},
-{"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "source":{"url": "not a uri"}},
 {"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "source":{"retrievedAt": "not a date-time"}},
+{"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "missingPersonReason": "no missingPersonType"},
+{"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "identifiers":[{}]},
 {"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "interests": [{"share": {"exact": "not a number", "minimum":-1, "maximum":101}}]},
 {"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "interests": {"share": {"exact": "not a number", "minimum":-1, "maximum":101}}},
 {"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "interests": ["not an object"]},
-{"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "interests": [{"share": {"exclusiveMinimum": "not a bool"}}]}
+{"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "interests": [{"share": {"exclusiveMinimum": "not a bool"}}]},
+{"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "annotations":[{"motivation": "not on open list"}]},
+{"statementType": "entityStatement", "statementID": "a484ec70-ef24-45ca-ae2a-52453ca2fe9b", "uri": "not a uri"}
 ]
