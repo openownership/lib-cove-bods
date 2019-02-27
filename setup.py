@@ -12,6 +12,10 @@ setup(
     install_requires=[
         'jsonref',
         'jsonschema<=2.6.0',
+        # Required for jsonschema to validate URIs
+        'rfc3987',
+        # Required for jsonschema to validate date-time
+        'strict-rfc3339',
         'CommonMark',
         'Django',
         'bleach',
