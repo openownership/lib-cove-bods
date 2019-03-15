@@ -4,6 +4,11 @@ from libcove.lib.common import get_orgids_prefixes
 def get_statistics(json_data):
     count_entity_statements = 0
     count_person_statements = 0
+    count_person_statements_types = {
+        'anonymousPerson': 0,
+        'unknownPerson': 0,
+        'knownPerson': 0,
+    }
     count_ownership_or_control_statement = 0
     count_ownership_or_control_statement_interested_party_with_person = 0
     count_ownership_or_control_statement_interested_party_with_entity = 0
@@ -14,6 +19,9 @@ def get_statistics(json_data):
             count_entity_statements += 1
         elif statement_type == 'personStatement':
             count_person_statements += 1
+            if 'personType' in statement and isinstance(statement['personType'], str) \
+                    and statement['personType'] in count_person_statements_types:
+                count_person_statements_types[statement['personType']] += 1
         elif statement_type == 'ownershipOrControlStatement':
             count_ownership_or_control_statement += 1
             interested_party = statement.get('interestedParty')
@@ -26,6 +34,7 @@ def get_statistics(json_data):
     return {
         'count_entity_statements': count_entity_statements,
         'count_person_statements': count_person_statements,
+        'count_person_statements_types': count_person_statements_types,
         'count_ownership_or_control_statement': count_ownership_or_control_statement,
         'count_ownership_or_control_statement_interested_party_with_person': count_ownership_or_control_statement_interested_party_with_person, # noqa
         'count_ownership_or_control_statement_interested_party_with_entity': count_ownership_or_control_statement_interested_party_with_entity, # noqa
