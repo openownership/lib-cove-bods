@@ -1,0 +1,41 @@
+[
+  {
+    "statementID": "1dc0e987-5c57-4a1c-b3ad-61353b66a9b7",
+    "statementType": "entityStatement",
+    "statementDate": "2017-11-18",
+    "entityType": "registeredEntity",
+    "name": "CHRINON LTD",
+    "foundingDate": "2010-11-18",
+    "identifiers": [
+      {
+        "scheme": "GB-COH",
+        "id": "07444723"
+      }
+    ]
+  },
+  {
+    "statementID": "fbfd0547-d0c6-4a00-b559-5c5e91c34f5c",
+    "statementType": "ownershipOrControlStatement",
+    "statementDate": "2017-11-18",
+    "subject": {
+      "describedByEntityStatement": "1dc0e987-5c57-4a1c-b3ad-61353b66a9b7"
+    },
+    "interestedParty": {
+      "unspecified": {
+        "reason": "interested-party-has-not-provided-information",
+        "description": "The new owner of shares has been contacted to ask them to confirm the ultimate beneficial owner."
+      }
+    },
+    "interests": [
+      {
+        "type": "shareholding",
+        "interestLevel": "direct",
+        "beneficialOwnershipOrControl":true,
+        "startDate": "2016-04-06",
+        "share": {
+          "exact": 100
+        }
+      }
+    ]
+  }
+]

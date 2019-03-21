@@ -12,6 +12,7 @@ def get_statistics(json_data):
     count_ownership_or_control_statement = 0
     count_ownership_or_control_statement_interested_party_with_person = 0
     count_ownership_or_control_statement_interested_party_with_entity = 0
+    count_ownership_or_control_statement_interested_party_with_unspecified = 0
     count_ownership_or_control_statement_interest_statement_types = {
         'shareholding': 0,
         'voting-rights': 0,
@@ -44,6 +45,9 @@ def get_statistics(json_data):
                     count_ownership_or_control_statement_interested_party_with_entity += 1
                 if interested_party.get('describedByPersonStatement'):
                     count_ownership_or_control_statement_interested_party_with_person += 1
+                if interested_party.get('unspecified') and isinstance(interested_party.get('unspecified'), dict) \
+                        and interested_party['unspecified'].get('reason'):
+                    count_ownership_or_control_statement_interested_party_with_unspecified += 1
             if 'interests' in statement and isinstance(statement['interests'], list):
                 for interest in statement['interests']:
                     if isinstance(interest, dict):
@@ -58,6 +62,7 @@ def get_statistics(json_data):
         'count_ownership_or_control_statement': count_ownership_or_control_statement,
         'count_ownership_or_control_statement_interested_party_with_person': count_ownership_or_control_statement_interested_party_with_person, # noqa
         'count_ownership_or_control_statement_interested_party_with_entity': count_ownership_or_control_statement_interested_party_with_entity, # noqa
+        'count_ownership_or_control_statement_interested_party_with_unspecified': count_ownership_or_control_statement_interested_party_with_unspecified, # noqa
         'count_ownership_or_control_statement_interest_statement_types': count_ownership_or_control_statement_interest_statement_types,  # noqa
     }
 
