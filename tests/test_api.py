@@ -18,6 +18,11 @@ def test_basic_1():
     assert results['additional_checks_count'] == 0
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'knownPerson':
@@ -49,6 +54,13 @@ def test_basic_2():
     assert results['additional_checks_count'] == 0
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 2
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'legalEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        elif k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 0
     for k in results['statistics']['count_person_statements_types']:
         assert results['statistics']['count_person_statements_types'][k] == 0
@@ -77,6 +89,11 @@ def test_basic_extra_entity_statement_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 2
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 2
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'knownPerson':
@@ -111,6 +128,11 @@ def test_basic_extra_person_statement_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 2
     for k in results['statistics']['count_person_statements_types']:
         if k == 'knownPerson':
@@ -145,6 +167,11 @@ def test_basic_extra_ownership_or_control_statement_1():
     assert results['additional_checks_count'] == 0
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'knownPerson':
@@ -176,6 +203,11 @@ def test_basic_missing_statement_ids():
     assert results['additional_fields_count'] == 0
     assert results['additional_checks_count'] == 0
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'knownPerson':
@@ -212,6 +244,11 @@ def test_additional_fields_1():
     assert results['file_type'] == 'json'
     assert results['data_only'] == [('', 'cats', 1), ('', 'dogs', 1)]
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'knownPerson':
@@ -243,6 +280,8 @@ def test_basic_missing_entity_statement_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 0
+    for k in results['statistics']['count_entity_statements_types']:
+        assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'knownPerson':
@@ -279,6 +318,11 @@ def test_basic_missing_entity_statement_2():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 0
     for k in results['statistics']['count_person_statements_types']:
         assert results['statistics']['count_person_statements_types'][k] == 0
@@ -312,6 +356,11 @@ def test_basic_missing_person_statement_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 0
     for k in results['statistics']['count_person_statements_types']:
         assert results['statistics']['count_person_statements_types'][k] == 0
@@ -345,6 +394,11 @@ def test_basic_1_wrong_order_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'knownPerson':
@@ -381,6 +435,11 @@ def test_basic_1_wrong_order_2():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'knownPerson':
@@ -417,6 +476,11 @@ def test_basic_2_wrong_order_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 2
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 2
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 0
     for k in results['statistics']['count_person_statements_types']:
         assert results['statistics']['count_person_statements_types'][k] == 0
@@ -450,6 +514,11 @@ def test_basic_bad_identifier_scheme():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'knownPerson':
@@ -485,6 +554,11 @@ def test_basic_anonymous_person_1():
     assert results['additional_checks_count'] == 0
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'anonymousPerson':
@@ -516,6 +590,11 @@ def test_unknown_basic_1():
     assert results['additional_checks_count'] == 0
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
     for k in results['statistics']['count_person_statements_types']:
         if k == 'unknownPerson':
@@ -547,6 +626,11 @@ def test_basic_unknown_owner_1():
     assert results['additional_checks_count'] == 0
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 0
     for k in results['statistics']['count_person_statements_types']:
         assert results['statistics']['count_person_statements_types'][k] == 0

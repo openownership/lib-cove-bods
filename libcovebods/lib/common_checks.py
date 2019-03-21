@@ -3,6 +3,13 @@ from libcove.lib.common import get_orgids_prefixes
 
 def get_statistics(json_data):
     count_entity_statements = 0
+    count_entity_statements_types = {
+        'registeredEntity': 0,
+        'legalEntity': 0,
+        'arrangement': 0,
+        'anonymousEntity': 0,
+        'unknownEntity': 0,
+    }
     count_person_statements = 0
     count_person_statements_types = {
         'anonymousPerson': 0,
@@ -32,6 +39,9 @@ def get_statistics(json_data):
         statement_type = statement.get('statementType')
         if statement_type == 'entityStatement':
             count_entity_statements += 1
+            if 'entityType' in statement and isinstance(statement['entityType'], str) \
+                    and statement['entityType'] in count_entity_statements_types:
+                count_entity_statements_types[statement['entityType']] += 1
         elif statement_type == 'personStatement':
             count_person_statements += 1
             if 'personType' in statement and isinstance(statement['personType'], str) \
@@ -57,6 +67,7 @@ def get_statistics(json_data):
 
     return {
         'count_entity_statements': count_entity_statements,
+        'count_entity_statements_types': count_entity_statements_types,
         'count_person_statements': count_person_statements,
         'count_person_statements_types': count_person_statements_types,
         'count_ownership_or_control_statement': count_ownership_or_control_statement,
