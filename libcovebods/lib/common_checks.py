@@ -86,15 +86,18 @@ class RunAdditionalChecks:
         self.person_statements_seen_in_ownership_or_control_statement = []
         self.entity_statements_seen = []
         self.entity_statements_seen_in_ownership_or_control_statement = []
+        self.ownership_or_control_statements_seen = []
         self.output = []
         self.possible_out_of_order_statements = []
         self.orgids_prefixes = []
+        self.statement_ids_counted = {}
 
     def run(self):
         self.person_statements_seen = []
         self.person_statements_seen_in_ownership_or_control_statement = []
         self.entity_statements_seen = []
         self.entity_statements_seen_in_ownership_or_control_statement = []
+        self.ownership_or_control_statements_seen = []
         self.output = []
         self.possible_out_of_order_statements = []
         self.orgids_prefixes = get_orgids_prefixes()
@@ -129,7 +132,9 @@ class RunAdditionalChecks:
                 elif statement_type == 'ownershipOrControlStatement':
                     self._check_ownership_or_control_statement_second_pass(statement)
 
-        # Turn checks into output
+        # We have seen some possible out of order statements;
+        # but earlier we weren't sure if they were "out of order" or "missing"!
+        # Now we have other info, we can check and see which one they are.
         for possible_out_of_order_statement in self.possible_out_of_order_statements:
             if possible_out_of_order_statement['type'] == 'entity_statement_out_of_order':
                 if possible_out_of_order_statement['entity_statement_out_of_order'] in self.entity_statements_seen:
@@ -137,6 +142,19 @@ class RunAdditionalChecks:
             else:
                 if possible_out_of_order_statement['person_statement_out_of_order'] in self.person_statements_seen:
                     self.output.append(possible_out_of_order_statement)
+
+        # We can now look for duplicate IDs!
+        self.statement_ids_counted = {}
+        self._add_statement_ids_to_statement_ids_counted(self.person_statements_seen)
+        self._add_statement_ids_to_statement_ids_counted(self.entity_statements_seen)
+        self._add_statement_ids_to_statement_ids_counted(self.ownership_or_control_statements_seen)
+        for k, v in self.statement_ids_counted.items():
+            if v > 1:
+                self.output.append({
+                    'type': 'duplicate_statement_id',
+                    'id': k,
+                    'count': v,
+                })
 
         return self.output
 
@@ -157,6 +175,7 @@ class RunAdditionalChecks:
         self.person_statements_seen.append(statement.get('statementID'))
 
     def _check_ownership_or_control_statement_first_pass(self, statement):
+        self.ownership_or_control_statements_seen.append(statement.get('statementID'))
         interested_party = statement.get('interestedParty')
         if isinstance(interested_party, dict):
             interested_party_described_by_entity_statement = interested_party.get('describedByEntityStatement')
@@ -238,3 +257,10 @@ class RunAdditionalChecks:
                         'entity_statement_missing': subject_described_by_entity_statement,
                         'seen_in_ownership_or_control_statement': statement.get('statementID'),
                     })
+
+    def _add_statement_ids_to_statement_ids_counted(self, statement_ids):
+        for statement_id in statement_ids:
+            if statement_id in self.statement_ids_counted:
+                self.statement_ids_counted[statement_id] += 1
+            else:
+                self.statement_ids_counted[statement_id] = 1

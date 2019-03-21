@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Statistic: % of type of interest statement in ownership-or-control statement
 - Statistic: % of ownership-or-control statements with unspecified interestedParty
 - Statistic: % of Entities of each type
+- Additional Checks: Each statement must have an entirely unique identifier
 
 ### Changed
 
