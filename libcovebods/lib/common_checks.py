@@ -12,6 +12,20 @@ def get_statistics(json_data):
     count_ownership_or_control_statement = 0
     count_ownership_or_control_statement_interested_party_with_person = 0
     count_ownership_or_control_statement_interested_party_with_entity = 0
+    count_ownership_or_control_statement_interest_statement_types = {
+        'shareholding': 0,
+        'voting-rights': 0,
+        'appointment-of-board': 0,
+        'influence-or-control': 0,
+        'senior-managing-official': 0,
+        'settlor-of-trust': 0,
+        'trustee-of-trust': 0,
+        'protector-of-trust': 0,
+        'beneficiary-of-trust': 0,
+        'other-influence-or-control-of-trust': 0,
+        'rights-to-surplus-assets': 0,
+        'rights-to-profit-or-income': 0,
+    }
 
     for statement in json_data:
         statement_type = statement.get('statementType')
@@ -30,6 +44,12 @@ def get_statistics(json_data):
                     count_ownership_or_control_statement_interested_party_with_entity += 1
                 if interested_party.get('describedByPersonStatement'):
                     count_ownership_or_control_statement_interested_party_with_person += 1
+            if 'interests' in statement and isinstance(statement['interests'], list):
+                for interest in statement['interests']:
+                    if isinstance(interest, dict):
+                        if 'type' in interest and isinstance(interest['type'], str) \
+                                and interest['type'] in count_ownership_or_control_statement_interest_statement_types:
+                            count_ownership_or_control_statement_interest_statement_types[interest['type']] += 1
 
     return {
         'count_entity_statements': count_entity_statements,
@@ -38,6 +58,7 @@ def get_statistics(json_data):
         'count_ownership_or_control_statement': count_ownership_or_control_statement,
         'count_ownership_or_control_statement_interested_party_with_person': count_ownership_or_control_statement_interested_party_with_person, # noqa
         'count_ownership_or_control_statement_interested_party_with_entity': count_ownership_or_control_statement_interested_party_with_entity, # noqa
+        'count_ownership_or_control_statement_interest_statement_types': count_ownership_or_control_statement_interest_statement_types,  # noqa
     }
 
 

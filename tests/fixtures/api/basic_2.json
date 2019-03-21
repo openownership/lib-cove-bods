@@ -39,13 +39,10 @@
     },
     "interests": [
       {
-        "type": "shareholding",
+        "type": "influence-or-control",
         "interestLevel": "direct",
         "beneficialOwnershipOrControl":true,
-        "startDate": "2016-04-06",
-        "share": {
-          "exact": 100
-        }
+        "startDate": "2016-04-06"
       }
     ]
   }

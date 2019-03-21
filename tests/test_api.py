@@ -27,6 +27,11 @@ def test_basic_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
 
 def test_basic_2():
@@ -49,6 +54,11 @@ def test_basic_2():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 0
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 1
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'influence-or-control':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
 
 def test_basic_extra_entity_statement_1():
@@ -74,6 +84,11 @@ def test_basic_extra_entity_statement_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_statement_not_used_in_ownership_or_control_statement'
     assert results['additional_checks'][0]['entity_statement'] == '9bf27aa7-f372-41d7-9429-1bcd8b0f475d'
@@ -102,6 +117,11 @@ def test_basic_extra_person_statement_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'person_statement_not_used_in_ownership_or_control_statement'
     assert results['additional_checks'][0]['person_statement'] == '891298d0-9b97-4d46-b776-d98927d72580'
@@ -130,6 +150,11 @@ def test_basic_extra_ownership_or_control_statement_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 2
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 2
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 2
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
 
 def test_basic_missing_statement_ids():
@@ -155,6 +180,11 @@ def test_basic_missing_statement_ids():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     for validation_error, data in results['validation_errors']:
         validation_error_data = json.loads(validation_error)
@@ -185,6 +215,11 @@ def test_additional_fields_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
 
 def test_basic_missing_entity_statement_1():
@@ -210,6 +245,11 @@ def test_basic_missing_entity_statement_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_statement_missing'
     assert results['additional_checks'][0]['missing_from'] == 'subject'
@@ -237,6 +277,11 @@ def test_basic_missing_entity_statement_2():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 0
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 1
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_statement_missing'
     assert results['additional_checks'][0]['missing_from'] == 'interestedParty'
@@ -264,6 +309,11 @@ def test_basic_missing_person_statement_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'person_statement_missing'
     assert results['additional_checks'][0]['missing_from'] == 'interestedParty'
@@ -294,6 +344,11 @@ def test_basic_1_wrong_order_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_statement_out_of_order'
     assert results['additional_checks'][0]['referenced_from'] == 'subject'
@@ -324,6 +379,11 @@ def test_basic_1_wrong_order_2():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'person_statement_out_of_order'
     assert results['additional_checks'][0]['referenced_from'] == 'interestedParty'
@@ -351,6 +411,11 @@ def test_basic_2_wrong_order_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 0
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 1
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_statement_out_of_order'
     assert results['additional_checks'][0]['referenced_from'] == 'interestedParty'
@@ -381,6 +446,11 @@ def test_basic_bad_identifier_scheme():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_identifier_scheme_not_known'
     assert results['additional_checks'][0]['scheme'] == 'GB-COH-THIS-SCHEME-IS-NOT-REAL-I-JUST-MADE-IT-UP-MWAHAHAHAHA'
@@ -410,6 +480,11 @@ def test_basic_anonymous_person_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
 
 def test_unknown_basic_1():
@@ -435,3 +510,8 @@ def test_unknown_basic_1():
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
