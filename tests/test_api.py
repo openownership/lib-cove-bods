@@ -620,7 +620,6 @@ def test_basic_unknown_owner_1():
     )
     results = bods_json_output(cove_temp_folder, json_filename)
 
-    print(results)
     assert results['validation_errors_count'] == 0
     assert results['additional_fields_count'] == 0
     assert results['additional_checks_count'] == 0
