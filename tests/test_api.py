@@ -629,7 +629,7 @@ def test_badfile_all_validation_errors():
 
     assert results['validation_errors_count'] == 39
     assert results['additional_fields_count'] == 1
-    assert results['additional_checks_count'] == 9
+    assert results['additional_checks_count'] == 11
     assert results['file_type'] == 'json'
 
     for (i, (expected_error, expected_values)) in enumerate(BADFILE_RESULTS):

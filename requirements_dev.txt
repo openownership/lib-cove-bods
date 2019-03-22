@@ -1,6 +1,4 @@
--e git+https://github.com/OpenDataServices/flatten-tool.git@4c13ef0b32a59e810919a3de09bc8f64ce8f9392#egg=flattentool
--e git+https://github.com/OpenDataServices/lib-cove.git@fe0ec370280e2986e6d47dff458a08313acceaef#egg=libcove
-
+-r requirements.in
 pytest==4.3.1
 flake8==3.7.7
 ## The following requirements were added by pip freeze:
@@ -15,25 +13,28 @@ contextlib2==0.5.5
 Django==2.1.7
 entrypoints==0.3
 et-xmlfile==1.0.1
+-e git+https://github.com/OpenDataServices/flatten-tool.git@4c13ef0b32a59e810919a3de09bc8f64ce8f9392#egg=flattentool
 future==0.17.1
 idna==2.8
 jdcal==1.4
 json-merge-patch==0.2
 jsonref==0.2
 jsonschema==2.6.0
+-e git+https://github.com/OpenDataServices/lib-cove.git@fe0ec370280e2986e6d47dff458a08313acceaef#egg=libcove
 lxml==4.3.2
 mccabe==0.6.1
 more-itertools==6.0.0
 openpyxl==2.6.1
-pathlib2==2.3.3
 pluggy==0.9.0
 py==1.8.0
 pycodestyle==2.5.0
 pyflakes==2.1.1
 pytz==2018.9
 requests==2.21.0
+rfc3987==1.3.8
 schema==0.7.0
 six==1.12.0
+strict-rfc3339==0.7
 urllib3==1.24.1
 webencodings==0.5.1
 xmltodict==0.12.0
