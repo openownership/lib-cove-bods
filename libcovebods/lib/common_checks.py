@@ -3,17 +3,50 @@ from libcove.lib.common import get_orgids_prefixes
 
 def get_statistics(json_data):
     count_entity_statements = 0
+    count_entity_statements_types = {
+        'registeredEntity': 0,
+        'legalEntity': 0,
+        'arrangement': 0,
+        'anonymousEntity': 0,
+        'unknownEntity': 0,
+    }
     count_person_statements = 0
+    count_person_statements_types = {
+        'anonymousPerson': 0,
+        'unknownPerson': 0,
+        'knownPerson': 0,
+    }
     count_ownership_or_control_statement = 0
     count_ownership_or_control_statement_interested_party_with_person = 0
     count_ownership_or_control_statement_interested_party_with_entity = 0
+    count_ownership_or_control_statement_interested_party_with_unspecified = 0
+    count_ownership_or_control_statement_interest_statement_types = {
+        'shareholding': 0,
+        'voting-rights': 0,
+        'appointment-of-board': 0,
+        'influence-or-control': 0,
+        'senior-managing-official': 0,
+        'settlor-of-trust': 0,
+        'trustee-of-trust': 0,
+        'protector-of-trust': 0,
+        'beneficiary-of-trust': 0,
+        'other-influence-or-control-of-trust': 0,
+        'rights-to-surplus-assets': 0,
+        'rights-to-profit-or-income': 0,
+    }
 
     for statement in json_data:
         statement_type = statement.get('statementType')
         if statement_type == 'entityStatement':
             count_entity_statements += 1
+            if 'entityType' in statement and isinstance(statement['entityType'], str) \
+                    and statement['entityType'] in count_entity_statements_types:
+                count_entity_statements_types[statement['entityType']] += 1
         elif statement_type == 'personStatement':
             count_person_statements += 1
+            if 'personType' in statement and isinstance(statement['personType'], str) \
+                    and statement['personType'] in count_person_statements_types:
+                count_person_statements_types[statement['personType']] += 1
         elif statement_type == 'ownershipOrControlStatement':
             count_ownership_or_control_statement += 1
             interested_party = statement.get('interestedParty')
@@ -22,13 +55,26 @@ def get_statistics(json_data):
                     count_ownership_or_control_statement_interested_party_with_entity += 1
                 if interested_party.get('describedByPersonStatement'):
                     count_ownership_or_control_statement_interested_party_with_person += 1
+                if interested_party.get('unspecified') and isinstance(interested_party.get('unspecified'), dict) \
+                        and interested_party['unspecified'].get('reason'):
+                    count_ownership_or_control_statement_interested_party_with_unspecified += 1
+            if 'interests' in statement and isinstance(statement['interests'], list):
+                for interest in statement['interests']:
+                    if isinstance(interest, dict):
+                        if 'type' in interest and isinstance(interest['type'], str) \
+                                and interest['type'] in count_ownership_or_control_statement_interest_statement_types:
+                            count_ownership_or_control_statement_interest_statement_types[interest['type']] += 1
 
     return {
         'count_entity_statements': count_entity_statements,
+        'count_entity_statements_types': count_entity_statements_types,
         'count_person_statements': count_person_statements,
+        'count_person_statements_types': count_person_statements_types,
         'count_ownership_or_control_statement': count_ownership_or_control_statement,
         'count_ownership_or_control_statement_interested_party_with_person': count_ownership_or_control_statement_interested_party_with_person, # noqa
         'count_ownership_or_control_statement_interested_party_with_entity': count_ownership_or_control_statement_interested_party_with_entity, # noqa
+        'count_ownership_or_control_statement_interested_party_with_unspecified': count_ownership_or_control_statement_interested_party_with_unspecified, # noqa
+        'count_ownership_or_control_statement_interest_statement_types': count_ownership_or_control_statement_interest_statement_types,  # noqa
     }
 
 
@@ -40,15 +86,18 @@ class RunAdditionalChecks:
         self.person_statements_seen_in_ownership_or_control_statement = []
         self.entity_statements_seen = []
         self.entity_statements_seen_in_ownership_or_control_statement = []
+        self.ownership_or_control_statements_seen = []
         self.output = []
         self.possible_out_of_order_statements = []
         self.orgids_prefixes = []
+        self.statement_ids_counted = {}
 
     def run(self):
         self.person_statements_seen = []
         self.person_statements_seen_in_ownership_or_control_statement = []
         self.entity_statements_seen = []
         self.entity_statements_seen_in_ownership_or_control_statement = []
+        self.ownership_or_control_statements_seen = []
         self.output = []
         self.possible_out_of_order_statements = []
         self.orgids_prefixes = get_orgids_prefixes()
@@ -83,7 +132,9 @@ class RunAdditionalChecks:
                 elif statement_type == 'ownershipOrControlStatement':
                     self._check_ownership_or_control_statement_second_pass(statement)
 
-        # Turn checks into output
+        # We have seen some possible out of order statements;
+        # but earlier we weren't sure if they were "out of order" or "missing"!
+        # Now we have other info, we can check and see which one they are.
         for possible_out_of_order_statement in self.possible_out_of_order_statements:
             if possible_out_of_order_statement['type'] == 'entity_statement_out_of_order':
                 if possible_out_of_order_statement['entity_statement_out_of_order'] in self.entity_statements_seen:
@@ -91,6 +142,19 @@ class RunAdditionalChecks:
             else:
                 if possible_out_of_order_statement['person_statement_out_of_order'] in self.person_statements_seen:
                     self.output.append(possible_out_of_order_statement)
+
+        # We can now look for duplicate IDs!
+        self.statement_ids_counted = {}
+        self._add_statement_ids_to_statement_ids_counted(self.person_statements_seen)
+        self._add_statement_ids_to_statement_ids_counted(self.entity_statements_seen)
+        self._add_statement_ids_to_statement_ids_counted(self.ownership_or_control_statements_seen)
+        for k, v in self.statement_ids_counted.items():
+            if v > 1:
+                self.output.append({
+                    'type': 'duplicate_statement_id',
+                    'id': k,
+                    'count': v,
+                })
 
         return self.output
 
@@ -111,6 +175,7 @@ class RunAdditionalChecks:
         self.person_statements_seen.append(statement.get('statementID'))
 
     def _check_ownership_or_control_statement_first_pass(self, statement):
+        self.ownership_or_control_statements_seen.append(statement.get('statementID'))
         interested_party = statement.get('interestedParty')
         if isinstance(interested_party, dict):
             interested_party_described_by_entity_statement = interested_party.get('describedByEntityStatement')
@@ -192,3 +257,10 @@ class RunAdditionalChecks:
                         'entity_statement_missing': subject_described_by_entity_statement,
                         'seen_in_ownership_or_control_statement': statement.get('statementID'),
                     })
+
+    def _add_statement_ids_to_statement_ids_counted(self, statement_ids):
+        for statement_id in statement_ids:
+            if statement_id in self.statement_ids_counted:
+                self.statement_ids_counted[statement_id] += 1
+            else:
+                self.statement_ids_counted[statement_id] = 1

@@ -11,7 +11,7 @@ setup(
     long_description='A data review library',
     install_requires=[
         'jsonref',
-        'jsonschema<=2.6.0',
+        'jsonschema<2.7',
         # Required for jsonschema to validate URIs
         'rfc3987',
         # Required for jsonschema to validate date-time
