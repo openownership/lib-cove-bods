@@ -18,10 +18,26 @@ def test_basic_1():
     assert results['additional_checks_count'] == 0
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
 
 def test_basic_2():
@@ -38,10 +54,25 @@ def test_basic_2():
     assert results['additional_checks_count'] == 0
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 2
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'legalEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        elif k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 0
+    for k in results['statistics']['count_person_statements_types']:
+        assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 0
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'influence-or-control':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
 
 def test_basic_extra_entity_statement_1():
@@ -58,10 +89,26 @@ def test_basic_extra_entity_statement_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 2
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 2
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_statement_not_used_in_ownership_or_control_statement'
     assert results['additional_checks'][0]['entity_statement'] == '9bf27aa7-f372-41d7-9429-1bcd8b0f475d'
@@ -81,10 +128,26 @@ def test_basic_extra_person_statement_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 2
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 2
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'person_statement_not_used_in_ownership_or_control_statement'
     assert results['additional_checks'][0]['person_statement'] == '891298d0-9b97-4d46-b776-d98927d72580'
@@ -104,10 +167,26 @@ def test_basic_extra_ownership_or_control_statement_1():
     assert results['additional_checks_count'] == 0
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 2
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 2
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 2
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
 
 def test_basic_missing_statement_ids():
@@ -124,10 +203,26 @@ def test_basic_missing_statement_ids():
     assert results['additional_fields_count'] == 0
     assert results['additional_checks_count'] == 0
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     for validation_error, data in results['validation_errors']:
         validation_error_data = json.loads(validation_error)
@@ -149,10 +244,26 @@ def test_additional_fields_1():
     assert results['file_type'] == 'json'
     assert results['data_only'] == [('', 'cats', 1), ('', 'dogs', 1)]
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
 
 def test_basic_missing_entity_statement_1():
@@ -169,10 +280,23 @@ def test_basic_missing_entity_statement_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 0
+    for k in results['statistics']['count_entity_statements_types']:
+        assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_statement_missing'
     assert results['additional_checks'][0]['missing_from'] == 'subject'
@@ -194,10 +318,23 @@ def test_basic_missing_entity_statement_2():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 0
+    for k in results['statistics']['count_person_statements_types']:
+        assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 0
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_statement_missing'
     assert results['additional_checks'][0]['missing_from'] == 'interestedParty'
@@ -219,10 +356,23 @@ def test_basic_missing_person_statement_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 0
+    for k in results['statistics']['count_person_statements_types']:
+        assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'person_statement_missing'
     assert results['additional_checks'][0]['missing_from'] == 'interestedParty'
@@ -244,10 +394,26 @@ def test_basic_1_wrong_order_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_statement_out_of_order'
     assert results['additional_checks'][0]['referenced_from'] == 'subject'
@@ -269,10 +435,26 @@ def test_basic_1_wrong_order_2():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'person_statement_out_of_order'
     assert results['additional_checks'][0]['referenced_from'] == 'interestedParty'
@@ -294,10 +476,23 @@ def test_basic_2_wrong_order_1():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 2
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 2
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 0
+    for k in results['statistics']['count_person_statements_types']:
+        assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 0
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_statement_out_of_order'
     assert results['additional_checks'][0]['referenced_from'] == 'interestedParty'
@@ -319,11 +514,172 @@ def test_basic_bad_identifier_scheme():
     assert results['additional_checks_count'] == 1
     assert results['file_type'] == 'json'
     assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
     assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
 
     assert results['additional_checks'][0]['type'] == 'entity_identifier_scheme_not_known'
     assert results['additional_checks'][0]['scheme'] == 'GB-COH-THIS-SCHEME-IS-NOT-REAL-I-JUST-MADE-IT-UP-MWAHAHAHAHA'
     assert results['additional_checks'][0]['entity_statement'] == '1dc0e987-5c57-4a1c-b3ad-61353b66a9b7'
+
+
+def test_basic_anonymous_person_1():
+
+    cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
+    json_filename = os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_anonymous_person_1.json'
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    assert results['validation_errors_count'] == 0
+    assert results['additional_fields_count'] == 0
+    assert results['additional_checks_count'] == 0
+    assert results['file_type'] == 'json'
+    assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
+    assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'anonymousPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
+    assert results['statistics']['count_ownership_or_control_statement'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
+
+
+def test_unknown_basic_1():
+
+    cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
+    json_filename = os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_unknown_person_1.json'
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    assert results['validation_errors_count'] == 0
+    assert results['additional_fields_count'] == 0
+    assert results['additional_checks_count'] == 0
+    assert results['file_type'] == 'json'
+    assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
+    assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'unknownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
+    assert results['statistics']['count_ownership_or_control_statement'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
+
+
+def test_basic_unknown_owner_1():
+
+    cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
+    json_filename = os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_unknown_owner_1.json'
+    )
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    assert results['validation_errors_count'] == 0
+    assert results['additional_fields_count'] == 0
+    assert results['additional_checks_count'] == 0
+    assert results['file_type'] == 'json'
+    assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
+    assert results['statistics']['count_person_statements'] == 0
+    for k in results['statistics']['count_person_statements_types']:
+        assert results['statistics']['count_person_statements_types'][k] == 0
+    assert results['statistics']['count_ownership_or_control_statement'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 1
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
+
+
+def test_basic_duplicate_statement_id_1():
+
+    cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
+    json_filename = os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_duplicate_statement_id_1.json'
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    assert results['validation_errors_count'] == 0
+    assert results['additional_fields_count'] == 0
+    assert results['additional_checks_count'] == 1
+
+    assert results['file_type'] == 'json'
+    assert results['statistics']['count_entity_statements'] == 1
+    for k in results['statistics']['count_entity_statements_types']:
+        if k == 'registeredEntity':
+            assert results['statistics']['count_entity_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_entity_statements_types'][k] == 0
+    assert results['statistics']['count_person_statements'] == 1
+    for k in results['statistics']['count_person_statements_types']:
+        if k == 'knownPerson':
+            assert results['statistics']['count_person_statements_types'][k] == 1
+        else:
+            assert results['statistics']['count_person_statements_types'][k] == 0
+    assert results['statistics']['count_ownership_or_control_statement'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
+        if k == 'shareholding':
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
+        else:
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
+
+    assert results['additional_checks'][0]['type'] == 'duplicate_statement_id'
+    assert results['additional_checks'][0]['id'] == '019a93f1-e470-42e9-957b-03559861b2e2'
+    assert results['additional_checks'][0]['count'] == 2

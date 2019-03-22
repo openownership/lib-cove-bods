@@ -3,7 +3,7 @@
     "statementID": "1dc0e987-5c57-4a1c-b3ad-61353b66a9b7",
     "statementType": "entityStatement",
     "statementDate": "2017-11-18",
-    "entityType": "legalEntity",
+    "entityType": "registeredEntity",
     "name": "CHRINON LTD",
     "foundingDate": "2010-11-18",
     "identifiers": [
@@ -14,16 +14,20 @@
     ]
   },
   {
-    "statementID": "9bf27aa7-f372-41d7-9429-1bcd8b0f475d",
-    "statementType": "entityStatement",
+    "statementID": "019a93f1-e470-42e9-957b-03559861b2e2",
+    "statementType": "personStatement",
     "statementDate": "2017-11-18",
-    "entityType": "registeredEntity",
-    "name": "PROTOGEN LTD",
-    "foundingDate": "2011-11-18",
-    "identifiers": [
+    "personType": "unknownPerson",
+    "names": [
       {
-        "scheme": "GB-COH",
-        "id": "07444353"
+        "type": "individual",
+        "fullName": "Christopher Taggart",
+        "givenName": "Christopher",
+        "familyName": "Taggart"
+      },
+      {
+        "type": "aka",
+        "fullName": "Chris Taggart"
       }
     ]
   },
@@ -35,14 +39,17 @@
       "describedByEntityStatement": "1dc0e987-5c57-4a1c-b3ad-61353b66a9b7"
     },
     "interestedParty": {
-      "describedByEntityStatement": "9bf27aa7-f372-41d7-9429-1bcd8b0f475d"
+      "describedByPersonStatement": "019a93f1-e470-42e9-957b-03559861b2e2"
     },
     "interests": [
       {
-        "type": "influence-or-control",
+        "type": "shareholding",
         "interestLevel": "direct",
         "beneficialOwnershipOrControl":true,
-        "startDate": "2016-04-06"
+        "startDate": "2016-04-06",
+        "share": {
+          "exact": 100
+        }
       }
     ]
   }

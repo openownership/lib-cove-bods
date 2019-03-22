@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Statistic: % of Persons of each type
+- Statistic: % of type of interest statement in ownership-or-control statement
+- Statistic: % of ownership-or-control statements with unspecified interestedParty
+- Statistic: % of Entities of each type
+- Additional Checks: Each statement must have an entirely unique identifier
+
 ### Changed
 
 - Require jsonschema version before 2.7
+- Updated standard Schema to V0.1
 
 ## [0.2.0] - 2018-12-04
 
