@@ -20,7 +20,7 @@ jdcal==1.4
 json-merge-patch==0.2
 jsonref==0.2
 jsonschema==2.6.0
--e git+https://github.com/OpenDataServices/lib-cove.git@fe0ec370280e2986e6d47dff458a08313acceaef#egg=libcove
+-e git+https://github.com/OpenDataServices/lib-cove.git@9fc8323052f2a4340a856d76f14fdfb8785b1aaa#egg=libcove
 lxml==4.3.2
 mccabe==0.6.1
 more-itertools==6.0.0
