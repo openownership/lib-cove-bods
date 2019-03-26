@@ -1,5 +1,5 @@
 -e git+https://github.com/OpenDataServices/flatten-tool.git@4c13ef0b32a59e810919a3de09bc8f64ce8f9392#egg=flattentool
--e git+https://github.com/OpenDataServices/lib-cove.git@9fc8323052f2a4340a856d76f14fdfb8785b1aaa#egg=libcove
+-e git+https://github.com/OpenDataServices/lib-cove.git@v0.5.0#egg=libcove
 ## The following requirements were added by pip freeze:
 bleach==3.1.0
 cached-property==1.5.1
