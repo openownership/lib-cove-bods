@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.0] - 2019-03-22
+
 ### Added
 
 - Statistic: % of Persons of each type
@@ -14,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Statistic: % of ownership-or-control statements with unspecified interestedParty
 - Statistic: % of Entities of each type
 - Additional Checks: Each statement must have an entirely unique identifier
+- Additional Checks: Check Birth Date is in acceptable range
 
 ### Changed
 
