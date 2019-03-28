@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='libcovebods',
-    version='0.2.0',
+    version='0.3.0',
     author='Open Data Services',
     author_email='code@opendataservices.coop',
     url='https://github.com/open-contracting/lib-cove-ocds',

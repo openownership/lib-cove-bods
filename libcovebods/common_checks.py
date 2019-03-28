@@ -3,6 +3,7 @@ from collections import OrderedDict
 from libcove.lib.common import common_checks_context
 from libcovebods.lib.common_checks import get_statistics, RunAdditionalChecks
 from django.utils.html import format_html
+from libcovebods.config import LibCoveBODSConfig
 
 
 validation_error_template_lookup = {
@@ -30,7 +31,10 @@ validation_error_template_lookup_safe = {
     'array': '<code>{}</code> should be a JSON array. Check that value(s) appear within square brackets, [...]'}
 
 
-def common_checks_bods(context, upload_dir, json_data, schema_obj):
+def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods_config=None):
+
+    if not lib_cove_bods_config:
+        lib_cove_bods_config = LibCoveBODSConfig()
 
     common_checks = common_checks_context(upload_dir, json_data, schema_obj, 'bods-schema.json', context)
 
@@ -98,7 +102,7 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj):
 
     context.update(common_checks['context'])
 
-    additional_checks = RunAdditionalChecks(json_data).run()
+    additional_checks = RunAdditionalChecks(json_data, lib_cove_bods_config).run()
 
     context.update({
         'statistics': get_statistics(json_data),

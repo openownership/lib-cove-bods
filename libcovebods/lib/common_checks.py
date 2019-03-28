@@ -1,4 +1,5 @@
 from libcove.lib.common import get_orgids_prefixes
+from libcovebods.lib.common import get_year_from_bods_birthdate_or_deathdate
 
 
 def get_statistics(json_data):
@@ -80,8 +81,9 @@ def get_statistics(json_data):
 
 class RunAdditionalChecks:
 
-    def __init__(self, json_data):
+    def __init__(self, json_data, lib_cove_bods_config):
         self.json_data = json_data
+        self.lib_cove_bods_config = lib_cove_bods_config
         self.person_statements_seen = []
         self.person_statements_seen_in_ownership_or_control_statement = []
         self.entity_statements_seen = []
@@ -173,6 +175,21 @@ class RunAdditionalChecks:
 
     def _check_person_statement_first_pass(self, statement):
         self.person_statements_seen.append(statement.get('statementID'))
+        if 'birthDate' in statement:
+            birth_year = get_year_from_bods_birthdate_or_deathdate(statement['birthDate'])
+            if birth_year:
+                if birth_year < self.lib_cove_bods_config.config['bods_additional_checks_person_birthdate_min_year']:
+                    self.output.append({
+                        'type': 'person_birth_year_too_early',
+                        'year': birth_year,
+                        'person_statement': statement.get('statementID'),
+                    })
+                elif birth_year > self.lib_cove_bods_config.config['bods_additional_checks_person_birthdate_max_year']:
+                    self.output.append({
+                        'type': 'person_birth_year_too_late',
+                        'year': birth_year,
+                        'person_statement': statement.get('statementID'),
+                    })
 
     def _check_ownership_or_control_statement_first_pass(self, statement):
         self.ownership_or_control_statements_seen.append(statement.get('statementID'))
