@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Use lib-cove version 0.5.0, which includes schema validation message changes
+
 ## [0.3.0] - 2019-03-22
 
 ### Added
