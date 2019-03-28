@@ -2,6 +2,7 @@ import tempfile
 import os
 import json
 from libcovebods.api import bods_json_output
+from libcovebods.config import LibCoveBODSConfig
 
 
 def unpack_validation_error(validation_error_result):
@@ -44,6 +45,50 @@ def test_basic_1():
             assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
         else:
             assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
+
+
+def test_basic_1_with_birth_year_to_early():
+
+    config = LibCoveBODSConfig()
+    config.config['bods_additional_checks_person_birthdate_min_year'] = 1970
+    config.config['bods_additional_checks_person_birthdate_max_year'] = 2000
+
+    # we reuse the basic1.json file here.
+    # So we don't bother testing anything not related to year, as the normal 'basic_1.json' test will do that.
+    cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
+    json_filename = os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_1.json'
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename, lib_cove_bods_config=config)
+
+    assert results['additional_checks_count'] == 1
+
+    assert results['additional_checks'][0]['type'] == 'person_birth_year_too_early'
+    assert results['additional_checks'][0]['person_statement'] == '019a93f1-e470-42e9-957b-03559861b2e2'
+    assert results['additional_checks'][0]['year'] == 1964
+
+
+def test_basic_1_with_birth_year_to_late():
+
+    config = LibCoveBODSConfig()
+    config.config['bods_additional_checks_person_birthdate_min_year'] = 1900
+    config.config['bods_additional_checks_person_birthdate_max_year'] = 1950
+
+    # we reuse the basic1.json file here.
+    # So we don't bother testing anything not related to year, as the normal 'basic_1.json' test will do that.
+    cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
+    json_filename = os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_1.json'
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename, lib_cove_bods_config=config)
+
+    assert results['additional_checks_count'] == 1
+
+    assert results['additional_checks'][0]['type'] == 'person_birth_year_too_late'
+    assert results['additional_checks'][0]['person_statement'] == '019a93f1-e470-42e9-957b-03559861b2e2'
+    assert results['additional_checks'][0]['year'] == 1964
 
 
 def test_basic_2():
