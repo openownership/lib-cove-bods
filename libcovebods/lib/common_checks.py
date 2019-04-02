@@ -187,7 +187,7 @@ class RunAdditionalChecks:
             for identifier in identifiers:
                 if isinstance(identifier, dict):
                     if ('scheme' in identifier and identifier['scheme']
-                            and not identifier.get('scheme') in self.orgids_prefixes):
+                            and not identifier['scheme'] in self.orgids_prefixes):
                         self.output.append({
                             'type': 'entity_identifier_scheme_not_known',
                             'scheme': identifier.get('scheme'),
