@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.4.0] - 2019-04-02
+
 ### Added
 
 - Statistic: Entity Statements with one or more identifiers, by statement type
