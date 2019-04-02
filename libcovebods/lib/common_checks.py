@@ -11,6 +11,8 @@ def get_statistics(json_data):
         'anonymousEntity': 0,
         'unknownEntity': 0,
     }
+    count_entity_statements_types_with_any_identifier = count_entity_statements_types.copy()
+    count_entity_statements_types_with_any_identifier_with_id_and_scheme = count_entity_statements_types.copy()
     count_person_statements = 0
     count_person_statements_types = {
         'anonymousPerson': 0,
@@ -43,6 +45,22 @@ def get_statistics(json_data):
             if 'entityType' in statement and isinstance(statement['entityType'], str) \
                     and statement['entityType'] in count_entity_statements_types:
                 count_entity_statements_types[statement['entityType']] += 1
+                if 'identifiers' in statement and isinstance(statement['identifiers'], list):
+                    has_ids = False
+                    has_ids_with_id_and_scheme = False
+                    for identifier in statement['identifiers']:
+                        if isinstance(identifier, dict):
+                            has_ids = True
+                            if 'scheme' in identifier and isinstance(identifier['scheme'], str) \
+                                    and identifier['scheme'] \
+                                    and 'id' in identifier and isinstance(identifier['id'], str) \
+                                    and identifier['id']:
+                                has_ids_with_id_and_scheme = True
+
+                    if has_ids:
+                        count_entity_statements_types_with_any_identifier[statement['entityType']] += 1
+                        if has_ids_with_id_and_scheme:
+                            count_entity_statements_types_with_any_identifier_with_id_and_scheme[statement['entityType']] += 1 # noqa
         elif statement_type == 'personStatement':
             count_person_statements += 1
             if 'personType' in statement and isinstance(statement['personType'], str) \
@@ -69,6 +87,8 @@ def get_statistics(json_data):
     return {
         'count_entity_statements': count_entity_statements,
         'count_entity_statements_types': count_entity_statements_types,
+        'count_entity_statements_types_with_any_identifier': count_entity_statements_types_with_any_identifier,
+        'count_entity_statements_types_with_any_identifier_with_id_and_scheme': count_entity_statements_types_with_any_identifier_with_id_and_scheme,  # noqa
         'count_person_statements': count_person_statements,
         'count_person_statements_types': count_person_statements_types,
         'count_ownership_or_control_statement': count_ownership_or_control_statement,
@@ -166,7 +186,8 @@ class RunAdditionalChecks:
         if isinstance(identifiers, list):
             for identifier in identifiers:
                 if isinstance(identifier, dict):
-                    if not identifier.get('scheme') in self.orgids_prefixes:
+                    if 'scheme' in identifier and identifier['scheme'] \
+                            and not identifier.get('scheme') in self.orgids_prefixes:
                         self.output.append({
                             'type': 'entity_identifier_scheme_not_known',
                             'scheme': identifier.get('scheme'),

@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Statistic: Entity Statements with one or more identifiers, by statement type
+- Statistic: Entity Statements with one or more identifiers with scheme and id, by statement type
+
 ### Changed
 
 - Use lib-cove version 0.5.0, which includes schema validation message changes
+
+### Fixed
+
+- scheme is not required in identifier object so if it's not there, that should not trigger an error
 
 ## [0.3.0] - 2019-03-22
 
