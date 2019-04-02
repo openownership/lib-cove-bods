@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Statistic: Entity Statements with one or more identifiers, by statement type
 - Statistic: Entity Statements with one or more identifiers with scheme and id, by statement type
+- Statistic: Statements referenced in replacesStatements, but have not appeared in the file yet
 
 ### Changed
 

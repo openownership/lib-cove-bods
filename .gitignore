@@ -1,4 +1,7 @@
 /.idea
 /.ve
 __pycache__
-
+/.pytest_cache
+/libcovebods.egg-info
+*~
+*.swp
