@@ -3,5 +3,7 @@
 /.pytest_cache
 /libcovebods.egg-info
 __pycache__
+/.pytest_cache
+/libcovebods.egg-info
 *~
 *.swp

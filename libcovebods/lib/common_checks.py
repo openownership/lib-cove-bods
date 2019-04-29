@@ -11,6 +11,8 @@ def get_statistics(json_data):
         'anonymousEntity': 0,
         'unknownEntity': 0,
     }
+    count_entity_statements_types_with_any_identifier = count_entity_statements_types.copy()
+    count_entity_statements_types_with_any_identifier_with_id_and_scheme = count_entity_statements_types.copy()
     count_person_statements = 0
     count_person_statements_types = {
         'anonymousPerson': 0,
@@ -35,18 +37,36 @@ def get_statistics(json_data):
         'rights-to-surplus-assets': 0,
         'rights-to-profit-or-income': 0,
     }
+    count_replaces_statements_missing = 0
+    statement_ids = set()
 
     for statement in json_data:
         statement_type = statement.get('statementType')
         if statement_type == 'entityStatement':
             count_entity_statements += 1
-            if 'entityType' in statement and isinstance(statement['entityType'], str) \
-                    and statement['entityType'] in count_entity_statements_types:
+            if ('entityType' in statement and isinstance(statement['entityType'], str)
+                    and statement['entityType'] in count_entity_statements_types):
                 count_entity_statements_types[statement['entityType']] += 1
+                if 'identifiers' in statement and isinstance(statement['identifiers'], list):
+                    has_ids = False
+                    has_ids_with_id_and_scheme = False
+                    for identifier in statement['identifiers']:
+                        if isinstance(identifier, dict):
+                            has_ids = True
+                            if ('scheme' in identifier and isinstance(identifier['scheme'], str)
+                                    and identifier['scheme']
+                                    and 'id' in identifier and isinstance(identifier['id'], str)
+                                    and identifier['id']):
+                                has_ids_with_id_and_scheme = True
+
+                    if has_ids:
+                        count_entity_statements_types_with_any_identifier[statement['entityType']] += 1
+                        if has_ids_with_id_and_scheme:
+                            count_entity_statements_types_with_any_identifier_with_id_and_scheme[statement['entityType']] += 1 # noqa
         elif statement_type == 'personStatement':
             count_person_statements += 1
-            if 'personType' in statement and isinstance(statement['personType'], str) \
-                    and statement['personType'] in count_person_statements_types:
+            if ('personType' in statement and isinstance(statement['personType'], str)
+                    and statement['personType'] in count_person_statements_types):
                 count_person_statements_types[statement['personType']] += 1
         elif statement_type == 'ownershipOrControlStatement':
             count_ownership_or_control_statement += 1
@@ -56,19 +76,28 @@ def get_statistics(json_data):
                     count_ownership_or_control_statement_interested_party_with_entity += 1
                 if interested_party.get('describedByPersonStatement'):
                     count_ownership_or_control_statement_interested_party_with_person += 1
-                if interested_party.get('unspecified') and isinstance(interested_party.get('unspecified'), dict) \
-                        and interested_party['unspecified'].get('reason'):
+                if (interested_party.get('unspecified') and isinstance(interested_party.get('unspecified'), dict)
+                        and interested_party['unspecified'].get('reason')):
                     count_ownership_or_control_statement_interested_party_with_unspecified += 1
             if 'interests' in statement and isinstance(statement['interests'], list):
                 for interest in statement['interests']:
                     if isinstance(interest, dict):
-                        if 'type' in interest and isinstance(interest['type'], str) \
-                                and interest['type'] in count_ownership_or_control_statement_interest_statement_types:
+                        if ('type' in interest and isinstance(interest['type'], str)
+                                and interest['type'] in count_ownership_or_control_statement_interest_statement_types):
                             count_ownership_or_control_statement_interest_statement_types[interest['type']] += 1
+
+        if isinstance(statement.get('replacesStatements'), list):
+            for replaces_statement_id in statement.get('replacesStatements'):
+                if replaces_statement_id not in statement_ids:
+                    count_replaces_statements_missing += 1
+        if 'statementID' in statement:
+            statement_ids.add(statement['statementID'])
 
     return {
         'count_entity_statements': count_entity_statements,
         'count_entity_statements_types': count_entity_statements_types,
+        'count_entity_statements_types_with_any_identifier': count_entity_statements_types_with_any_identifier,
+        'count_entity_statements_types_with_any_identifier_with_id_and_scheme': count_entity_statements_types_with_any_identifier_with_id_and_scheme,  # noqa
         'count_person_statements': count_person_statements,
         'count_person_statements_types': count_person_statements_types,
         'count_ownership_or_control_statement': count_ownership_or_control_statement,
@@ -76,6 +105,7 @@ def get_statistics(json_data):
         'count_ownership_or_control_statement_interested_party_with_entity': count_ownership_or_control_statement_interested_party_with_entity, # noqa
         'count_ownership_or_control_statement_interested_party_with_unspecified': count_ownership_or_control_statement_interested_party_with_unspecified, # noqa
         'count_ownership_or_control_statement_interest_statement_types': count_ownership_or_control_statement_interest_statement_types,  # noqa
+        'count_replaces_statements_missing': count_replaces_statements_missing,  # noqa
     }
 
 
@@ -166,7 +196,8 @@ class RunAdditionalChecks:
         if isinstance(identifiers, list):
             for identifier in identifiers:
                 if isinstance(identifier, dict):
-                    if not identifier.get('scheme') in self.orgids_prefixes:
+                    if ('scheme' in identifier and identifier['scheme']
+                            and not identifier['scheme'] in self.orgids_prefixes):
                         self.output.append({
                             'type': 'entity_identifier_scheme_not_known',
                             'scheme': identifier.get('scheme'),
