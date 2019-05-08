@@ -136,6 +136,9 @@ def test_basic_2():
             assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 1
         else:
             assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
+    assert results['statistics']['count_ownership_or_control_statement_by_year'] == {
+        2017: 1
+    }
 
 
 def test_basic_extra_entity_statement_1():
@@ -220,7 +223,7 @@ def test_basic_extra_ownership_or_control_statement_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_extra_ownership_or_control_statement_1.json'
+        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_extra_ownership_or_control_statements_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -241,15 +244,19 @@ def test_basic_extra_ownership_or_control_statement_1():
             assert results['statistics']['count_person_statements_types'][k] == 1
         else:
             assert results['statistics']['count_person_statements_types'][k] == 0
-    assert results['statistics']['count_ownership_or_control_statement'] == 2
-    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 2
+    assert results['statistics']['count_ownership_or_control_statement'] == 3
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 3
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
     for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
         if k == 'shareholding':
-            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 2
+            assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 3
         else:
             assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
+    assert results['statistics']['count_ownership_or_control_statement_by_year'] == {
+        2017: 1,
+        2018: 2
+    }
 
 
 def test_basic_missing_statement_ids():
@@ -921,3 +928,17 @@ def test_replaces_statements():
         else:
             assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 0
     assert results['statistics']['count_replaces_statements_missing'] == 3
+    assert results['statistics']['count_ownership_or_control_statement_by_year'] == {
+        2017: 1,
+        2018: 1
+    }
+
+
+def test_bad_statement_date():
+    cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
+    json_filename = os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), 'fixtures', 'api', 'bad_statement_date.json'
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+    assert results['statistics']['count_ownership_or_control_statement_by_year'] == {2011: 1}

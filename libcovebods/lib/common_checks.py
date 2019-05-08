@@ -1,5 +1,6 @@
 from libcove.lib.common import get_orgids_prefixes
 from libcovebods.lib.common import get_year_from_bods_birthdate_or_deathdate
+from collections import defaultdict
 
 
 def get_statistics(json_data):
@@ -39,6 +40,7 @@ def get_statistics(json_data):
     }
     count_replaces_statements_missing = 0
     statement_ids = set()
+    count_ownership_or_control_statement_by_year = defaultdict(int)
 
     for statement in json_data:
         statement_type = statement.get('statementType')
@@ -86,6 +88,11 @@ def get_statistics(json_data):
                                 and interest['type'] in count_ownership_or_control_statement_interest_statement_types):
                             count_ownership_or_control_statement_interest_statement_types[interest['type']] += 1
 
+            if 'statementDate' in statement:
+                try:
+                    count_ownership_or_control_statement_by_year[int(statement['statementDate'].split('-')[0])] += 1
+                except ValueError:
+                    pass
         if isinstance(statement.get('replacesStatements'), list):
             for replaces_statement_id in statement.get('replacesStatements'):
                 if replaces_statement_id not in statement_ids:
@@ -105,6 +112,7 @@ def get_statistics(json_data):
         'count_ownership_or_control_statement_interested_party_with_entity': count_ownership_or_control_statement_interested_party_with_entity, # noqa
         'count_ownership_or_control_statement_interested_party_with_unspecified': count_ownership_or_control_statement_interested_party_with_unspecified, # noqa
         'count_ownership_or_control_statement_interest_statement_types': count_ownership_or_control_statement_interest_statement_types,  # noqa
+        'count_ownership_or_control_statement_by_year': count_ownership_or_control_statement_by_year,
         'count_replaces_statements_missing': count_replaces_statements_missing,  # noqa
     }
 
