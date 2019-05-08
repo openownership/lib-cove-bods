@@ -257,6 +257,10 @@ def test_basic_extra_ownership_or_control_statement_1():
         2017: 1,
         2018: 2
     }
+    assert results['statistics']['count_ownership_or_control_statement_subject_by_year'] == {
+        2017: 1,
+        2018: 1
+    }
 
 
 def test_basic_missing_statement_ids():
@@ -932,6 +936,10 @@ def test_replaces_statements():
         2017: 1,
         2018: 1
     }
+    assert results['statistics']['count_ownership_or_control_statement_subject_by_year'] == {
+        2017: 1,
+        2018: 1
+    }
 
 
 def test_bad_statement_date():
@@ -941,4 +949,7 @@ def test_bad_statement_date():
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
-    assert results['statistics']['count_ownership_or_control_statement_by_year'] == {2011: 1}
+    assert results['statistics']['count_ownership_or_control_statement_by_year'] == {
+        None: 1,
+        2011: 1
+    }

@@ -41,6 +41,7 @@ def get_statistics(json_data):
     count_replaces_statements_missing = 0
     statement_ids = set()
     count_ownership_or_control_statement_by_year = defaultdict(int)
+    subject_statement_ids_by_year = defaultdict(set)
 
     for statement in json_data:
         statement_type = statement.get('statementType')
@@ -87,12 +88,15 @@ def get_statistics(json_data):
                         if ('type' in interest and isinstance(interest['type'], str)
                                 and interest['type'] in count_ownership_or_control_statement_interest_statement_types):
                             count_ownership_or_control_statement_interest_statement_types[interest['type']] += 1
-
+            try:
+                year = int(statement['statementDate'].split('-')[0])
+            except ValueError:
+                year = None
             if 'statementDate' in statement:
-                try:
-                    count_ownership_or_control_statement_by_year[int(statement['statementDate'].split('-')[0])] += 1
-                except ValueError:
-                    pass
+                count_ownership_or_control_statement_by_year[year] += 1
+            if ('subject' in statement and isinstance(statement['subject'], dict)
+                    and 'describedByEntityStatement' in statement['subject']):
+                subject_statement_ids_by_year[year].add(statement['subject']['describedByEntityStatement'])
         if isinstance(statement.get('replacesStatements'), list):
             for replaces_statement_id in statement.get('replacesStatements'):
                 if replaces_statement_id not in statement_ids:
@@ -113,6 +117,8 @@ def get_statistics(json_data):
         'count_ownership_or_control_statement_interested_party_with_unspecified': count_ownership_or_control_statement_interested_party_with_unspecified, # noqa
         'count_ownership_or_control_statement_interest_statement_types': count_ownership_or_control_statement_interest_statement_types,  # noqa
         'count_ownership_or_control_statement_by_year': count_ownership_or_control_statement_by_year,
+        'count_ownership_or_control_statement_subject_by_year': {
+            year: len(year_set) for year, year_set in subject_statement_ids_by_year.items()},
         'count_replaces_statements_missing': count_replaces_statements_missing,  # noqa
     }
 
