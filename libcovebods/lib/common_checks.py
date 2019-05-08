@@ -42,6 +42,9 @@ def get_statistics(json_data):
     statement_ids = set()
     count_ownership_or_control_statement_by_year = defaultdict(int)
     subject_statement_ids_by_year = defaultdict(set)
+    count_ownership_or_control_statement_interested_party_with_entity_by_year = defaultdict(int)
+    count_ownership_or_control_statement_interested_party_with_person_by_year = defaultdict(int)
+    count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(int)
 
     for statement in json_data:
         statement_type = statement.get('statementType')
@@ -72,26 +75,29 @@ def get_statistics(json_data):
                     and statement['personType'] in count_person_statements_types):
                 count_person_statements_types[statement['personType']] += 1
         elif statement_type == 'ownershipOrControlStatement':
+            try:
+                year = int(statement['statementDate'].split('-')[0])
+            except ValueError:
+                year = None
             count_ownership_or_control_statement += 1
             interested_party = statement.get('interestedParty')
             if isinstance(interested_party, dict):
                 if interested_party.get('describedByEntityStatement'):
                     count_ownership_or_control_statement_interested_party_with_entity += 1
+                    count_ownership_or_control_statement_interested_party_with_entity_by_year[year] += 1
                 if interested_party.get('describedByPersonStatement'):
                     count_ownership_or_control_statement_interested_party_with_person += 1
+                    count_ownership_or_control_statement_interested_party_with_person_by_year[year] += 1
                 if (interested_party.get('unspecified') and isinstance(interested_party.get('unspecified'), dict)
                         and interested_party['unspecified'].get('reason')):
                     count_ownership_or_control_statement_interested_party_with_unspecified += 1
+                    count_ownership_or_control_statement_interested_party_with_unspecified_by_year[year] += 1
             if 'interests' in statement and isinstance(statement['interests'], list):
                 for interest in statement['interests']:
                     if isinstance(interest, dict):
                         if ('type' in interest and isinstance(interest['type'], str)
                                 and interest['type'] in count_ownership_or_control_statement_interest_statement_types):
                             count_ownership_or_control_statement_interest_statement_types[interest['type']] += 1
-            try:
-                year = int(statement['statementDate'].split('-')[0])
-            except ValueError:
-                year = None
             if 'statementDate' in statement:
                 count_ownership_or_control_statement_by_year[year] += 1
             if ('subject' in statement and isinstance(statement['subject'], dict)
@@ -119,6 +125,9 @@ def get_statistics(json_data):
         'count_ownership_or_control_statement_by_year': count_ownership_or_control_statement_by_year,
         'count_ownership_or_control_statement_subject_by_year': {
             year: len(year_set) for year, year_set in subject_statement_ids_by_year.items()},
+        'count_ownership_or_control_statement_interested_party_with_entity_by_year': count_ownership_or_control_statement_interested_party_with_entity_by_year, # noqa
+        'count_ownership_or_control_statement_interested_party_with_person_by_year': count_ownership_or_control_statement_interested_party_with_person_by_year, # noqa
+        'count_ownership_or_control_statement_interested_party_with_unspecified_by_year': count_ownership_or_control_statement_interested_party_with_unspecified_by_year, # noqa
         'count_replaces_statements_missing': count_replaces_statements_missing,  # noqa
     }
 

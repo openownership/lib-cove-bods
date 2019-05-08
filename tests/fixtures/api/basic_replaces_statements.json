@@ -69,7 +69,9 @@
       "describedByEntityStatement": "e1aad1c2-bd30-402c-b4dd-e3927399b29a"
     },
     "interestedParty": {
-      "describedByPersonStatement": "019a93f1-e470-42e9-957b-03559861b2e2"
+      "unspecified": {
+        "reason": "interested-party-has-not-provided-information"
+      }
     },
     "interests": [
       {

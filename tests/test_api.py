@@ -923,9 +923,9 @@ def test_replaces_statements():
         else:
             assert results['statistics']['count_person_statements_types'][k] == 0
     assert results['statistics']['count_ownership_or_control_statement'] == 2
-    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 2
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person'] == 1
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity'] == 0
-    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 0
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified'] == 1
     for k in results['statistics']['count_ownership_or_control_statement_interest_statement_types']:
         if k == 'shareholding':
             assert results['statistics']['count_ownership_or_control_statement_interest_statement_types'][k] == 2
@@ -940,6 +940,14 @@ def test_replaces_statements():
         2017: 1,
         2018: 1
     }
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person_by_year'] == {
+        2018: 1
+    }
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity_by_year'] == {
+    }
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified_by_year'] == {
+        2017: 1
+    }
 
 
 def test_bad_statement_date():
@@ -952,4 +960,16 @@ def test_bad_statement_date():
     assert results['statistics']['count_ownership_or_control_statement_by_year'] == {
         None: 1,
         2011: 1
+    }
+    assert results['statistics']['count_ownership_or_control_statement_subject_by_year'] == {
+        None: 1,
+        2011: 1
+    }
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person_by_year'] == {
+        None: 1,
+        2011: 1
+    }
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity_by_year'] == {
+    }
+    assert results['statistics']['count_ownership_or_control_statement_interested_party_with_unspecified_by_year'] == {
     }
