@@ -22,6 +22,7 @@ setup(
         'requests',
         'json-merge-patch',
         'cached-property',
+        'python-dateutil',
         # TODO Should also have flatten-tool >= v0.5.0 - that is currently in requirements instead.
         # TODO Should also have lib-cove  >= v0.3.1 - that is currently in requirements instead.
     ],
