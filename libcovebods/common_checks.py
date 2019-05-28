@@ -36,11 +36,11 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
     for key, value_list in context['validation_errors']:
         key_data = json.loads(key)
         for value in value_list:
-            problem = {
+            context['problems'].append({
                 'type': 'validate_' + key_data['message_type'],
                 'path_no_number': key_data['path_no_number'],
-            }
-            problem.update(value)
-            context['problems'].append(problem)
-
+                'value': value['value'],
+                'path': value['path'],
+            })
+            
     return context
