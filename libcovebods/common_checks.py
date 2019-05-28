@@ -21,6 +21,13 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
         'problems': additional_checks.copy(),
     })
 
-    # Rewrite
+    # Rewrite additional fields checks into this
+    for data in context['data_only']:
+        context['problems'].append({
+            'type': 'additional_field',
+            'place': data[0],
+            'field': data[1],
+            'count': data[2],
+        })
 
     return context
