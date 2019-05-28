@@ -1,3 +1,5 @@
+import json
+
 from libcove.lib.common import common_checks_context
 from libcovebods.lib.common_checks import get_statistics, RunAdditionalChecks
 from libcovebods.config import LibCoveBODSConfig
@@ -29,5 +31,16 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
             'field': data[1],
             'count': data[2],
         })
+
+    # Rewrite Validation errors into this
+    for key, value_list in context['validation_errors']:
+        key_data = json.loads(key)
+        for value in value_list:
+            problem = {
+                'type': 'validate_' + key_data['message_type'],
+                'path_no_number': key_data['path_no_number'],
+            }
+            problem.update(value)
+            context['problems'].append(problem)
 
     return context
