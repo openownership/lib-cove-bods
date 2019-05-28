@@ -18,6 +18,9 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
         'statistics': get_statistics(json_data),
         'additional_checks': additional_checks,
         'additional_checks_count': len(additional_checks),
+        'problems': additional_checks.copy(),
     })
+
+    # Rewrite
 
     return context
