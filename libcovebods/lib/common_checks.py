@@ -76,7 +76,7 @@ def get_statistics(json_data):
                 count_person_statements_types[statement['personType']] += 1
         elif statement_type == 'ownershipOrControlStatement':
             try:
-                year = int(statement['statementDate'].split('-')[0])
+                year = int(statement.get('statementDate', '').split('-')[0])
             except ValueError:
                 year = None
             count_ownership_or_control_statement += 1
