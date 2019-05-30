@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Statistic: Count of ownership-or-control statements by year
+- Statistic: Count of subjects of ownership-or-control statements by year
+- Statistic: Count of different kinds of interested parties by year
+
 ## [0.4.0] - 2019-04-02
 
 ### Added
