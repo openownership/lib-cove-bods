@@ -1,5 +1,5 @@
 from libcove.lib.common import get_orgids_prefixes
-from libcovebods.lib.common import get_year_from_bods_birthdate_or_deathdate
+from libcovebods.lib.common import get_year_from_bods_birthdate_or_deathdate, is_interest_current
 from collections import defaultdict
 
 
@@ -40,6 +40,7 @@ def get_statistics(json_data):
     }
     count_replaces_statements_missing = 0
     statement_ids = set()
+    current_statement_ids = set()
     count_ownership_or_control_statement_by_year = defaultdict(int)
     subject_statement_ids_by_year = defaultdict(set)
     count_ownership_or_control_statement_interested_party_with_entity_by_year = defaultdict(int)
@@ -98,6 +99,9 @@ def get_statistics(json_data):
                         if ('type' in interest and isinstance(interest['type'], str)
                                 and interest['type'] in count_ownership_or_control_statement_interest_statement_types):
                             count_ownership_or_control_statement_interest_statement_types[interest['type']] += 1
+                        if is_interest_current(interest) and 'statementID' in statement:
+                            current_statement_ids.add(statement['statementID'])
+
             if 'statementDate' in statement:
                 count_ownership_or_control_statement_by_year[year] += 1
             if ('subject' in statement and isinstance(statement['subject'], dict)
@@ -107,6 +111,8 @@ def get_statistics(json_data):
             for replaces_statement_id in statement.get('replacesStatements'):
                 if replaces_statement_id not in statement_ids:
                     count_replaces_statements_missing += 1
+                if replaces_statement_id in current_statement_ids:
+                    current_statement_ids.remove(replaces_statement_id)
         if 'statementID' in statement:
             statement_ids.add(statement['statementID'])
 
@@ -118,6 +124,7 @@ def get_statistics(json_data):
         'count_person_statements': count_person_statements,
         'count_person_statements_types': count_person_statements_types,
         'count_ownership_or_control_statement': count_ownership_or_control_statement,
+        'count_ownership_or_control_statement_current': len(current_statement_ids),
         'count_ownership_or_control_statement_interested_party_with_person': count_ownership_or_control_statement_interested_party_with_person, # noqa
         'count_ownership_or_control_statement_interested_party_with_entity': count_ownership_or_control_statement_interested_party_with_entity, # noqa
         'count_ownership_or_control_statement_interested_party_with_unspecified': count_ownership_or_control_statement_interested_party_with_unspecified, # noqa
