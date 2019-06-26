@@ -46,7 +46,7 @@ def test_basic_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -101,7 +101,7 @@ def test_basic_1_with_birth_year_to_early():
     # So we don't bother testing anything not related to year, as the normal 'basic_1.json' test will do that.
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename, lib_cove_bods_config=config)
@@ -123,7 +123,7 @@ def test_basic_1_with_birth_year_to_late():
     # So we don't bother testing anything not related to year, as the normal 'basic_1.json' test will do that.
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename, lib_cove_bods_config=config)
@@ -139,7 +139,7 @@ def test_basic_2():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_2.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_2.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -177,7 +177,7 @@ def test_basic_extra_entity_statement_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_extra_entity_statement_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_extra_entity_statement_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -216,7 +216,7 @@ def test_basic_extra_person_statement_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_extra_person_statement_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_extra_person_statement_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -255,7 +255,7 @@ def test_basic_extra_ownership_or_control_statement_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_extra_ownership_or_control_statements_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_extra_ownership_or_control_statements_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -299,7 +299,7 @@ def test_basic_missing_statement_ids():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_missing_statement_ids.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_missing_statement_ids.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -339,7 +339,7 @@ def test_basic_statement_id_and_type_errors():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_statement_id_and_type_errors.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_statement_id_and_type_errors.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -381,7 +381,7 @@ def test_additional_fields_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_additional_fields_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_additional_fields_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -418,7 +418,7 @@ def test_basic_missing_entity_statement_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_missing_entity_statement_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_missing_entity_statement_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -456,7 +456,7 @@ def test_basic_missing_entity_statement_2():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_missing_entity_statement_2.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_missing_entity_statement_2.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -494,7 +494,7 @@ def test_basic_missing_person_statement_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_missing_person_statement_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_missing_person_statement_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -532,7 +532,7 @@ def test_basic_1_wrong_order_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_1_wrong_order_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_1_wrong_order_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -573,7 +573,7 @@ def test_basic_1_wrong_order_2():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_1_wrong_order_2.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_1_wrong_order_2.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -614,7 +614,7 @@ def test_basic_2_wrong_order_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_2_wrong_order_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_2_wrong_order_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -652,7 +652,7 @@ def test_basic_bad_identifier_scheme():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_bad_identifier_scheme.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_bad_identifier_scheme.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -692,7 +692,7 @@ def test_badfile_all_validation_errors():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'badfile_all_validation_errors.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'badfile_all_validation_errors.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -717,7 +717,7 @@ def test_basic_anonymous_person_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_anonymous_person_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_anonymous_person_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -753,7 +753,7 @@ def test_unknown_basic_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_unknown_person_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_unknown_person_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -789,7 +789,7 @@ def test_basic_unknown_owner_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_unknown_owner_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_unknown_owner_1.json'
     )
     results = bods_json_output(cove_temp_folder, json_filename)
 
@@ -821,7 +821,7 @@ def test_basic_duplicate_statement_id_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_duplicate_statement_id_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_duplicate_statement_id_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -862,7 +862,7 @@ def test_basic_entity_with_no_ids_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_entity_with_no_ids_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_entity_with_no_ids_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -903,7 +903,7 @@ def test_basic_basic_entity_with_id_with_scheme_name_1():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_entity_with_id_with_scheme_name_1.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_entity_with_id_with_scheme_name_1.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -947,7 +947,7 @@ def test_replaces_statements():
 
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'basic_replaces_statements.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'basic_replaces_statements.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -1012,7 +1012,7 @@ def test_replaces_statements():
 def test_bad_statement_date():
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', 'bad_statement_date.json'
+        os.path.realpath(__file__)), 'fixtures', '0.1', 'bad_statement_date.json'
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -1041,7 +1041,7 @@ def test_bad_statement_date():
 def test_basic_end_date(filename, interests_shareholding, current_statements):
     cove_temp_folder = tempfile.mkdtemp(prefix='lib-cove-bods-tests-', dir=tempfile.gettempdir())
     json_filename = os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), 'fixtures', 'api', filename
+        os.path.realpath(__file__)), 'fixtures', '0.1', filename
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)

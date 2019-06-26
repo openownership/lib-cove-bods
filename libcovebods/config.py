@@ -9,7 +9,7 @@ _schema_folder = os.path.join(os.path.dirname(
 )
 
 LIB_COVE_BODS_CONFIG_DEFAULT.update({
-    'schema_url': os.path.join(_schema_folder, 'schema.json'),
+    'schema_url': os.path.join(_schema_folder, 'schema-0-1-0.json'),
     'schema_url_host': _schema_folder,
     # These default values are very wide on purpose. It is left to apps using this to tighten them up.
     'bods_additional_checks_person_birthdate_min_year': 1,
