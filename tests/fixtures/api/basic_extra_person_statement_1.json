@@ -11,7 +11,9 @@
         "scheme": "GB-COH",
         "id": "07444723"
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "019a93f1-e470-42e9-957b-03559861b2e2",
@@ -31,7 +33,7 @@
         "familyName": "Taggart"
       },
       {
-        "type": "aka",
+        "type": "alternative",
         "fullName": "Chris Taggart"
       }
     ],
@@ -43,7 +45,9 @@
         "country": "GB",
         "postCode": "N3 1LF"
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "891298d0-9b97-4d46-b776-d98927d72580",
@@ -63,7 +67,7 @@
         "familyName": "Draper"
       },
       {
-        "type": "aka",
+        "type": "alternative",
         "fullName": "Bobbie"
       }
     ],
@@ -75,7 +79,9 @@
         "country": "GB",
         "postCode": "N3 1LF"
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "fbfd0547-d0c6-4a00-b559-5c5e91c34f5c",
@@ -97,6 +103,8 @@
           "exact": 100
         }
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   }
 ]

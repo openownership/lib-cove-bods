@@ -1,24 +1,171 @@
 [
-{},
-{"statementType": "bad statement type"},
-{"statementType": "personStatement"},
-{"statementType": {}},
-{"statementType": "personStatement", "statementID": 100},
-{"statementType": "personStatement", "statementID": "tooshort"},
-{"statementType": "personStatement", "statementID": "too long long long long long long long long long long long long long long long long"},
-{"statementType": "personStatement", "replacesStatements": ["tooshort"]},
-{"statementType": "personStatement", "replacesStatements": ["too long long long long long long long long long long long long long long long long"]},
-{"statementType": "personStatement", "replacesStatements": "not an array"},
-{"statementType": "personStatement", "statementDate": "not a date"},
-{"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "personType": "bad person type"},
-{"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "birthDate": "not a date"},
-{"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "source":{"retrievedAt": "not a date-time"}},
-{"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "missingPersonReason": "no missingPersonType"},
-{"statementType": "personStatement", "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6", "identifiers":[{}]},
-{"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "interests": [{"share": {"exact": "not a number", "minimum":-1, "maximum":101}}]},
-{"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "interests": {"share": {"exact": "not a number", "minimum":-1, "maximum":101}}},
-{"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "interests": ["not an object"]},
-{"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "interests": [{"share": {"exclusiveMinimum": "not a bool"}}]},
-{"statementType": "ownershipOrControlStatement", "statementID": "772099ea-419f-418b-b6b8-98492e5516bb", "annotations":[{"motivation": "not on open list"}]},
-{"statementType": "entityStatement", "statementID": "a484ec70-ef24-45ca-ae2a-52453ca2fe9b", "uri": "not a uri"}
+  {},
+  {
+    "statementType": "bad statement type",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": {},
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "statementID": 100,
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "statementID": "tooshort",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "statementID": "too long long long long long long long long long long long long long long long long",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "replacesStatements": [
+      "tooshort"
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "replacesStatements": [
+      "too long long long long long long long long long long long long long long long long"
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "replacesStatements": "not an array",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "statementDate": "not a date",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6",
+    "personType": "bad person type",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6",
+    "birthDate": "not a date",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6",
+    "source": {
+      "retrievedAt": "not a date-time"
+    },
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6",
+    "missingPersonReason": "no missingPersonType",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "personStatement",
+    "statementID": "2f957a72-caaa-4363-bf45-1257f1b57db6",
+    "identifiers": [
+      {}
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "ownershipOrControlStatement",
+    "statementID": "772099ea-419f-418b-b6b8-98492e5516bb",
+    "interests": [
+      {
+        "share": {
+          "exact": "not a number",
+          "minimum": -1,
+          "maximum": 101
+        }
+      }
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "ownershipOrControlStatement",
+    "statementID": "772099ea-419f-418b-b6b8-98492e5516bb",
+    "interests": {
+      "share": {
+        "exact": "not a number",
+        "minimum": -1,
+        "maximum": 101
+      }
+    },
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "ownershipOrControlStatement",
+    "statementID": "772099ea-419f-418b-b6b8-98492e5516bb",
+    "interests": [
+      "not an object"
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "ownershipOrControlStatement",
+    "statementID": "772099ea-419f-418b-b6b8-98492e5516bb",
+    "interests": [
+      {
+        "share": {
+          "exclusiveMinimum": "not a bool"
+        }
+      }
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "ownershipOrControlStatement",
+    "statementID": "772099ea-419f-418b-b6b8-98492e5516bb",
+    "annotations": [
+      {
+        "motivation": "not on open list"
+      }
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  },
+  {
+    "statementType": "entityStatement",
+    "statementID": "a484ec70-ef24-45ca-ae2a-52453ca2fe9b",
+    "uri": "not a uri",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
+  }
 ]

@@ -47,10 +47,10 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
         error = json.loads(json_key, object_pairs_hook=OrderedDict)
 
         e_validator = error['validator']
-        e_validator_value = error['validator_value']
+        e_validator_value = error.get('validator_value')
         validator_type = error['message_type']
-        null_clause = error['null_clause']
-        header = error['header_extra']
+        null_clause = error.get('null_clause')
+        header = error.get('header_extra')
 
         message = None
         message_safe = None

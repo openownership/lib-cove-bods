@@ -5,7 +5,9 @@
     "statementDate": "2017-11-18",
     "entityType": "registeredEntity",
     "name": "CHRINON LTD",
-    "foundingDate": "2010-11-18"
+    "foundingDate": "2010-11-18",
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "019a93f1-e470-42e9-957b-03559861b2e2",
@@ -25,7 +27,7 @@
         "familyName": "Taggart"
       },
       {
-        "type": "aka",
+        "type": "alternative",
         "fullName": "Chris Taggart"
       }
     ],
@@ -37,7 +39,9 @@
         "country": "GB",
         "postCode": "N3 1LF"
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "fbfd0547-d0c6-4a00-b559-5c5e91c34f5c",
@@ -59,6 +63,8 @@
           "exact": 100
         }
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   }
 ]

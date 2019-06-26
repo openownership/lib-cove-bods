@@ -11,7 +11,9 @@
         "scheme": "GB-COH",
         "id": "07444723"
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "fbfd0547-d0c6-4a00-b559-5c5e91c34f5c",
@@ -33,7 +35,9 @@
           "exact": 100
         }
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "9bf27aa7-f372-41d7-9429-1bcd8b0f475d",
@@ -47,6 +51,8 @@
         "scheme": "GB-COH",
         "id": "07444353"
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   }
 ]

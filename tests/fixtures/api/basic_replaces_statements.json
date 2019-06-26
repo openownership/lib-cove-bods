@@ -11,7 +11,9 @@
         "scheme": "GB-COH",
         "id": "07444723"
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "1dc0e987-5c57-4a1c-b3ad-61353b66a9b7",
@@ -26,7 +28,9 @@
         "id": "07444723"
       }
     ],
-    "replacesStatements": ["e1aad1c2-bd30-402c-b4dd-e3927399b29a", "bbddbabd-be42-42f5-a884-ad878a93e285"]
+    "replacesStatements": ["e1aad1c2-bd30-402c-b4dd-e3927399b29a", "bbddbabd-be42-42f5-a884-ad878a93e285"],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "019a93f1-e470-42e9-957b-03559861b2e2",
@@ -46,7 +50,7 @@
         "familyName": "Taggart"
       },
       {
-        "type": "aka",
+        "type": "alternative",
         "fullName": "Chris Taggart"
       }
     ],
@@ -59,7 +63,9 @@
         "postCode": "N3 1LF"
       }
     ],
-    "replacesStatements": ["ec68cbaa-be7f-4b08-826a-491c4d56f2a1", "e48e77de-d95e-48c5-a78b-dc823e3e3808"]
+    "replacesStatements": ["ec68cbaa-be7f-4b08-826a-491c4d56f2a1", "e48e77de-d95e-48c5-a78b-dc823e3e3808"],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "f1789ef5-000c-4ccf-a4ed-55256b43df90",
@@ -83,7 +89,9 @@
           "exact": 100
         }
       }
-    ]
+    ],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   },
   {
     "statementID": "fbfd0547-d0c6-4a00-b559-5c5e91c34f5c",
@@ -106,6 +114,8 @@
         }
       }
     ],
-    "replacesStatements": ["f1789ef5-000c-4ccf-a4ed-55256b43df90"]
+    "replacesStatements": ["f1789ef5-000c-4ccf-a4ed-55256b43df90"],
+    "publicationDetails": {"publicationDate": "2019-06-26", "bodsVersion": "0.2", "publisher": {"name": "ACME Test Data Ltd"}},
+    "isComponent": false
   }
 ]
