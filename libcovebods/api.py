@@ -28,7 +28,7 @@ def bods_json_output(output_dir, file, file_type=None, json_data=None,
                 except ValueError:
                     raise APIException('The file looks like invalid json')
 
-        schema_bods = SchemaBODS(lib_cove_bods_config=lib_cove_bods_config)
+        schema_bods = SchemaBODS(json_data=json_data, lib_cove_bods_config=lib_cove_bods_config)
 
     else:
 
