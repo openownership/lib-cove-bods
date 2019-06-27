@@ -3,41 +3,24 @@ from libcovebods.lib.common import get_year_from_bods_birthdate_or_deathdate, is
 from collections import defaultdict
 
 
-def get_statistics(json_data):
+def get_statistics(schema_object, json_data):
     count_entity_statements = 0
-    count_entity_statements_types = {
-        'registeredEntity': 0,
-        'legalEntity': 0,
-        'arrangement': 0,
-        'anonymousEntity': 0,
-        'unknownEntity': 0,
-    }
+    count_entity_statements_types = {}
+    for value in schema_object.get_entity_statement_types_list():
+        count_entity_statements_types[value] = 0
     count_entity_statements_types_with_any_identifier = count_entity_statements_types.copy()
     count_entity_statements_types_with_any_identifier_with_id_and_scheme = count_entity_statements_types.copy()
     count_person_statements = 0
-    count_person_statements_types = {
-        'anonymousPerson': 0,
-        'unknownPerson': 0,
-        'knownPerson': 0,
-    }
+    count_person_statements_types = {}
+    for value in schema_object.get_person_statement_types_list():
+        count_person_statements_types[value] = 0
     count_ownership_or_control_statement = 0
     count_ownership_or_control_statement_interested_party_with_person = 0
     count_ownership_or_control_statement_interested_party_with_entity = 0
     count_ownership_or_control_statement_interested_party_with_unspecified = 0
-    count_ownership_or_control_statement_interest_statement_types = {
-        'shareholding': 0,
-        'voting-rights': 0,
-        'appointment-of-board': 0,
-        'influence-or-control': 0,
-        'senior-managing-official': 0,
-        'settlor-of-trust': 0,
-        'trustee-of-trust': 0,
-        'protector-of-trust': 0,
-        'beneficiary-of-trust': 0,
-        'other-influence-or-control-of-trust': 0,
-        'rights-to-surplus-assets': 0,
-        'rights-to-profit-or-income': 0,
-    }
+    count_ownership_or_control_statement_interest_statement_types = {}
+    for value in schema_object.get_ownership_or_control_statement_interest_statement_types_list():
+        count_ownership_or_control_statement_interest_statement_types[value] = 0
     count_replaces_statements_missing = 0
     statement_ids = set()
     current_statement_ids = set()

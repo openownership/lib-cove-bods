@@ -21,3 +21,18 @@ class SchemaBODS(SchemaJsonMixin):
                     self.release_pkg_schema_url = lib_cove_bods_config.config['schema_versions'][version]['schema_url']
                     self.schema_host = lib_cove_bods_config.config['schema_versions'][version]['schema_url_host']
                     self.schema_version = version
+
+    def get_entity_statement_types_list(self):
+        for statement_schema in self._release_pkg_schema_obj['items']['oneOf']:
+            if statement_schema['properties']['statementType']['enum'][0] == 'entityStatement':
+                return statement_schema['properties']['entityType']['enum']
+
+    def get_person_statement_types_list(self):
+        for statement_schema in self._release_pkg_schema_obj['items']['oneOf']:
+            if statement_schema['properties']['statementType']['enum'][0] == 'personStatement':
+                return statement_schema['properties']['personType']['enum']
+
+    def get_ownership_or_control_statement_interest_statement_types_list(self):
+        for statement_schema in self._release_pkg_schema_obj['items']['oneOf']:
+            if statement_schema['properties']['statementType']['enum'][0] == 'ownershipOrControlStatement':
+                return statement_schema['properties']['interests']['items']['properties']['type']['enum']
