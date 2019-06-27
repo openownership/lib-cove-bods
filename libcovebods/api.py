@@ -34,6 +34,8 @@ def bods_json_output(output_dir, file, file_type=None, json_data=None,
 
         raise Exception("JSON only for now, sorry!")
 
+    context['schema_version'] = schema_bods.schema_version
+
     context = context_api_transform(
         common_checks_bods(context, output_dir, json_data, schema_bods, lib_cove_bods_config=lib_cove_bods_config)
     )

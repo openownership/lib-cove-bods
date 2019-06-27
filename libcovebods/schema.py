@@ -7,6 +7,7 @@ class SchemaBODS(SchemaJsonMixin):
         # The default schema we use ...
         self.release_pkg_schema_url = lib_cove_bods_config.config['schema_url']
         self.schema_host = lib_cove_bods_config.config['schema_url_host']
+        self.schema_version = lib_cove_bods_config.config['schema_version']
         # ... unless the data specifies a version.
         if isinstance(json_data, list) and len(json_data) > 0:
             statement = json_data[0]
@@ -19,3 +20,4 @@ class SchemaBODS(SchemaJsonMixin):
                 if version in lib_cove_bods_config.config['schema_versions']:
                     self.release_pkg_schema_url = lib_cove_bods_config.config['schema_versions'][version]['schema_url']
                     self.schema_host = lib_cove_bods_config.config['schema_versions'][version]['schema_url_host']
+                    self.schema_version = version

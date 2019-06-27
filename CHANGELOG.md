@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Support for schema version 0.2.
   If no meta information is in the data, 0.1 is assumed and work happens as before.
+  - Add new schema_version key for reporting https://github.com/openownership/lib-cove-bods/issues/28
 - Statistic: Count of current ownership/control statements
 - Statistic: Count of ownership-or-control statements by year
 - Statistic: Count of subjects of ownership-or-control statements by year

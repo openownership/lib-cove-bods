@@ -12,6 +12,7 @@ LIB_COVE_BODS_CONFIG_DEFAULT.update({
     # These details are used if the data does not specify a version
     'schema_url': os.path.join(_schema_folder, 'schema-0-1-0.json'),
     'schema_url_host': _schema_folder,
+    'schema_version': '0.1',
     # But from 0.2 onwards, data should specify a version
     'schema_versions': {
         '0.2': {
