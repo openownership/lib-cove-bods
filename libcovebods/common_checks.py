@@ -105,7 +105,7 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
     additional_checks = RunAdditionalChecks(json_data, lib_cove_bods_config).run()
 
     context.update({
-        'statistics': get_statistics(json_data),
+        'statistics': get_statistics(schema_obj, json_data),
         'additional_checks': additional_checks,
         'additional_checks_count': len(additional_checks),
     })
