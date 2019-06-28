@@ -4,16 +4,22 @@ from collections import defaultdict
 
 
 def get_statistics(schema_object, json_data):
+
+    # Initialise Variables to hold results
+    # .... entities
     count_entity_statements = 0
     count_entity_statements_types = {}
     for value in schema_object.get_entity_statement_types_list():
         count_entity_statements_types[value] = 0
     count_entity_statements_types_with_any_identifier = count_entity_statements_types.copy()
     count_entity_statements_types_with_any_identifier_with_id_and_scheme = count_entity_statements_types.copy()
+    # .... people
     count_person_statements = 0
     count_person_statements_types = {}
     for value in schema_object.get_person_statement_types_list():
         count_person_statements_types[value] = 0
+    count_person_statements_have_pep_status = 0
+    # .... ownership or control
     count_ownership_or_control_statement = 0
     count_ownership_or_control_statement_interested_party_with_person = 0
     count_ownership_or_control_statement_interested_party_with_entity = 0
@@ -30,6 +36,7 @@ def get_statistics(schema_object, json_data):
     count_ownership_or_control_statement_interested_party_with_person_by_year = defaultdict(int)
     count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(int)
 
+    # Process data one statement at a time
     for statement in json_data:
         statement_type = statement.get('statementType')
         if statement_type == 'entityStatement':
@@ -58,6 +65,9 @@ def get_statistics(schema_object, json_data):
             if ('personType' in statement and isinstance(statement['personType'], str)
                     and statement['personType'] in count_person_statements_types):
                 count_person_statements_types[statement['personType']] += 1
+            if schema_object.schema_version != '0.1':
+                if 'hasPepStatus' in statement and statement['hasPepStatus']:
+                    count_person_statements_have_pep_status += 1
         elif statement_type == 'ownershipOrControlStatement':
             try:
                 year = int(statement.get('statementDate', '').split('-')[0])
@@ -99,7 +109,8 @@ def get_statistics(schema_object, json_data):
         if 'statementID' in statement:
             statement_ids.add(statement['statementID'])
 
-    return {
+    # Return Results
+    data = {
         'count_entity_statements': count_entity_statements,
         'count_entity_statements_types': count_entity_statements_types,
         'count_entity_statements_types_with_any_identifier': count_entity_statements_types_with_any_identifier,
@@ -120,6 +131,9 @@ def get_statistics(schema_object, json_data):
         'count_ownership_or_control_statement_interested_party_with_unspecified_by_year': count_ownership_or_control_statement_interested_party_with_unspecified_by_year, # noqa
         'count_replaces_statements_missing': count_replaces_statements_missing,  # noqa
     }
+    if schema_object.schema_version != '0.1':
+        data['count_person_statements_have_pep_status'] = count_person_statements_have_pep_status
+    return data
 
 
 class RunAdditionalChecks:
