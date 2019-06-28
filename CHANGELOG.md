@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - https://github.com/openownership/lib-cove-bods/pull/5
   - This adds translation issues, human messages and a requirement for Django; it was not intended that these should be in this library but as discussed in the pull request we added it hopefully temporarily.
 - Statistic: hasPepStatus (0.2 only) https://github.com/openownership/lib-cove-bods/issues/29
+- Statistic: pepStatusDetails.missingInfoReason (0.2 only) https://github.com/openownership/lib-cove-bods/issues/30
 - Additional Check: inconsistent bodsVersion https://github.com/openownership/lib-cove-bods/issues/27
 
 ## [0.4.0] - 2019-04-02

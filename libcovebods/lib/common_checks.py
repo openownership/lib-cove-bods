@@ -19,6 +19,7 @@ def get_statistics(schema_object, json_data):
     for value in schema_object.get_person_statement_types_list():
         count_person_statements_types[value] = 0
     count_person_statements_have_pep_status = 0
+    count_person_statements_have_pep_status_and_reason_missing_info = 0
     # .... ownership or control
     count_ownership_or_control_statement = 0
     count_ownership_or_control_statement_interested_party_with_person = 0
@@ -68,6 +69,9 @@ def get_statistics(schema_object, json_data):
             if schema_object.schema_version != '0.1':
                 if 'hasPepStatus' in statement and statement['hasPepStatus']:
                     count_person_statements_have_pep_status += 1
+                    if 'pepStatusDetails' in statement and isinstance(statement['pepStatusDetails'], list):
+                        if [x for x in statement['pepStatusDetails'] if x.get('missingInfoReason')]:
+                            count_person_statements_have_pep_status_and_reason_missing_info += 1
         elif statement_type == 'ownershipOrControlStatement':
             try:
                 year = int(statement.get('statementDate', '').split('-')[0])
@@ -133,6 +137,8 @@ def get_statistics(schema_object, json_data):
     }
     if schema_object.schema_version != '0.1':
         data['count_person_statements_have_pep_status'] = count_person_statements_have_pep_status
+        data['count_person_statements_have_pep_status_and_reason_missing_info'] = \
+            count_person_statements_have_pep_status_and_reason_missing_info
     return data
 
 
