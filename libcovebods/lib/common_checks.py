@@ -4,16 +4,23 @@ from collections import defaultdict
 
 
 def get_statistics(schema_object, json_data):
+
+    # Initialise Variables to hold results
+    # .... entities
     count_entity_statements = 0
     count_entity_statements_types = {}
     for value in schema_object.get_entity_statement_types_list():
         count_entity_statements_types[value] = 0
     count_entity_statements_types_with_any_identifier = count_entity_statements_types.copy()
     count_entity_statements_types_with_any_identifier_with_id_and_scheme = count_entity_statements_types.copy()
+    # .... people
     count_person_statements = 0
     count_person_statements_types = {}
     for value in schema_object.get_person_statement_types_list():
         count_person_statements_types[value] = 0
+    count_person_statements_have_pep_status = 0
+    count_person_statements_have_pep_status_and_reason_missing_info = 0
+    # .... ownership or control
     count_ownership_or_control_statement = 0
     count_ownership_or_control_statement_interested_party_with_person = 0
     count_ownership_or_control_statement_interested_party_with_entity = 0
@@ -30,6 +37,7 @@ def get_statistics(schema_object, json_data):
     count_ownership_or_control_statement_interested_party_with_person_by_year = defaultdict(int)
     count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(int)
 
+    # Process data one statement at a time
     for statement in json_data:
         statement_type = statement.get('statementType')
         if statement_type == 'entityStatement':
@@ -58,6 +66,12 @@ def get_statistics(schema_object, json_data):
             if ('personType' in statement and isinstance(statement['personType'], str)
                     and statement['personType'] in count_person_statements_types):
                 count_person_statements_types[statement['personType']] += 1
+            if schema_object.schema_version != '0.1':
+                if 'hasPepStatus' in statement and statement['hasPepStatus']:
+                    count_person_statements_have_pep_status += 1
+                    if 'pepStatusDetails' in statement and isinstance(statement['pepStatusDetails'], list):
+                        if [x for x in statement['pepStatusDetails'] if x.get('missingInfoReason')]:
+                            count_person_statements_have_pep_status_and_reason_missing_info += 1
         elif statement_type == 'ownershipOrControlStatement':
             try:
                 year = int(statement.get('statementDate', '').split('-')[0])
@@ -99,7 +113,8 @@ def get_statistics(schema_object, json_data):
         if 'statementID' in statement:
             statement_ids.add(statement['statementID'])
 
-    return {
+    # Return Results
+    data = {
         'count_entity_statements': count_entity_statements,
         'count_entity_statements_types': count_entity_statements_types,
         'count_entity_statements_types_with_any_identifier': count_entity_statements_types_with_any_identifier,
@@ -120,13 +135,19 @@ def get_statistics(schema_object, json_data):
         'count_ownership_or_control_statement_interested_party_with_unspecified_by_year': count_ownership_or_control_statement_interested_party_with_unspecified_by_year, # noqa
         'count_replaces_statements_missing': count_replaces_statements_missing,  # noqa
     }
+    if schema_object.schema_version != '0.1':
+        data['count_person_statements_have_pep_status'] = count_person_statements_have_pep_status
+        data['count_person_statements_have_pep_status_and_reason_missing_info'] = \
+            count_person_statements_have_pep_status_and_reason_missing_info
+    return data
 
 
 class RunAdditionalChecks:
 
-    def __init__(self, json_data, lib_cove_bods_config):
+    def __init__(self, json_data, lib_cove_bods_config, schema_object):
         self.json_data = json_data
         self.lib_cove_bods_config = lib_cove_bods_config
+        self.schema_object = schema_object
         self.person_statements_seen = []
         self.person_statements_seen_in_ownership_or_control_statement = []
         self.entity_statements_seen = []
@@ -216,6 +237,14 @@ class RunAdditionalChecks:
                             'scheme': identifier.get('scheme'),
                             'entity_statement': statement.get('statementID'),
                         })
+        schema_version, throw_away_1, throw_away_2 = self.schema_object.get_schema_version_of_statement(statement)
+        if self.schema_object.schema_version != schema_version:
+            self.output.append({
+                'type': 'inconsistent_schema_version_used',
+                'schema_version': schema_version,
+                'statement_type': 'entity',
+                'statement': statement.get('statementID'),
+            })
 
     def _check_person_statement_first_pass(self, statement):
         self.person_statements_seen.append(statement.get('statementID'))
@@ -234,6 +263,14 @@ class RunAdditionalChecks:
                         'year': birth_year,
                         'person_statement': statement.get('statementID'),
                     })
+        schema_version, throw_away_1, throw_away_2 = self.schema_object.get_schema_version_of_statement(statement)
+        if self.schema_object.schema_version != schema_version:
+            self.output.append({
+                'type': 'inconsistent_schema_version_used',
+                'schema_version': schema_version,
+                'statement_type': 'person',
+                'statement': statement.get('statementID'),
+            })
 
     def _check_ownership_or_control_statement_first_pass(self, statement):
         self.ownership_or_control_statements_seen.append(statement.get('statementID'))
@@ -271,6 +308,14 @@ class RunAdditionalChecks:
                         'entity_statement_out_of_order': subject_described_by_entity_statement,
                         'seen_in_ownership_or_control_statement': statement.get('statementID'),
                     })
+        schema_version, throw_away_1, throw_away_2 = self.schema_object.get_schema_version_of_statement(statement)
+        if self.schema_object.schema_version != schema_version:
+            self.output.append({
+                'type': 'inconsistent_schema_version_used',
+                'schema_version': schema_version,
+                'statement_type': 'ownership_or_control',
+                'statement': statement.get('statementID'),
+            })
 
     def _check_entity_statement_second_pass(self, statement):
         if statement.get('statementID') not in self.entity_statements_seen_in_ownership_or_control_statement:
