@@ -282,6 +282,17 @@ class RunAdditionalChecks:
                 'statement_type': 'person',
                 'statement': statement.get('statementID'),
             })
+        if self.schema_object.schema_version != '0.1':
+            if 'addresses' in statement and isinstance(statement['addresses'], list):
+                for address in statement['addresses']:
+                    if 'type' in address and address['type'] not in \
+                            self.schema_object.get_address_types_allowed_in_person_statement():
+                        self.output.append({
+                            'type': 'wrong_address_type_used',
+                            'address_type': address['type'],
+                            'statement_type': 'person',
+                            'statement': statement.get('statementID'),
+                        })
 
     def _check_ownership_or_control_statement_first_pass(self, statement):
         self.ownership_or_control_statements_seen.append(statement.get('statementID'))

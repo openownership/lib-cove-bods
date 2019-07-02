@@ -46,3 +46,6 @@ class SchemaBODS(SchemaJsonMixin):
 
     def get_address_types_allowed_in_entity_statement(self):
         return ('registered', 'business', 'alternative')
+
+    def get_address_types_allowed_in_person_statement(self):
+        return ('placeOfBirth', 'residence', 'service', 'alternative')
