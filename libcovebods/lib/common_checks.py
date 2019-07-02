@@ -247,6 +247,7 @@ class RunAdditionalChecks:
             })
         if self.schema_object.schema_version != '0.1':
             if 'addresses' in statement and isinstance(statement['addresses'], list):
+                self._check_addresses_list_for_alternatives(statement)
                 for address in statement['addresses']:
                     if 'type' in address and address['type'] not in \
                             self.schema_object.get_address_types_allowed_in_entity_statement():
@@ -284,6 +285,7 @@ class RunAdditionalChecks:
             })
         if self.schema_object.schema_version != '0.1':
             if 'addresses' in statement and isinstance(statement['addresses'], list):
+                self._check_addresses_list_for_alternatives(statement)
                 for address in statement['addresses']:
                     if 'type' in address and address['type'] not in \
                             self.schema_object.get_address_types_allowed_in_person_statement():
@@ -392,3 +394,26 @@ class RunAdditionalChecks:
                 self.statement_ids_counted[statement_id] += 1
             else:
                 self.statement_ids_counted[statement_id] = 1
+
+    def _check_addresses_list_for_alternatives(self, statement):
+        # Does this addresses list have any alternative?
+        found_alternative = False
+        for address in statement['addresses']:
+            if 'type' in address and address['type'] == 'alternative':
+                found_alternative = True
+
+        if not found_alternative:
+            return
+
+        # It does! Well, if it has an alternative it must have another address that is not an alternative
+        found_non_alternative = False
+        for address in statement['addresses']:
+            if 'type' in address and address['type'] != 'alternative':
+                found_non_alternative = True
+
+        if not found_non_alternative:
+            self.output.append({
+                'type': 'alternative_address_with_no_other_address_types',
+                'statement_type': ('person' if statement.get('statementType') == 'personStatement' else 'entity'),
+                'statement': statement.get('statementID'),
+            })
