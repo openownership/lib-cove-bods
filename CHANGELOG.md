@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Statistic: hasPepStatus (0.2 only) https://github.com/openownership/lib-cove-bods/issues/29
 - Statistic: pepStatusDetails.missingInfoReason (0.2 only) https://github.com/openownership/lib-cove-bods/issues/30
 - Additional Check: inconsistent bodsVersion https://github.com/openownership/lib-cove-bods/issues/27
+- Additional Check: address types (0.2 only) https://github.com/openownership/lib-cove-bods/issues/22
 
 ## [0.4.0] - 2019-04-02
 

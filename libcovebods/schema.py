@@ -43,3 +43,6 @@ class SchemaBODS(SchemaJsonMixin):
         # In which case, default schema
         return self.lib_cove_bods_config.config['schema_version'], self.lib_cove_bods_config.config['schema_url'], \
             self.lib_cove_bods_config.config['schema_version']
+
+    def get_address_types_allowed_in_entity_statement(self):
+        return ('registered', 'business', 'alternative')
