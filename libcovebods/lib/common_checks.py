@@ -340,6 +340,13 @@ class RunAdditionalChecks:
                 'statement_type': 'ownership_or_control',
                 'statement': statement.get('statementID'),
             })
+        if self.schema_object.schema_version != '0.1':
+            if 'isComponent' in statement and statement['isComponent'] \
+                    and 'componentStatementIDs' in statement and statement['componentStatementIDs']:
+                self.output.append({
+                    'type': 'ownership_or_control_statement_has_is_compontent_and_component_statement_ids',
+                    'statement': statement.get('statementID'),
+                })
 
     def _check_entity_statement_second_pass(self, statement):
         if statement.get('statementID') not in self.entity_statements_seen_in_ownership_or_control_statement:
