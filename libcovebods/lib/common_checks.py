@@ -394,6 +394,17 @@ class RunAdditionalChecks:
                         'entity_statement_missing': subject_described_by_entity_statement,
                         'seen_in_ownership_or_control_statement': statement.get('statementID'),
                     })
+        if self.schema_object.schema_version != '0.1':
+            if 'componentStatementIDs' in statement and isinstance(statement['componentStatementIDs'], list):
+                for component_statement_id in statement['componentStatementIDs']:
+                    if component_statement_id not in self.person_statements_seen and \
+                            component_statement_id not in self.entity_statements_seen and \
+                            component_statement_id not in self.ownership_or_control_statements_seen:
+                        self.output.append({
+                            'type': 'component_statement_id_not_in_package',
+                            'component_statement_id': component_statement_id,
+                            'seen_in_ownership_or_control_statement': statement.get('statementID'),
+                        })
 
     def _add_statement_ids_to_statement_ids_counted(self, statement_ids):
         for statement_id in statement_ids:
