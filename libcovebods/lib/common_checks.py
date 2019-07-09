@@ -153,6 +153,7 @@ class RunAdditionalChecks:
         self.entity_statements_seen = []
         self.entity_statements_seen_in_ownership_or_control_statement = []
         self.ownership_or_control_statements_seen = []
+        self.statement_ids_seen_in_component_statement_ids = []
         self.output = []
         self.possible_out_of_order_statements = []
         self.orgids_prefixes = []
@@ -164,6 +165,7 @@ class RunAdditionalChecks:
         self.entity_statements_seen = []
         self.entity_statements_seen_in_ownership_or_control_statement = []
         self.ownership_or_control_statements_seen = []
+        self.statement_ids_seen_in_component_statement_ids = []
         self.output = []
         self.possible_out_of_order_statements = []
         self.orgids_prefixes = get_orgids_prefixes()
@@ -257,6 +259,13 @@ class RunAdditionalChecks:
                             'statement_type': 'entity',
                             'statement': statement.get('statementID'),
                         })
+            if statement.get('isComponent') and statement.get('statementID') \
+                    and statement.get('statementID') in self.statement_ids_seen_in_component_statement_ids:
+                self.output.append({
+                    'type': 'statement_is_component_but_is_after_use_in_component_statement_id',
+                    'statement_type': 'entity',
+                    'statement': statement.get('statementID'),
+                })
 
     def _check_person_statement_first_pass(self, statement):
         self.person_statements_seen.append(statement.get('statementID'))
@@ -295,6 +304,13 @@ class RunAdditionalChecks:
                             'statement_type': 'person',
                             'statement': statement.get('statementID'),
                         })
+            if statement.get('isComponent') and statement.get('statementID') \
+                    and statement.get('statementID') in self.statement_ids_seen_in_component_statement_ids:
+                self.output.append({
+                    'type': 'statement_is_component_but_is_after_use_in_component_statement_id',
+                    'statement_type': 'person',
+                    'statement': statement.get('statementID'),
+                })
 
     def _check_ownership_or_control_statement_first_pass(self, statement):
         self.ownership_or_control_statements_seen.append(statement.get('statementID'))
@@ -347,6 +363,16 @@ class RunAdditionalChecks:
                     'type': 'ownership_or_control_statement_has_is_compontent_and_component_statement_ids',
                     'statement': statement.get('statementID'),
                 })
+            if statement.get('isComponent') and statement.get('statementID') \
+                    and statement.get('statementID') in self.statement_ids_seen_in_component_statement_ids:
+                self.output.append({
+                    'type': 'statement_is_component_but_is_after_use_in_component_statement_id',
+                    'statement_type': 'ownership_or_control',
+                    'statement': statement.get('statementID'),
+                })
+            if 'componentStatementIDs' in statement and not statement.get('isComponent') \
+                    and isinstance(statement['componentStatementIDs'], list):
+                self.statement_ids_seen_in_component_statement_ids.extend(statement['componentStatementIDs'])
 
     def _check_entity_statement_second_pass(self, statement):
         if statement.get('statementID') not in self.entity_statements_seen_in_ownership_or_control_statement:
@@ -354,6 +380,14 @@ class RunAdditionalChecks:
                 'type': 'entity_statement_not_used_in_ownership_or_control_statement',
                 'entity_statement': statement.get('statementID'),
             })
+        if self.schema_object.schema_version != '0.1':
+            if statement.get('isComponent') and statement.get('statementID') \
+                    and statement.get('statementID') not in self.statement_ids_seen_in_component_statement_ids:
+                self.output.append({
+                    'type': 'statement_is_component_but_not_used_in_component_statement_ids',
+                    'statement_type': 'entity',
+                    'statement': statement.get('statementID'),
+                })
 
     def _check_person_statement_second_pass(self, statement):
         if statement.get('statementID') not in self.person_statements_seen_in_ownership_or_control_statement:
@@ -361,6 +395,14 @@ class RunAdditionalChecks:
                 'type': 'person_statement_not_used_in_ownership_or_control_statement',
                 'person_statement': statement.get('statementID'),
             })
+        if self.schema_object.schema_version != '0.1':
+            if statement.get('isComponent') and statement.get('statementID') \
+                    and statement.get('statementID') not in self.statement_ids_seen_in_component_statement_ids:
+                self.output.append({
+                    'type': 'statement_is_component_but_not_used_in_component_statement_ids',
+                    'statement_type': 'person',
+                    'statement': statement.get('statementID'),
+                })
 
     def _check_ownership_or_control_statement_second_pass(self, statement):
         interested_party = statement.get('interestedParty')
@@ -405,6 +447,13 @@ class RunAdditionalChecks:
                             'component_statement_id': component_statement_id,
                             'seen_in_ownership_or_control_statement': statement.get('statementID'),
                         })
+            if statement.get('isComponent') and statement.get('statementID') \
+                    and statement.get('statementID') not in self.statement_ids_seen_in_component_statement_ids:
+                self.output.append({
+                    'type': 'statement_is_component_but_not_used_in_component_statement_ids',
+                    'statement_type': 'ownership_or_control',
+                    'statement': statement.get('statementID'),
+                })
 
     def _add_statement_ids_to_statement_ids_counted(self, statement_ids):
         for statement_id in statement_ids:
