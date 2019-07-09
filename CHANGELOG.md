@@ -31,6 +31,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - https://github.com/openownership/lib-cove-bods/issues/24
   - https://github.com/openownership/lib-cove-bods/issues/23
 
+### Changed
+
+- get_statistics() function becomes GetStatistics class, like the RunAdditionalChecks class
+
 ## [0.4.0] - 2019-04-02
 
 ### Added

@@ -3,143 +3,149 @@ from libcovebods.lib.common import get_year_from_bods_birthdate_or_deathdate, is
 from collections import defaultdict
 
 
-def get_statistics(schema_object, json_data):
+class GetStatistics:
 
-    # Initialise Variables to hold results
-    # .... entities
-    count_entity_statements = 0
-    count_entity_statements_types = {}
-    for value in schema_object.get_entity_statement_types_list():
-        count_entity_statements_types[value] = 0
-    count_entity_statements_types_with_any_identifier = count_entity_statements_types.copy()
-    count_entity_statements_types_with_any_identifier_with_id_and_scheme = count_entity_statements_types.copy()
-    # .... people
-    count_person_statements = 0
-    count_person_statements_types = {}
-    for value in schema_object.get_person_statement_types_list():
-        count_person_statements_types[value] = 0
-    count_person_statements_have_pep_status = 0
-    count_person_statements_have_pep_status_and_reason_missing_info = 0
-    # .... ownership or control
-    count_ownership_or_control_statement = 0
-    count_ownership_or_control_statement_interested_party_with_person = 0
-    count_ownership_or_control_statement_interested_party_with_entity = 0
-    count_ownership_or_control_statement_interested_party_with_unspecified = 0
-    count_ownership_or_control_statement_interest_statement_types = {}
-    for value in schema_object.get_ownership_or_control_statement_interest_statement_types_list():
-        count_ownership_or_control_statement_interest_statement_types[value] = 0
-    count_replaces_statements_missing = 0
-    statement_ids = set()
-    current_statement_ids = set()
-    count_ownership_or_control_statement_by_year = defaultdict(int)
-    subject_statement_ids_by_year = defaultdict(set)
-    count_ownership_or_control_statement_interested_party_with_entity_by_year = defaultdict(int)
-    count_ownership_or_control_statement_interested_party_with_person_by_year = defaultdict(int)
-    count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(int)
+    def __init__(self, json_data, lib_cove_bods_config, schema_object):
+        self.json_data = json_data
+        self.lib_cove_bods_config = lib_cove_bods_config
+        self.schema_object = schema_object
 
-    # Process data one statement at a time
-    for statement in json_data:
-        statement_type = statement.get('statementType')
-        if statement_type == 'entityStatement':
-            count_entity_statements += 1
-            if ('entityType' in statement and isinstance(statement['entityType'], str)
-                    and statement['entityType'] in count_entity_statements_types):
-                count_entity_statements_types[statement['entityType']] += 1
-                if 'identifiers' in statement and isinstance(statement['identifiers'], list):
-                    has_ids = False
-                    has_ids_with_id_and_scheme = False
-                    for identifier in statement['identifiers']:
-                        if isinstance(identifier, dict):
-                            has_ids = True
-                            if ('scheme' in identifier and isinstance(identifier['scheme'], str)
-                                    and identifier['scheme']
-                                    and 'id' in identifier and isinstance(identifier['id'], str)
-                                    and identifier['id']):
-                                has_ids_with_id_and_scheme = True
+    def run(self):
+        # Initialise Variables to hold results
+        # .... entities
+        count_entity_statements = 0
+        count_entity_statements_types = {}
+        for value in self.schema_object.get_entity_statement_types_list():
+            count_entity_statements_types[value] = 0
+        count_entity_statements_types_with_any_identifier = count_entity_statements_types.copy()
+        count_entity_statements_types_with_any_identifier_with_id_and_scheme = count_entity_statements_types.copy()
+        # .... people
+        count_person_statements = 0
+        count_person_statements_types = {}
+        for value in self.schema_object.get_person_statement_types_list():
+            count_person_statements_types[value] = 0
+        count_person_statements_have_pep_status = 0
+        count_person_statements_have_pep_status_and_reason_missing_info = 0
+        # .... ownership or control
+        count_ownership_or_control_statement = 0
+        count_ownership_or_control_statement_interested_party_with_person = 0
+        count_ownership_or_control_statement_interested_party_with_entity = 0
+        count_ownership_or_control_statement_interested_party_with_unspecified = 0
+        count_ownership_or_control_statement_interest_statement_types = {}
+        for value in self.schema_object.get_ownership_or_control_statement_interest_statement_types_list():
+            count_ownership_or_control_statement_interest_statement_types[value] = 0
+        count_replaces_statements_missing = 0
+        statement_ids = set()
+        current_statement_ids = set()
+        count_ownership_or_control_statement_by_year = defaultdict(int)
+        subject_statement_ids_by_year = defaultdict(set)
+        count_ownership_or_control_statement_interested_party_with_entity_by_year = defaultdict(int)
+        count_ownership_or_control_statement_interested_party_with_person_by_year = defaultdict(int)
+        count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(int)
 
-                    if has_ids:
-                        count_entity_statements_types_with_any_identifier[statement['entityType']] += 1
-                        if has_ids_with_id_and_scheme:
-                            count_entity_statements_types_with_any_identifier_with_id_and_scheme[statement['entityType']] += 1 # noqa
-        elif statement_type == 'personStatement':
-            count_person_statements += 1
-            if ('personType' in statement and isinstance(statement['personType'], str)
-                    and statement['personType'] in count_person_statements_types):
-                count_person_statements_types[statement['personType']] += 1
-            if schema_object.schema_version != '0.1':
-                if 'hasPepStatus' in statement and statement['hasPepStatus']:
-                    count_person_statements_have_pep_status += 1
-                    if 'pepStatusDetails' in statement and isinstance(statement['pepStatusDetails'], list):
-                        if [x for x in statement['pepStatusDetails'] if x.get('missingInfoReason')]:
-                            count_person_statements_have_pep_status_and_reason_missing_info += 1
-        elif statement_type == 'ownershipOrControlStatement':
-            try:
-                year = int(statement.get('statementDate', '').split('-')[0])
-            except ValueError:
-                year = None
-            count_ownership_or_control_statement += 1
-            interested_party = statement.get('interestedParty')
-            if isinstance(interested_party, dict):
-                if interested_party.get('describedByEntityStatement'):
-                    count_ownership_or_control_statement_interested_party_with_entity += 1
-                    count_ownership_or_control_statement_interested_party_with_entity_by_year[year] += 1
-                if interested_party.get('describedByPersonStatement'):
-                    count_ownership_or_control_statement_interested_party_with_person += 1
-                    count_ownership_or_control_statement_interested_party_with_person_by_year[year] += 1
-                if (interested_party.get('unspecified') and isinstance(interested_party.get('unspecified'), dict)
-                        and interested_party['unspecified'].get('reason')):
-                    count_ownership_or_control_statement_interested_party_with_unspecified += 1
-                    count_ownership_or_control_statement_interested_party_with_unspecified_by_year[year] += 1
-            if 'interests' in statement and isinstance(statement['interests'], list):
-                for interest in statement['interests']:
-                    if isinstance(interest, dict):
-                        if ('type' in interest and isinstance(interest['type'], str)
-                                and interest['type'] in count_ownership_or_control_statement_interest_statement_types):
-                            count_ownership_or_control_statement_interest_statement_types[interest['type']] += 1
-                        if is_interest_current(interest) and 'statementID' in statement:
-                            current_statement_ids.add(statement['statementID'])
+        # Process data one statement at a time
+        for statement in self.json_data:
+            statement_type = statement.get('statementType')
+            if statement_type == 'entityStatement':
+                count_entity_statements += 1
+                if ('entityType' in statement and isinstance(statement['entityType'], str)
+                        and statement['entityType'] in count_entity_statements_types):
+                    count_entity_statements_types[statement['entityType']] += 1
+                    if 'identifiers' in statement and isinstance(statement['identifiers'], list):
+                        has_ids = False
+                        has_ids_with_id_and_scheme = False
+                        for identifier in statement['identifiers']:
+                            if isinstance(identifier, dict):
+                                has_ids = True
+                                if ('scheme' in identifier and isinstance(identifier['scheme'], str)
+                                        and identifier['scheme']
+                                        and 'id' in identifier and isinstance(identifier['id'], str)
+                                        and identifier['id']):
+                                    has_ids_with_id_and_scheme = True
 
-            if 'statementDate' in statement:
-                count_ownership_or_control_statement_by_year[year] += 1
-            if ('subject' in statement and isinstance(statement['subject'], dict)
-                    and 'describedByEntityStatement' in statement['subject']):
-                subject_statement_ids_by_year[year].add(statement['subject']['describedByEntityStatement'])
-        if isinstance(statement.get('replacesStatements'), list):
-            for replaces_statement_id in statement.get('replacesStatements'):
-                if replaces_statement_id not in statement_ids:
-                    count_replaces_statements_missing += 1
-                if replaces_statement_id in current_statement_ids:
-                    current_statement_ids.remove(replaces_statement_id)
-        if 'statementID' in statement:
-            statement_ids.add(statement['statementID'])
+                        if has_ids:
+                            count_entity_statements_types_with_any_identifier[statement['entityType']] += 1
+                            if has_ids_with_id_and_scheme:
+                                count_entity_statements_types_with_any_identifier_with_id_and_scheme[statement['entityType']] += 1 # noqa
+            elif statement_type == 'personStatement':
+                count_person_statements += 1
+                if ('personType' in statement and isinstance(statement['personType'], str)
+                        and statement['personType'] in count_person_statements_types):
+                    count_person_statements_types[statement['personType']] += 1
+                if self.schema_object.schema_version != '0.1':
+                    if 'hasPepStatus' in statement and statement['hasPepStatus']:
+                        count_person_statements_have_pep_status += 1
+                        if 'pepStatusDetails' in statement and isinstance(statement['pepStatusDetails'], list):
+                            if [x for x in statement['pepStatusDetails'] if x.get('missingInfoReason')]:
+                                count_person_statements_have_pep_status_and_reason_missing_info += 1
+            elif statement_type == 'ownershipOrControlStatement':
+                try:
+                    year = int(statement.get('statementDate', '').split('-')[0])
+                except ValueError:
+                    year = None
+                count_ownership_or_control_statement += 1
+                interested_party = statement.get('interestedParty')
+                if isinstance(interested_party, dict):
+                    if interested_party.get('describedByEntityStatement'):
+                        count_ownership_or_control_statement_interested_party_with_entity += 1
+                        count_ownership_or_control_statement_interested_party_with_entity_by_year[year] += 1
+                    if interested_party.get('describedByPersonStatement'):
+                        count_ownership_or_control_statement_interested_party_with_person += 1
+                        count_ownership_or_control_statement_interested_party_with_person_by_year[year] += 1
+                    if (interested_party.get('unspecified') and isinstance(interested_party.get('unspecified'), dict)
+                            and interested_party['unspecified'].get('reason')):
+                        count_ownership_or_control_statement_interested_party_with_unspecified += 1
+                        count_ownership_or_control_statement_interested_party_with_unspecified_by_year[year] += 1
+                if 'interests' in statement and isinstance(statement['interests'], list):
+                    for interest in statement['interests']:
+                        if isinstance(interest, dict):
+                            if ('type' in interest and isinstance(interest['type'], str)
+                                    and interest['type'] in count_ownership_or_control_statement_interest_statement_types):  # noqa
+                                count_ownership_or_control_statement_interest_statement_types[interest['type']] += 1
+                            if is_interest_current(interest) and 'statementID' in statement:
+                                current_statement_ids.add(statement['statementID'])
 
-    # Return Results
-    data = {
-        'count_entity_statements': count_entity_statements,
-        'count_entity_statements_types': count_entity_statements_types,
-        'count_entity_statements_types_with_any_identifier': count_entity_statements_types_with_any_identifier,
-        'count_entity_statements_types_with_any_identifier_with_id_and_scheme': count_entity_statements_types_with_any_identifier_with_id_and_scheme,  # noqa
-        'count_person_statements': count_person_statements,
-        'count_person_statements_types': count_person_statements_types,
-        'count_ownership_or_control_statement': count_ownership_or_control_statement,
-        'count_ownership_or_control_statement_current': len(current_statement_ids),
-        'count_ownership_or_control_statement_interested_party_with_person': count_ownership_or_control_statement_interested_party_with_person, # noqa
-        'count_ownership_or_control_statement_interested_party_with_entity': count_ownership_or_control_statement_interested_party_with_entity, # noqa
-        'count_ownership_or_control_statement_interested_party_with_unspecified': count_ownership_or_control_statement_interested_party_with_unspecified, # noqa
-        'count_ownership_or_control_statement_interest_statement_types': count_ownership_or_control_statement_interest_statement_types,  # noqa
-        'count_ownership_or_control_statement_by_year': count_ownership_or_control_statement_by_year,
-        'count_ownership_or_control_statement_subject_by_year': {
-            year: len(year_set) for year, year_set in subject_statement_ids_by_year.items()},
-        'count_ownership_or_control_statement_interested_party_with_entity_by_year': count_ownership_or_control_statement_interested_party_with_entity_by_year, # noqa
-        'count_ownership_or_control_statement_interested_party_with_person_by_year': count_ownership_or_control_statement_interested_party_with_person_by_year, # noqa
-        'count_ownership_or_control_statement_interested_party_with_unspecified_by_year': count_ownership_or_control_statement_interested_party_with_unspecified_by_year, # noqa
-        'count_replaces_statements_missing': count_replaces_statements_missing,  # noqa
-    }
-    if schema_object.schema_version != '0.1':
-        data['count_person_statements_have_pep_status'] = count_person_statements_have_pep_status
-        data['count_person_statements_have_pep_status_and_reason_missing_info'] = \
-            count_person_statements_have_pep_status_and_reason_missing_info
-    return data
+                if 'statementDate' in statement:
+                    count_ownership_or_control_statement_by_year[year] += 1
+                if ('subject' in statement and isinstance(statement['subject'], dict)
+                        and 'describedByEntityStatement' in statement['subject']):
+                    subject_statement_ids_by_year[year].add(statement['subject']['describedByEntityStatement'])
+            if isinstance(statement.get('replacesStatements'), list):
+                for replaces_statement_id in statement.get('replacesStatements'):
+                    if replaces_statement_id not in statement_ids:
+                        count_replaces_statements_missing += 1
+                    if replaces_statement_id in current_statement_ids:
+                        current_statement_ids.remove(replaces_statement_id)
+            if 'statementID' in statement:
+                statement_ids.add(statement['statementID'])
+
+        # Return Results
+        data = {
+            'count_entity_statements': count_entity_statements,
+            'count_entity_statements_types': count_entity_statements_types,
+            'count_entity_statements_types_with_any_identifier': count_entity_statements_types_with_any_identifier,
+            'count_entity_statements_types_with_any_identifier_with_id_and_scheme': count_entity_statements_types_with_any_identifier_with_id_and_scheme,  # noqa
+            'count_person_statements': count_person_statements,
+            'count_person_statements_types': count_person_statements_types,
+            'count_ownership_or_control_statement': count_ownership_or_control_statement,
+            'count_ownership_or_control_statement_current': len(current_statement_ids),
+            'count_ownership_or_control_statement_interested_party_with_person': count_ownership_or_control_statement_interested_party_with_person, # noqa
+            'count_ownership_or_control_statement_interested_party_with_entity': count_ownership_or_control_statement_interested_party_with_entity, # noqa
+            'count_ownership_or_control_statement_interested_party_with_unspecified': count_ownership_or_control_statement_interested_party_with_unspecified, # noqa
+            'count_ownership_or_control_statement_interest_statement_types': count_ownership_or_control_statement_interest_statement_types,  # noqa
+            'count_ownership_or_control_statement_by_year': count_ownership_or_control_statement_by_year,
+            'count_ownership_or_control_statement_subject_by_year': {
+                year: len(year_set) for year, year_set in subject_statement_ids_by_year.items()},
+            'count_ownership_or_control_statement_interested_party_with_entity_by_year': count_ownership_or_control_statement_interested_party_with_entity_by_year, # noqa
+            'count_ownership_or_control_statement_interested_party_with_person_by_year': count_ownership_or_control_statement_interested_party_with_person_by_year, # noqa
+            'count_ownership_or_control_statement_interested_party_with_unspecified_by_year': count_ownership_or_control_statement_interested_party_with_unspecified_by_year, # noqa
+            'count_replaces_statements_missing': count_replaces_statements_missing,  # noqa
+        }
+        if self.schema_object.schema_version != '0.1':
+            data['count_person_statements_have_pep_status'] = count_person_statements_have_pep_status
+            data['count_person_statements_have_pep_status_and_reason_missing_info'] = \
+                count_person_statements_have_pep_status_and_reason_missing_info
+        return data
 
 
 class RunAdditionalChecks:
