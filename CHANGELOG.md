@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Additional Check: statement_is_component_but_not_used_in_component_statement_ids and statement_is_component_but_is_after_use_in_component_statement_id (0.2 only) 
   - https://github.com/openownership/lib-cove-bods/issues/24
   - https://github.com/openownership/lib-cove-bods/issues/23
+- Statistic: Addresses, with country, with postcode, with postcode in address https://github.com/openownership/lib-cove-bods/issues/16
 
 ### Changed
 

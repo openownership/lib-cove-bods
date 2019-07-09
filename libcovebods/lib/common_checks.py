@@ -9,6 +9,12 @@ class GetStatistics:
         self.json_data = json_data
         self.lib_cove_bods_config = lib_cove_bods_config
         self.schema_object = schema_object
+        # These are variables used during the run - we need to init them here so the class works
+        # We should also reset them at the start of the run function, incase the run function is called more than once
+        self.count_addresses = 0
+        self.count_addresses_with_postcode = 0
+        self.count_addresses_with_country = 0
+        self.count_addresses_with_postcode_duplicated_in_address = 0
 
     def run(self):
         # Initialise Variables to hold results
@@ -42,6 +48,11 @@ class GetStatistics:
         count_ownership_or_control_statement_interested_party_with_entity_by_year = defaultdict(int)
         count_ownership_or_control_statement_interested_party_with_person_by_year = defaultdict(int)
         count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(int)
+        # .... Others
+        self.count_addresses = 0
+        self.count_addresses_with_postcode = 0
+        self.count_addresses_with_country = 0
+        self.count_addresses_with_postcode_duplicated_in_address = 0
 
         # Process data one statement at a time
         for statement in self.json_data:
@@ -67,6 +78,9 @@ class GetStatistics:
                             count_entity_statements_types_with_any_identifier[statement['entityType']] += 1
                             if has_ids_with_id_and_scheme:
                                 count_entity_statements_types_with_any_identifier_with_id_and_scheme[statement['entityType']] += 1 # noqa
+                if 'addresses' in statement and isinstance(statement['addresses'], list):
+                    for address in statement['addresses']:
+                        self._process_address(address)
             elif statement_type == 'personStatement':
                 count_person_statements += 1
                 if ('personType' in statement and isinstance(statement['personType'], str)
@@ -78,6 +92,13 @@ class GetStatistics:
                         if 'pepStatusDetails' in statement and isinstance(statement['pepStatusDetails'], list):
                             if [x for x in statement['pepStatusDetails'] if x.get('missingInfoReason')]:
                                 count_person_statements_have_pep_status_and_reason_missing_info += 1
+                if 'addresses' in statement and isinstance(statement['addresses'], list):
+                    for address in statement['addresses']:
+                        self._process_address(address)
+                if 'placeOfBirth' in statement and isinstance(statement['placeOfBirth'], dict):
+                    self._process_address(statement['placeOfBirth'])
+                if 'placeOfResidence' in statement and isinstance(statement['placeOfResidence'], dict):
+                    self._process_address(statement['placeOfResidence'])
             elif statement_type == 'ownershipOrControlStatement':
                 try:
                     year = int(statement.get('statementDate', '').split('-')[0])
@@ -110,6 +131,9 @@ class GetStatistics:
                 if ('subject' in statement and isinstance(statement['subject'], dict)
                         and 'describedByEntityStatement' in statement['subject']):
                     subject_statement_ids_by_year[year].add(statement['subject']['describedByEntityStatement'])
+                if 'addresses' in statement and isinstance(statement['addresses'], list):
+                    for address in statement['addresses']:
+                        self._process_address(address)
             if isinstance(statement.get('replacesStatements'), list):
                 for replaces_statement_id in statement.get('replacesStatements'):
                     if replaces_statement_id not in statement_ids:
@@ -140,12 +164,27 @@ class GetStatistics:
             'count_ownership_or_control_statement_interested_party_with_person_by_year': count_ownership_or_control_statement_interested_party_with_person_by_year, # noqa
             'count_ownership_or_control_statement_interested_party_with_unspecified_by_year': count_ownership_or_control_statement_interested_party_with_unspecified_by_year, # noqa
             'count_replaces_statements_missing': count_replaces_statements_missing,  # noqa
+            'count_addresses': self.count_addresses,
+            'count_addresses_with_postcode': self.count_addresses_with_postcode,
+            'count_addresses_with_country': self.count_addresses_with_country,
+            'count_addresses_with_postcode_duplicated_in_address': self.count_addresses_with_postcode_duplicated_in_address,  # noqa
         }
         if self.schema_object.schema_version != '0.1':
             data['count_person_statements_have_pep_status'] = count_person_statements_have_pep_status
             data['count_person_statements_have_pep_status_and_reason_missing_info'] = \
                 count_person_statements_have_pep_status_and_reason_missing_info
         return data
+
+    def _process_address(self, address):
+        self.count_addresses += 1
+        if address.get('postCode'):
+            self.count_addresses_with_postcode += 1
+        if address.get('country'):
+            self.count_addresses_with_country += 1
+        if address.get('postCode') and address.get('address') \
+                and isinstance(address.get('postCode'), str) and isinstance(address.get('address'), str) \
+                and address.get('postCode').lower() in address.get('address').lower():
+            self.count_addresses_with_postcode_duplicated_in_address += 1
 
 
 class RunAdditionalChecks:
