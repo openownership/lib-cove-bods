@@ -24,6 +24,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Statistic: hasPepStatus (0.2 only) https://github.com/openownership/lib-cove-bods/issues/29
 - Statistic: pepStatusDetails.missingInfoReason (0.2 only) https://github.com/openownership/lib-cove-bods/issues/30
 - Additional Check: inconsistent bodsVersion https://github.com/openownership/lib-cove-bods/issues/27
+- Additional Check: address types (0.2 only) https://github.com/openownership/lib-cove-bods/issues/22
+- Additional Check: ownership_or_control_statement has is_compontent and component_statement_ids (0.2 only) https://github.com/openownership/lib-cove-bods/issues/26
+- Additional Check: component_statement_id not in package (0.2 only) https://github.com/openownership/lib-cove-bods/issues/25
+- Additional Check: statement_is_component_but_not_used_in_component_statement_ids and statement_is_component_but_is_after_use_in_component_statement_id (0.2 only) 
+  - https://github.com/openownership/lib-cove-bods/issues/24
+  - https://github.com/openownership/lib-cove-bods/issues/23
+- Statistic: Addresses, with country, with postcode, with postcode in address https://github.com/openownership/lib-cove-bods/issues/16
+
+### Changed
+
+- get_statistics() function becomes GetStatistics class, like the RunAdditionalChecks class
 
 ## [0.4.0] - 2019-04-02
 
