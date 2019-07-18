@@ -5,7 +5,7 @@
 
 Call `libcovebods` and pass the filename of some JSON data.
 
-    libcovebods tests/fixtures/api/basic_1.json
+    libcovebods tests/fixtures/0.1/basic_1.json
 
 ## Code for use by external users
 
