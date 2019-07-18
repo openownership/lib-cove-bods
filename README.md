@@ -6,6 +6,10 @@
 Call `libcovebods` and pass the filename of some JSON data.
 
     libcovebods tests/fixtures/0.1/basic_1.json
+    
+You can also pass the raw option to see the JSON as it originally came out of the library.
+
+    libcovebods --raw tests/fixtures/0.1/basic_1.json
 
 ## Code for use by external users
 
