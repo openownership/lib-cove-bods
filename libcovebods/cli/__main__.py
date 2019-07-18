@@ -8,6 +8,7 @@ import json
 def main():
     parser = argparse.ArgumentParser(description='Lib Cove BODS CLI')
     parser.add_argument("filename")
+    parser.add_argument("--raw", help="show raw output from the library", action="store_true")
 
     args = parser.parse_args()
 
@@ -20,6 +21,9 @@ def main():
         )
     finally:
         shutil.rmtree(cove_temp_folder)
+
+    if not args.raw:
+        del result['json_data']
 
     print(json.dumps(result, indent=4))
 
