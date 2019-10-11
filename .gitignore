@@ -7,3 +7,4 @@ __pycache__
 /libcovebods.egg-info
 *~
 *.swp
+dist
