@@ -23,12 +23,13 @@ setup(
         'json-merge-patch',
         'cached-property',
         'python-dateutil',
-        # TODO Should also have flatten-tool >= v0.5.0 - that is currently in requirements instead.
-        # TODO Should also have lib-cove  >= v0.3.1 - that is currently in requirements instead.
+        'flattentool>=0.5.0',
+        'libcove>=0.6.0'
     ],
     classifiers=[
             'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
     ],
     entry_points='''[console_scripts]
 libcovebods = libcovebods.cli.__main__:main''',
+    include_package_data=True,
 )
