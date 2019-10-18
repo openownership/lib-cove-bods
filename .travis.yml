@@ -8,4 +8,4 @@ install:
 script:
   - flake8
   - python -m pytest tests/
-  - ./.travis.version.upgrades.needed.sh
+  - "if [ \"$TRAVIS_BRANCH\" != \"master\" ] || [\"$TRAVIS_PULL_REQUEST\" != \"false\"]; then ./.travis.version.upgrades.needed.sh; fi"
