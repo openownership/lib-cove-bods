@@ -12,7 +12,7 @@ setup(
     install_requires=[
         'rfc3987',
         'strict-rfc3339',
-        'Django',
+        'Django>1.11.23,<1.12',
         'python-dateutil',
         'libcove>=0.13.0'
     ],
