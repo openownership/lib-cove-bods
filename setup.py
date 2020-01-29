@@ -23,7 +23,6 @@ setup(
         'json-merge-patch',
         'cached-property',
         'python-dateutil',
-        'flattentool>=0.5.0',
         'libcove>=0.6.0'
     ],
     classifiers=[
