@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.6.0] - 2020-02-05
+
+Changes to packaging only; 
+
+- Removed all requirements files and moved to setup.py
+- Moved data underneath main folder where it can be included in package
+
 ## [0.5.0] - 2019-07-19
 
 ### Added
