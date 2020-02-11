@@ -1,8 +1,6 @@
 -e git+https://github.com/OpenDataServices/flatten-tool.git@4c13ef0b32a59e810919a3de09bc8f64ce8f9392#egg=flattentool
 -e git+https://github.com/OpenDataServices/lib-cove.git@52acb2f0dcd296b9d952ff2adbae61dc4f8dd296#egg=libcove
-pytest==4.4.1
-flake8==3.7.7
-## The following requirements were added by pip freeze:
+-e file:///home/dependabot/dependabot-updater/tmp/dependabot_20200211-73-1da1xa2
 atomicwrites==1.3.0
 attrs==19.1.0
 bleach==3.1.0
@@ -11,9 +9,10 @@ certifi==2019.3.9
 chardet==3.0.4
 commonmark==0.8.1
 contextlib2==0.5.5
-Django==2.2
+django==2.2.10
 entrypoints==0.3
 et-xmlfile==1.0.1
+flake8==3.7.7
 future==0.17.1
 idna==2.8
 jdcal==1.4.1
@@ -28,6 +27,7 @@ pluggy==0.9.0
 py==1.8.0
 pycodestyle==2.5.0
 pyflakes==2.1.1
+pytest==4.4.1
 python-dateutil==2.8.0
 pytz==2019.1
 requests==2.21.0
