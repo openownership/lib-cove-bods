@@ -29,6 +29,8 @@ BADFILE_RESULTS = [
     ({'message': '-1 is less than the minimum of 0', 'message_safe': '<code>minimum</code> is too small. The minimum allowed value is 0.', 'message_type': 'minimum', 'path_no_number': 'interests/share/minimum'}, [{'path': '16/interests/0/share/minimum', 'value': -1}]), # noqa
     ({'message': '101 is greater than the maximum of 100', 'message_safe': '<code>maximum</code> is too large. The maximum allowed value is 100.', 'message_type': 'maximum', 'path_no_number': 'interests/share/maximum'}, [{'path': '16/interests/0/share/maximum', 'value': 101}]), # noqa
     ({'message': 'Date is not in the correct format. The correct format is YYYY-MM-DD.', 'message_safe': 'Date is not in the correct format. The correct format is YYYY-MM-DD.', 'message_type': 'date', 'path_no_number': 'statementDate'}, [{'path': '10/statementDate', 'value': 'not a date'}]), # noqa
+    ({'message': 'Date is not in the correct format. The correct format is YYYY-MM-DDThh:mm:ssZ.', 'message_safe': 'Date is not in the correct format. The correct format is YYYY-MM-DDT00:00:00Z.', 'message_type': 'date-time', 'path_no_number': 'source/retrievedAt'}, [{'path': '13/source/retrievedAt', 'value': 'not a date-time'}]), # noqa
+    ({'message': 'Invalid uri found', 'message_safe': 'Invalid uri found', 'message_type': 'uri', 'path_no_number': 'uri'}, [{'path': '21/uri', 'value': 'not a uri'}]), # noqa
     ({'message': "{'motivation': 'not on open list'} is not valid under any of the given schemas", 'message_safe': '{&#39;motivation&#39;: &#39;not on open list&#39;} is not valid under any of the given schemas', 'message_type': 'anyOf', 'path_no_number': 'annotations'}, [{'path': '20/annotations/0'}]), # noqa
     ({'message': '{} is not valid under any of the given schemas', 'message_safe': '{} is not valid under any of the given schemas', 'message_type': 'anyOf', 'path_no_number': 'identifiers'}, [{'path': '15/identifiers/0'}]), # noqa
 ]
@@ -696,7 +698,7 @@ def test_badfile_all_validation_errors():
 
     results = bods_json_output(cove_temp_folder, json_filename)
 
-    assert results['validation_errors_count'] == 37
+    assert results['validation_errors_count'] == 39
     assert results['additional_fields_count'] == 1
     assert results['additional_checks_count'] == 11
     assert results['file_type'] == 'json'
