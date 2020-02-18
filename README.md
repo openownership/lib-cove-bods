@@ -1,7 +1,18 @@
 # Lib Cove BODS
 
-
 ## Command line
+
+### Installation
+
+Installation from this git repo:
+
+```bash
+git clone https://github.com/openownership/lib-cove-bods.git
+cd lib-cove-bods
+python3 -m venv .ve
+source .ve/bin/activate
+pip install -e .
+```
 
 Call `libcovebods` and pass the filename of some JSON data.
 
@@ -17,23 +28,3 @@ The only code that should be used directly by users is the `libcovebods.config` 
 
 Other code ( Code in `lib`, etc) 
 should not be used by external users of this library directly, as the structure and use of these may change more frequently.
-
-## FAQ: libcovebods: command not found ?
-
-If installed via 
-
-    virtualenv .ve -p python3
-    source .ve/bin/activate
-    pip3 install -r requirements.txt
-
-You may get
-
-    libcovebods tests/fixtures/0.1/basic_1.json
-    libcovebods: command not found
-
-To fix, run
-
-    pip3 install -e .
-
-We are looking at a proper fix for this problem in https://github.com/openownership/lib-cove-bods/issues/19
-
