@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='libcovebods',
-    version='0.6.0',
+    version='0.7.0',
     author='Open Data Services',
     author_email='code@opendataservices.coop',
     url='https://github.com/openownership/lib-cove-bods',
@@ -11,9 +11,9 @@ setup(
     long_description='A data review library',
     install_requires=[
         'python-dateutil',
-        'Django>1.11.23,<1.12',
+        'Django>2.2,<2.3',
         'flattentool>=0.5.0',
-        'libcove>=0.14.0'
+        'libcove>=0.17.0'
     ],
     extras_require={
         'dev': ['pytest', 'flake8']

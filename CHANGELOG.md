@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.7.0] - 2020-06-26
+
+### Changed
+
+- requirements: Update Django to 2.2 LTS and lib-cove to latest
+
 ## [0.6.0] - 2020-02-18
 
 Changes to packaging only; 
