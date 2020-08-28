@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Rename schema object attributes to remove word "release", as in latest lib-cove
+
 ## [0.7.0] - 2020-06-26
 
 ### Changed

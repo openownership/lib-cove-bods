@@ -6,25 +6,25 @@ class SchemaBODS(SchemaJsonMixin):
     def __init__(self, json_data=None, lib_cove_bods_config=None):
         self.lib_cove_bods_config = lib_cove_bods_config
         if isinstance(json_data, list) and len(json_data) > 0:
-            self.schema_version, self.release_pkg_schema_url, self.schema_host = \
+            self.schema_version, self.pkg_schema_url, self.schema_host = \
                 self.get_schema_version_of_statement(json_data[0])
         else:
-            self.release_pkg_schema_url = lib_cove_bods_config.config['schema_url']
+            self.pkg_schema_url = lib_cove_bods_config.config['schema_url']
             self.schema_host = lib_cove_bods_config.config['schema_url_host']
             self.schema_version = lib_cove_bods_config.config['schema_version']
 
     def get_entity_statement_types_list(self):
-        for statement_schema in self._release_pkg_schema_obj['items']['oneOf']:
+        for statement_schema in self._pkg_schema_obj['items']['oneOf']:
             if statement_schema['properties']['statementType']['enum'][0] == 'entityStatement':
                 return statement_schema['properties']['entityType']['enum']
 
     def get_person_statement_types_list(self):
-        for statement_schema in self._release_pkg_schema_obj['items']['oneOf']:
+        for statement_schema in self._pkg_schema_obj['items']['oneOf']:
             if statement_schema['properties']['statementType']['enum'][0] == 'personStatement':
                 return statement_schema['properties']['personType']['enum']
 
     def get_ownership_or_control_statement_interest_statement_types_list(self):
-        for statement_schema in self._release_pkg_schema_obj['items']['oneOf']:
+        for statement_schema in self._pkg_schema_obj['items']['oneOf']:
             if statement_schema['properties']['statementType']['enum'][0] == 'ownershipOrControlStatement':
                 return statement_schema['properties']['interests']['items']['properties']['type']['enum']
 
