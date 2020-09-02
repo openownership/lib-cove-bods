@@ -97,7 +97,10 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
             error['message_safe'] = message_safe
 
         new_validation_errors.append([json.dumps(error), values])
-    new_validation_errors.sort()
+    try:
+        new_validation_errors.sort()
+    except TypeError:
+        pass
     common_checks['context']['validation_errors'] = new_validation_errors
 
     context.update(common_checks['context'])
