@@ -102,7 +102,7 @@ class GetStatistics:
             elif statement_type == 'ownershipOrControlStatement':
                 try:
                     year = int(statement.get('statementDate', '').split('-')[0])
-                except ValueError:
+                except (ValueError, AttributeError):
                     year = None
                 count_ownership_or_control_statement += 1
                 interested_party = statement.get('interestedParty')
