@@ -1018,15 +1018,15 @@ def test_bad_statement_date():
 
     results = bods_json_output(cove_temp_folder, json_filename)
     assert results['statistics']['count_ownership_or_control_statement_by_year'] == {
-        None: 1,
+        None: 2,
         2011: 1
     }
     assert results['statistics']['count_ownership_or_control_statement_subject_by_year'] == {
-        None: 1,
+        None: 2,
         2011: 1
     }
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_person_by_year'] == {
-        None: 1,
+        None: 2,
         2011: 1
     }
     assert results['statistics']['count_ownership_or_control_statement_interested_party_with_entity_by_year'] == {
