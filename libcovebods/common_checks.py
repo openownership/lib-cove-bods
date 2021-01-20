@@ -67,7 +67,7 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
         if e_validator == 'required':
             extra_message = ". Check that the field is included and correctly spelled."
             error['message'] += extra_message
-            error['message_safe'] += extra_message
+            error['message_safe'] = error.get('message_safe', error['message']) + extra_message
 
         if e_validator == 'enum':
             message = "'{}' contains an unrecognised value. Check the related codelist for allowed code values.".format(header) # noqa
