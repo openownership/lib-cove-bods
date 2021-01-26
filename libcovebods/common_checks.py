@@ -5,6 +5,8 @@ from libcovebods.lib.common_checks import GetStatistics, RunAdditionalChecks
 from django.utils.html import format_html
 from libcovebods.config import LibCoveBODSConfig
 
+from cove.html_error_msg import html_error_msg
+
 
 validation_error_template_lookup = {
     'date': 'Date is not in the correct format. The correct format is YYYY-MM-DD.',
@@ -46,6 +48,9 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
     for (json_key, values) in validation_errors:
         error = json.loads(json_key, object_pairs_hook=OrderedDict)
 
+        assert 'message_safe' not in error
+        error['message_safe'] = html_error_msg(error)
+
         e_validator = error['validator']
         e_validator_value = error['validator_value']
         validator_type = error['message_type']
@@ -67,7 +72,7 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
         if e_validator == 'required':
             extra_message = ". Check that the field is included and correctly spelled."
             error['message'] += extra_message
-            error['message_safe'] = error.get('message_safe', error['message']) + extra_message
+            error['message_safe'] += extra_message
 
         if e_validator == 'enum':
             message = "'{}' contains an unrecognised value. Check the related codelist for allowed code values.".format(header) # noqa

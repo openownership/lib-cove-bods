@@ -13,7 +13,8 @@ setup(
         'python-dateutil',
         'Django>2.2,<2.3',
         'flattentool>=0.5.0',
-        'libcove>=0.20.3'
+        'libcove>=0.20.3',
+        'libcoveweb>=0.19.0'
     ],
     extras_require={
         'dev': ['pytest', 'flake8']
