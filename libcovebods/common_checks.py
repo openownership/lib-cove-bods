@@ -5,6 +5,8 @@ from libcovebods.lib.common_checks import GetStatistics, RunAdditionalChecks
 from django.utils.html import format_html
 from libcovebods.config import LibCoveBODSConfig
 
+from cove.html_error_msg import html_error_msg
+
 
 validation_error_template_lookup = {
     'date': 'Date is not in the correct format. The correct format is YYYY-MM-DD.',
@@ -45,6 +47,9 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
     new_validation_errors = []
     for (json_key, values) in validation_errors:
         error = json.loads(json_key, object_pairs_hook=OrderedDict)
+
+        assert 'message_safe' not in error
+        error['message_safe'] = html_error_msg(error)
 
         e_validator = error['validator']
         e_validator_value = error['validator_value']
