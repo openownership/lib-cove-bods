@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- A crash when statementID is not a string https://github.com/openownership/cove-bods/issues/67
+
 ## [0.10.0] - 2021-04-08
 
 ### Changed

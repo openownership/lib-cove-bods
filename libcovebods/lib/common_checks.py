@@ -140,7 +140,7 @@ class GetStatistics:
                         count_replaces_statements_missing += 1
                     if replaces_statement_id in current_statement_ids:
                         current_statement_ids.remove(replaces_statement_id)
-            if 'statementID' in statement:
+            if 'statementID' in statement and isinstance(statement['statementID'], str):
                 statement_ids.add(statement['statementID'])
 
         # Return Results
