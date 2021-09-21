@@ -4,7 +4,7 @@ from libcovebods.common_checks import common_checks_bods
 from libcovebods.lib.api import context_api_transform
 from libcovebods.config import LibCoveBODSConfig
 from libcovebods.schema import SchemaBODS
-
+import csv
 
 class APIException(Exception):
     pass

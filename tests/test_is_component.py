@@ -12,7 +12,7 @@ def test_iscomponent_true_but_has_component_statement_ids_1():
 
     results = bods_json_output(cove_temp_folder, json_filename)
 
-    assert results['schema_version'] == '0.2'
+    assert results['schema_version'] == '0.8'
     assert results['additional_checks_count'] == 1
 
     assert results['additional_checks'][0]['type'] == 'ownership_or_control_statement_has_is_compontent_and_component_statement_ids'  # noqa
