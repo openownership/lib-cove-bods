@@ -215,6 +215,10 @@ class RunAdditionalChecks:
         self.possible_out_of_order_statements = []
         self.orgids_prefixes = get_orgids_prefixes()
 
+        # Meta - check version specified is actually known
+        if self.schema_object.schema_error:
+            self.output.append(self.schema_object.schema_error)
+
         # First Pass
         for statement in self.json_data:
             statement_type = statement.get('statementType')
@@ -284,11 +288,12 @@ class RunAdditionalChecks:
                             'scheme': identifier.get('scheme'),
                             'entity_statement': statement.get('statementID'),
                         })
-        schema_version, throw_away_1, throw_away_2 = self.schema_object.get_schema_version_of_statement(statement)
-        if self.schema_object.schema_version != schema_version:
+        inconsistent_schema_version_error, inconsistent_schema_version_used = \
+            self.schema_object.get_inconsistent_schema_version_used_for_statement(statement)
+        if inconsistent_schema_version_error:
             self.output.append({
                 'type': 'inconsistent_schema_version_used',
-                'schema_version': schema_version,
+                'schema_version': inconsistent_schema_version_used,
                 'statement_type': 'entity',
                 'statement': statement.get('statementID'),
             })
@@ -329,11 +334,12 @@ class RunAdditionalChecks:
                         'year': birth_year,
                         'person_statement': statement.get('statementID'),
                     })
-        schema_version, throw_away_1, throw_away_2 = self.schema_object.get_schema_version_of_statement(statement)
-        if self.schema_object.schema_version != schema_version:
+        inconsistent_schema_version_error, inconsistent_schema_version_used = \
+            self.schema_object.get_inconsistent_schema_version_used_for_statement(statement)
+        if inconsistent_schema_version_error:
             self.output.append({
                 'type': 'inconsistent_schema_version_used',
-                'schema_version': schema_version,
+                'schema_version': inconsistent_schema_version_used,
                 'statement_type': 'person',
                 'statement': statement.get('statementID'),
             })
@@ -393,11 +399,12 @@ class RunAdditionalChecks:
                         'entity_statement_out_of_order': subject_described_by_entity_statement,
                         'seen_in_ownership_or_control_statement': statement.get('statementID'),
                     })
-        schema_version, throw_away_1, throw_away_2 = self.schema_object.get_schema_version_of_statement(statement)
-        if self.schema_object.schema_version != schema_version:
+        inconsistent_schema_version_error, inconsistent_schema_version_used = \
+            self.schema_object.get_inconsistent_schema_version_used_for_statement(statement)
+        if inconsistent_schema_version_error:
             self.output.append({
                 'type': 'inconsistent_schema_version_used',
-                'schema_version': schema_version,
+                'schema_version': inconsistent_schema_version_used,
                 'statement_type': 'ownership_or_control',
                 'statement': statement.get('statementID'),
             })
