@@ -20,6 +20,9 @@ LIB_COVE_BODS_CONFIG_DEFAULT.update({
             'schema_url_host': _schema_folder,
         }
     },
+    # In some cases we default to the latest schema version, so we need to know what the latest version is.
+    # It should be a key that is in the 'schema_versions' data.
+    'schema_latest_version': '0.2',
     # These default values are very wide on purpose. It is left to apps using this to tighten them up.
     'bods_additional_checks_person_birthdate_min_year': 1,
     'bods_additional_checks_person_birthdate_max_year': datetime.datetime.now().year,

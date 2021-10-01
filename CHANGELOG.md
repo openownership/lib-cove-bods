@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- New additional check type, "unknown_schema_version_used" https://github.com/openownership/cove-bods/issues/56
+-- Used if some other type than a string given (eg a dict, list)
+-- Used if a string is given but it's a version we don't know about
+-- Used if a blank string is given
+-- Used if a version with patch number is given (eg 0.2.0 instead of 0.2)
+
+### Changed
+
+- If a version is specified in "bodsVersion" that does not exist, then it will assume the latest version
+  (previously it assumed the default version)
+- Checking for inconsistent schema versions works against the schema the data tries to use in the first statement
+  (previously it worked against the version that was assumed)
+
 ## [0.10.1] - 2021-09-22
 
 ### Fixed
