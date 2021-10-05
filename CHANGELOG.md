@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.11.0] - 2021-10-05
+
 ### Added
 
 - New additional check type, "unknown_schema_version_used" https://github.com/openownership/cove-bods/issues/56
