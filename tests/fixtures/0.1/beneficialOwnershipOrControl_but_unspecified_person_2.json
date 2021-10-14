@@ -3,13 +3,27 @@
     "statementID": "1dc0e987-5c57-4a1c-b3ad-61353b66a9b7",
     "statementType": "entityStatement",
     "statementDate": "2017-11-18",
-    "entityType": "registeredEntity",
+    "entityType": "legalEntity",
     "name": "CHRINON LTD",
     "foundingDate": "2010-11-18",
     "identifiers": [
       {
         "scheme": "GB-COH",
         "id": "07444723"
+      }
+    ]
+  },
+  {
+    "statementID": "9bf27aa7-f372-41d7-9429-1bcd8b0f475d",
+    "statementType": "entityStatement",
+    "statementDate": "2017-11-18",
+    "entityType": "registeredEntity",
+    "name": "PROTOGEN LTD",
+    "foundingDate": "2011-11-18",
+    "identifiers": [
+      {
+        "scheme": "GB-COH",
+        "id": "07444353"
       }
     ]
   },
@@ -21,17 +35,14 @@
       "describedByEntityStatement": "1dc0e987-5c57-4a1c-b3ad-61353b66a9b7"
     },
     "interestedParty": {
-      "describedByEntityStatement": "019a93f1-e420-42e9-957b-03559861b2e2"
+      "describedByEntityStatement": "9bf27aa7-f372-41d7-9429-1bcd8b0f475d"
     },
     "interests": [
       {
-        "type": "shareholding",
+        "type": "influence-or-control",
         "interestLevel": "direct",
-        "beneficialOwnershipOrControl":false,
-        "startDate": "2016-04-06",
-        "share": {
-          "exact": 100
-        }
+        "beneficialOwnershipOrControl":true,
+        "startDate": "2016-04-06"
       }
     ]
   }
