@@ -21,13 +21,16 @@
       "describedByEntityStatement": "1dc0e987-5c57-4a1c-b3ad-61353b66a9b7"
     },
     "interestedParty": {
-      "describedByEntityStatement": "019a93f1-e420-42e9-957b-03559861b2e2"
+      "unspecified": {
+        "reason": "subject-unable-to-confirm-or-identify-beneficial-owner",
+        "description": "In this case I'm meant to have a unknown or anonymous person entity but I just can not be bothered https://github.com/openownership/lib-cove-bods/issues/47"
+      }
     },
     "interests": [
       {
         "type": "shareholding",
         "interestLevel": "direct",
-        "beneficialOwnershipOrControl":false,
+        "beneficialOwnershipOrControl":true,
         "startDate": "2016-04-06",
         "share": {
           "exact": 100
