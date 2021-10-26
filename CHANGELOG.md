@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.12.0] - 2021-10-26
+
 ### Added
 
 - New additional check type, "statement_is_beneficialOwnershipOrControl_but_no_person_specified" https://github.com/openownership/lib-cove-bods/issues/47
