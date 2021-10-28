@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Updated included schema files, and added instructions on how to do that to the README
+
 ## [0.12.0] - 2021-10-26
 
 ### Added
