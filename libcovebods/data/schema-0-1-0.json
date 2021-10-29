@@ -440,9 +440,9 @@
             "description": "Use the [personType codelist](#persontype). The ultimate beneficial owner of a legal entity is always a natural person. Where the beneficial owner has been identified, but information about them cannot be disclosed, use 'anonymousPerson'. Where the beneficial owner has not been clearly identified, use 'unknownPerson'. Where the beneficial owner has been identified use knownPerson.",
             "type": "string",
             "enum": [
+              "knownPerson",
               "anonymousPerson",
-              "unknownPerson",
-              "knownPerson"
+              "unknownPerson"
             ],
             "propertyOrder": 4,
             "codelist": "personType.csv",

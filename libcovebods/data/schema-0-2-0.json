@@ -8,7 +8,7 @@
       {
         "id": "entity-statement.json",
         "$schema": "http://json-schema.org/draft-04/schema#",
-        "version": "0.1",
+        "version": "0.2",
         "title": "Entity statement",
         "description": "A statement identifying and describing the entity that is the subject of the ownership or control described in an ownership or control statement.",
         "type": "object",
@@ -44,7 +44,7 @@
           },
           "entityType": {
             "title": "Type",
-            "description": "From the [entityType codelist](#entitytype). What kind of entity is this? The 'registeredEntity' code covers any legal entity created through an act of official registration, usually resulting in an identifier being assigned to the entity. The 'legalEntity' code covers other bodies with distinct legal personality (government departments, international institutions etc.).  The 'arrangement' code covers artificial entities, described in the data model for the purpose of associating one or more natural or legal persons together in an ownership or control relationship, but without implying that the parties to this arrangement have any other form of collective legal identity.",
+            "description": "From the entityType codelist. What kind of entity is this? The 'registeredEntity' code covers any legal entity created through an act of official registration, usually resulting in an identifier being assigned to the entity. The 'legalEntity' code covers other bodies with distinct legal personality (government departments, international institutions etc.).  The 'arrangement' code covers artificial entities, described in the data model for the purpose of associating one or more natural or legal persons together in an ownership or control relationship, but without implying that the parties to this arrangement have any other form of collective legal identity.",
             "type": "string",
             "enum": [
               "registeredEntity",
@@ -64,7 +64,7 @@
             "properties": {
               "reason": {
                 "title": "Reason",
-                "description": "The reason that an entity cannot be specified. From the [unspecifiedReason codelist](#unspecifiedreason).",
+                "description": "The reason that an entity cannot be specified. From the unspecifiedReason codelist.",
                 "type": "string",
                 "enum": [
                   "no-beneficial-owners",
@@ -72,8 +72,8 @@
                   "interested-party-has-not-provided-information",
                   "subject-exempt-from-disclosure",
                   "interested-party-exempt-from-disclosure",
-                  "information-unknown-to-publisher",
-                  "unknown"
+                  "unknown",
+                  "information-unknown-to-publisher"
                 ],
                 "codelist": "unspecifiedReason.csv",
                 "openCodelist": false
@@ -203,7 +203,7 @@
               "properties": {
                 "type": {
                   "title": "Type",
-                  "description": "What type of address is this? See the [addressType](#addresstype) codelist.",
+                  "description": "What type of address is this? See the addressType codelist.",
                   "type": "string",
                   "enum": [
                     "placeOfBirth",
@@ -325,7 +325,7 @@
             "properties": {
               "type": {
                 "title": "Source type",
-                "description": "What type of source is this? Multiple tags can be combined. Values should come from the [source type](#sourcetype) codelist.",
+                "description": "What type of source is this? Multiple tags can be combined. Values should come from the source type codelist.",
                 "type": "array",
                 "items": {
                   "type": "string",
@@ -423,7 +423,7 @@
                 },
                 "motivation": {
                   "title": "Motivation",
-                  "description": "The motivation for this annotation, chosen from a codelist. See the [annotationMotivation](#annotationmotivation) codelist.",
+                  "description": "The motivation for this annotation, chosen from a codelist. See the annotationMotivation codelist.",
                   "type": "string",
                   "enum": [
                     "commenting",
@@ -499,7 +499,7 @@
       {
         "id": "person-statement.json",
         "$schema": "http://json-schema.org/draft-04/schema#",
-        "version": "0.1",
+        "version": "0.2",
         "type": "object",
         "title": "Person statement",
         "description": "A person statement describes the information known about a natural person at a particular point in time, or from a given submission of information",
@@ -537,12 +537,12 @@
           },
           "personType": {
             "title": "Person type",
-            "description": "Use the [personType codelist](#persontype). The ultimate beneficial owner of a legal entity is always a natural person. Where the beneficial owner has been identified, but information about them cannot be disclosed, use 'anonymousPerson'. Where the beneficial owner has not been clearly identified, use 'unknownPerson'. Where the beneficial owner has been identified use knownPerson. Where a person has the type 'anonymousPerson' or 'unknownPerson' a reason for the absence of information SHOULD be provided in 'unspecifiedPersonDetails')",
+            "description": "Use the personType codelist. The ultimate beneficial owner of a legal entity is always a natural person. Where the beneficial owner has been identified, but information about them cannot be disclosed, use 'anonymousPerson'. Where the beneficial owner has not been clearly identified, use 'unknownPerson'. Where the beneficial owner has been identified use knownPerson. Where a person has the type 'anonymousPerson' or 'unknownPerson' a reason for the absence of information SHOULD be provided in 'unspecifiedPersonDetails')",
             "type": "string",
             "enum": [
+              "knownPerson",
               "anonymousPerson",
-              "unknownPerson",
-              "knownPerson"
+              "unknownPerson"
             ],
             "propertyOrder": 4,
             "codelist": "personType.csv",
@@ -555,7 +555,7 @@
             "properties": {
               "reason": {
                 "title": "Reason",
-                "description": "The reason that an interested party cannot be specified. From the [unspecifiedReason codelist](#unspecifiedreason).",
+                "description": "The reason that an interested party cannot be specified. From the unspecifiedReason codelist.",
                 "type": "string",
                 "enum": [
                   "no-beneficial-owners",
@@ -591,7 +591,7 @@
               "properties": {
                 "type": {
                   "title": "Type",
-                  "description": "What kind of name is this? See the [nameType](#nametype) codelist.",
+                  "description": "What kind of name is this? See the nameType codelist.",
                   "type": "string",
                   "enum": [
                     "individual",
@@ -712,7 +712,7 @@
             "properties": {
               "type": {
                 "title": "Type",
-                "description": "What type of address is this? See the [addressType](#addresstype) codelist.",
+                "description": "What type of address is this? See the addressType codelist.",
                 "type": "string",
                 "enum": [
                   "placeOfBirth",
@@ -766,7 +766,7 @@
             "properties": {
               "type": {
                 "title": "Type",
-                "description": "What type of address is this? See the [addressType](#addresstype) codelist.",
+                "description": "What type of address is this? See the addressType codelist.",
                 "type": "string",
                 "enum": [
                   "placeOfBirth",
@@ -835,7 +835,7 @@
               "properties": {
                 "type": {
                   "title": "Type",
-                  "description": "What type of address is this? See the [addressType](#addresstype) codelist.",
+                  "description": "What type of address is this? See the addressType codelist.",
                   "type": "string",
                   "enum": [
                     "placeOfBirth",
@@ -932,7 +932,7 @@
                   "properties": {
                     "type": {
                       "title": "Source type",
-                      "description": "What type of source is this? Multiple tags can be combined. Values should come from the [source type](#sourcetype) codelist.",
+                      "description": "What type of source is this? Multiple tags can be combined. Values should come from the source type codelist.",
                       "type": "array",
                       "items": {
                         "type": "string",
@@ -1061,7 +1061,7 @@
             "properties": {
               "type": {
                 "title": "Source type",
-                "description": "What type of source is this? Multiple tags can be combined. Values should come from the [source type](#sourcetype) codelist.",
+                "description": "What type of source is this? Multiple tags can be combined. Values should come from the source type codelist.",
                 "type": "array",
                 "items": {
                   "type": "string",
@@ -1159,7 +1159,7 @@
                 },
                 "motivation": {
                   "title": "Motivation",
-                  "description": "The motivation for this annotation, chosen from a codelist. See the [annotationMotivation](#annotationmotivation) codelist.",
+                  "description": "The motivation for this annotation, chosen from a codelist. See the annotationMotivation codelist.",
                   "type": "string",
                   "enum": [
                     "commenting",
@@ -1247,7 +1247,7 @@
       {
         "id": "ownership-or-control-statement.json",
         "$schema": "http://json-schema.org/draft-04/schema#",
-        "version": "0.1",
+        "version": "0.2",
         "title": "Ownership or control Statement",
         "description": "An ownership or control statement is made up of an entity, an interested party (a reference to an entity, natural person, arrangement or trust), details of the interest and provenance information for the statement.",
         "type": "object",
@@ -1327,7 +1327,7 @@
                 "properties": {
                   "reason": {
                     "title": "Reason",
-                    "description": "The reason that an interested party cannot be specified. From the [unspecifiedReason codelist](#unspecifiedreason).",
+                    "description": "The reason that an interested party cannot be specified. From the unspecifiedReason codelist.",
                     "type": "string",
                     "enum": [
                       "no-beneficial-owners",
@@ -1364,7 +1364,7 @@
               "properties": {
                 "type": {
                   "title": "Type of interest",
-                  "description": "A codelist value indicating the nature of the interest. See the [interestType codelist](#interesttype)",
+                  "description": "A codelist value indicating the nature of the interest. See the interestType codelist",
                   "type": "string",
                   "enum": [
                     "shareholding",
@@ -1529,7 +1529,7 @@
             "properties": {
               "type": {
                 "title": "Source type",
-                "description": "What type of source is this? Multiple tags can be combined. Values should come from the [source type](#sourcetype) codelist.",
+                "description": "What type of source is this? Multiple tags can be combined. Values should come from the source type codelist.",
                 "type": "array",
                 "items": {
                   "type": "string",
@@ -1626,7 +1626,7 @@
                 },
                 "motivation": {
                   "title": "Motivation",
-                  "description": "The motivation for this annotation, chosen from a codelist. See the [annotationMotivation](#annotationmotivation) codelist.",
+                  "description": "The motivation for this annotation, chosen from a codelist. See the annotationMotivation codelist.",
                   "type": "string",
                   "enum": [
                     "commenting",
@@ -1733,7 +1733,7 @@
                 "properties": {
                   "reason": {
                     "title": "Reason",
-                    "description": "The reason that an interested party cannot be specified. From the [unspecifiedReason codelist](#unspecifiedreason).",
+                    "description": "The reason that an interested party cannot be specified. From the unspecifiedReason codelist.",
                     "type": "string",
                     "enum": [
                       "no-beneficial-owners",
