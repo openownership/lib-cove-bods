@@ -15,7 +15,7 @@ def test_basic_1():
 
     results = bods_json_output(cove_temp_folder, json_filename)
 
-    assert results['schema_version'] == '0.2'
+    assert results['schema_version'] == '0.3'
     assert results['validation_errors_count'] == 3
     assert results['additional_fields_count'] == 0
     assert results['additional_checks_count'] == 1

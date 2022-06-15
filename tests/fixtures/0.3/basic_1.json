@@ -14,11 +14,11 @@
       }
     ],
     "publicationDetails": {
-        "publicationDate": "2018-02-13",
-        "bodsVersion": "0.2.0",
-        "publisher": {
-            "name": "CHRINON LTD"
-        }
+      "publicationDate": "2018-02-13",
+      "bodsVersion": "0.3",
+      "publisher": {
+        "name": "CHRINON LTD"
+      }
     }
   },
   {
@@ -29,7 +29,8 @@
     "personType": "knownPerson",
     "nationalities": [
       {
-        "code": "GB"
+        "code": "GB",
+        "name": "United Kingdom of Great Britain and Northern Ireland (the)"
       }
     ],
     "names": [
@@ -54,11 +55,11 @@
       }
     ],
     "publicationDetails": {
-        "publicationDate": "2018-02-13",
-        "bodsVersion": "0.2.0",
-        "publisher": {
-            "name": "CHRINON LTD"
-        }
+      "publicationDate": "2018-02-13",
+      "bodsVersion": "0.3",
+      "publisher": {
+        "name": "CHRINON LTD"
+      }
     }
   },
   {
@@ -75,8 +76,8 @@
     "interests": [
       {
         "type": "shareholding",
-        "interestLevel": "direct",
-        "beneficialOwnershipOrControl":true,
+        "directOrIndirect": "direct",
+        "beneficialOwnershipOrControl": true,
         "startDate": "2016-04-06",
         "share": {
           "exact": 100,
@@ -86,11 +87,11 @@
       }
     ],
     "publicationDetails": {
-        "publicationDate": "2018-02-13",
-        "bodsVersion": "0.2.0",
-        "publisher": {
-            "name": "CHRINON LTD"
-        }
+      "publicationDate": "2018-02-13",
+      "bodsVersion": "0.3",
+      "publisher": {
+        "name": "CHRINON LTD"
+      }
     }
   }
 ]

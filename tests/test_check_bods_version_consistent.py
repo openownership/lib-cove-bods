@@ -66,7 +66,7 @@ def test_dict_then_0_2():
 
     results = bods_json_output(cove_temp_folder, json_filename)
 
-    assert results['schema_version'] == '0.2'
+    assert results['schema_version'] == '0.3'
 
     assert results['additional_checks_count'] == 2
 
