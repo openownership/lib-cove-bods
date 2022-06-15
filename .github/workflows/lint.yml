@@ -9,7 +9,6 @@ jobs:
     - name: Setup python
       uses: actions/setup-python@v2
       with:
-        # Use the same version of Python that we run on our current live server
         python-version: 3.6
         architecture: x64
     - uses: actions/cache@v1
