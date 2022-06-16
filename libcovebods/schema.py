@@ -1,4 +1,5 @@
 from libcove.lib.common import SchemaJsonMixin
+from packaging import version as packaging_version
 
 
 class SchemaBODS(SchemaJsonMixin):
@@ -89,6 +90,16 @@ class SchemaBODS(SchemaJsonMixin):
             if statement_schema['properties']['statementType']['enum'][0] == 'ownershipOrControlStatement':
                 return statement_schema['properties']['interests']['items']['properties']['type']['enum']
 
+    def get_ownership_or_control_statement_interest_direct_or_indirect_list(self):
+        for statement_schema in self._pkg_schema_obj['items']['oneOf']:
+            if statement_schema['properties']['statementType']['enum'][0] == 'ownershipOrControlStatement':
+                direct_or_indirect_json_schema = statement_schema['properties']['interests']['items']['properties'].get('directOrIndirect')  # noqa
+                # This is only available in 0.3 and above.
+                if isinstance(direct_or_indirect_json_schema, dict):
+                    return direct_or_indirect_json_schema.get('enum')
+                else:
+                    return []
+
     def get_inconsistent_schema_version_used_for_statement(self, statement):
         # If version is not set at all, then we assume it's the default version
         if not isinstance(statement, dict) \
@@ -111,3 +122,6 @@ class SchemaBODS(SchemaJsonMixin):
 
     def get_address_types_allowed_in_person_statement(self):
         return ('placeOfBirth', 'residence', 'service', 'alternative')
+
+    def is_schema_version_equal_to_or_greater_than(self, version):
+        return packaging_version.parse(self.schema_version) >= packaging_version.parse(version)

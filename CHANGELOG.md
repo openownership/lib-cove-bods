@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Schema version 0.3
+- Schema class has new method is_schema_version_equal_to_or_greater_than()
+- New statistic: count of interest objects with different directOrIndirect values
+  -  Schema class has new method get_ownership_or_control_statement_interest_direct_or_indirect_list() for this
 
 ### Changed
 

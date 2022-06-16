@@ -40,6 +40,9 @@ class GetStatistics:
         count_ownership_or_control_statement_interest_statement_types = {}
         for value in self.schema_object.get_ownership_or_control_statement_interest_statement_types_list():
             count_ownership_or_control_statement_interest_statement_types[value] = 0
+        count_ownership_or_control_statement_interest_direct_or_indirect = {}
+        for value in self.schema_object.get_ownership_or_control_statement_interest_direct_or_indirect_list():
+            count_ownership_or_control_statement_interest_direct_or_indirect[value] = 0
         count_replaces_statements_missing = 0
         statement_ids = set()
         current_statement_ids = set()
@@ -123,6 +126,9 @@ class GetStatistics:
                             if ('type' in interest and isinstance(interest['type'], str)
                                     and interest['type'] in count_ownership_or_control_statement_interest_statement_types):  # noqa
                                 count_ownership_or_control_statement_interest_statement_types[interest['type']] += 1
+                            if ('directOrIndirect' in interest and isinstance(interest['directOrIndirect'], str)
+                                    and interest['directOrIndirect'] in count_ownership_or_control_statement_interest_direct_or_indirect):  # noqa
+                                count_ownership_or_control_statement_interest_direct_or_indirect[interest['directOrIndirect']] += 1  # noqa
                             if is_interest_current(interest) and 'statementID' in statement:
                                 current_statement_ids.add(statement['statementID'])
 
@@ -173,6 +179,8 @@ class GetStatistics:
             data['count_person_statements_have_pep_status'] = count_person_statements_have_pep_status
             data['count_person_statements_have_pep_status_and_reason_missing_info'] = \
                 count_person_statements_have_pep_status_and_reason_missing_info
+        if self.schema_object.is_schema_version_equal_to_or_greater_than('0.3'):
+            data['count_ownership_or_control_statement_interest_direct_or_indirect'] = count_ownership_or_control_statement_interest_direct_or_indirect  # noqa
         return data
 
     def _process_address(self, address):
