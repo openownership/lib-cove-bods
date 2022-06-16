@@ -425,19 +425,27 @@ class RunAdditionalChecks:
             if 'componentStatementIDs' in statement and not statement.get('isComponent') \
                     and isinstance(statement['componentStatementIDs'], list):
                 self.statement_ids_seen_in_component_statement_ids.extend(statement['componentStatementIDs'])
-        # If any interest has beneficialOwnershipOrControl then a person statement ID must be specified.
+        # Check Interests
         interests = statement.get('interests', [])
         if isinstance(interests, list):
             interests_with_beneficialOwnershipOrControl = \
                 [i for i in interests if isinstance(i, dict) and i.get('beneficialOwnershipOrControl')]
-            if len(interests_with_beneficialOwnershipOrControl) > 0 \
-                    and isinstance(statement.get('interestedParty', {}), dict) \
-                    and not statement.get('interestedParty').get('describedByPersonStatement'):
-                self.output.append({
-                    'type': 'statement_is_beneficialOwnershipOrControl_but_no_person_specified',
-                    'statement_type': 'ownership_or_control',
-                    'statement': statement.get('statementID'),
-                })
+            if len(interests_with_beneficialOwnershipOrControl) > 0:
+                # If any interest has beneficialOwnershipOrControl then a person statement ID must be specified.
+                if isinstance(statement.get('interestedParty', {}), dict) \
+                        and not statement.get('interestedParty').get('describedByPersonStatement'):
+                    self.output.append({
+                        'type': 'statement_is_beneficialOwnershipOrControl_but_no_person_specified',
+                        'statement_type': 'ownership_or_control',
+                        'statement': statement.get('statementID'),
+                    })
+                # If any interests has beneficialOwnershipOrControl then isComponent at the statement level must be false.
+                if statement.get("isComponent"):
+                    self.output.append({
+                        'type': 'statement_is_beneficialOwnershipOrControl_but_also_is_component',
+                        'statement_type': 'ownership_or_control',
+                        'statement': statement.get('statementID'),
+                    })
 
     def _check_entity_statement_second_pass(self, statement):
         if statement.get('statementID') not in self.entity_statements_seen_in_ownership_or_control_statement:
