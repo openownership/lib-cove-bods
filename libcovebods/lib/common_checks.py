@@ -86,12 +86,20 @@ class GetStatistics:
                 if ('personType' in statement and isinstance(statement['personType'], str)
                         and statement['personType'] in count_person_statements_types):
                     count_person_statements_types[statement['personType']] += 1
-                if self.schema_object.schema_version != '0.1':
+                if self.schema_object.schema_version == '0.2':
                     if 'hasPepStatus' in statement and statement['hasPepStatus']:
                         count_person_statements_have_pep_status += 1
                         if 'pepStatusDetails' in statement and isinstance(statement['pepStatusDetails'], list):
                             if [x for x in statement['pepStatusDetails'] if x.get('missingInfoReason')]:
                                 count_person_statements_have_pep_status_and_reason_missing_info += 1
+                elif self.schema_object.schema_version != '0.1':
+                    # Essentially, V0.3 and up. We don't count stats for 0.1 for this.
+                    if isinstance(statement.get('politicalExposure'), dict):
+                        if statement['politicalExposure'].get('status') == 'isPep':
+                            count_person_statements_have_pep_status += 1
+                            if isinstance(statement['politicalExposure'].get('details'), list):
+                                if [x for x in statement['politicalExposure']['details'] if x.get('missingInfoReason')]:
+                                    count_person_statements_have_pep_status_and_reason_missing_info += 1
                 if 'addresses' in statement and isinstance(statement['addresses'], list):
                     for address in statement['addresses']:
                         self._process_address(address)
