@@ -1,7 +1,7 @@
 import json
 from collections import OrderedDict
 from libcove.lib.common import common_checks_context
-from libcovebods.lib.common_checks import GetStatistics, RunAdditionalChecks
+from libcovebods.lib.common_checks import process_additional_checks
 from django.utils.html import format_html
 from libcovebods.config import LibCoveBODSConfig
 
@@ -110,13 +110,11 @@ def common_checks_bods(context, upload_dir, json_data, schema_obj, lib_cove_bods
 
     context.update(common_checks['context'])
 
-    additional_checks = RunAdditionalChecks(json_data, lib_cove_bods_config, schema_obj).run()
-    get_statistics = GetStatistics(json_data, lib_cove_bods_config, schema_obj).run()
-
+    additional_checks_data = process_additional_checks(json_data, lib_cove_bods_config, schema_obj)
     context.update({
-        'statistics': get_statistics,
-        'additional_checks': additional_checks,
-        'additional_checks_count': len(additional_checks),
+        'statistics': additional_checks_data['statistics'],
+        'additional_checks': additional_checks_data['additional_checks'],
+        'additional_checks_count': len(additional_checks_data['additional_checks']),
     })
 
     return context
