@@ -910,7 +910,7 @@ def process_additional_checks(json_data, lib_cove_bods_config, schema_object):
         elif statement_type == "personStatement":
             for additional_check_instance in additional_check_instances:
                 additional_check_instance.check_person_statement_first_pass(statement)
-        elif statement_type == "ownershipOrControlStatement":
+        elif statement_type == 'ownershipOrControlStatement':
             for additional_check_instance in additional_check_instances:
                 additional_check_instance.check_ownership_or_control_statement_first_pass(
                     statement
