@@ -18,4 +18,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - run: pip install .[dev]
-    - run: flake8
+    - run: isort --check-only libcovebods/ tests/ setup.py
+    - run: black --check libcovebods/ tests/ setup.py
+    - run: flake8 libcovebods/ tests/ setup.py
