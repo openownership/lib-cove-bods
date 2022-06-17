@@ -1,7 +1,7 @@
 import datetime
 
-from dateutil import parser
 from pytz import UTC
+from dateutil import parser
 
 
 def get_year_from_bods_birthdate_or_deathdate(data):
