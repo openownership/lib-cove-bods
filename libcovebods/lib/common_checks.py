@@ -11,6 +11,9 @@ class AdditionalCheck:
         self._lib_cove_bods_config = lib_cove_bods_config
         self._schema_object = schema_object
 
+    def does_apply_to_schema(self):
+        return True
+
     def check_statement_first_pass(self, statement):
         pass
 
@@ -217,6 +220,31 @@ class LegacyStatistics(AdditionalCheck):
             data['count_person_statements_have_pep_status_and_reason_missing_info'] = \
                 self.count_person_statements_have_pep_status_and_reason_missing_info
         return data
+
+
+class StatisticOwnershipOrControlInterestDirectOrIndirect(AdditionalCheck):
+
+    def does_apply_to_schema(self):
+        return self._schema_object.is_schema_version_equal_to_or_greater_than('0.3')
+
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_ownership_or_control_statement_interest_direct_or_indirect = {}
+        for value in schema_object.get_ownership_or_control_statement_interest_direct_or_indirect_list():
+            self.count_ownership_or_control_statement_interest_direct_or_indirect[value] = 0
+
+    def check_ownership_or_control_statement_first_pass(self, statement):
+        if 'interests' in statement and isinstance(statement['interests'], list):
+            for interest in statement['interests']:
+                if isinstance(interest, dict):
+                    if ('directOrIndirect' in interest and isinstance(interest['directOrIndirect'], str)
+                            and interest['directOrIndirect'] in self.count_ownership_or_control_statement_interest_direct_or_indirect):  # noqa
+                        self.count_ownership_or_control_statement_interest_direct_or_indirect[interest['directOrIndirect']] += 1  # noqa
+
+    def get_statistics(self):
+        return {
+            'count_ownership_or_control_statement_interest_direct_or_indirect': self.count_ownership_or_control_statement_interest_direct_or_indirect, # noqa
+        }
 
 
 class LegacyChecks(AdditionalCheck):
@@ -560,6 +588,7 @@ class LegacyChecks(AdditionalCheck):
 ADDITIONAL_CHECK_CLASSES = [
     LegacyChecks,
     LegacyStatistics,
+    StatisticOwnershipOrControlInterestDirectOrIndirect,
 ]
 
 
@@ -569,6 +598,7 @@ def process_additional_checks(
         schema_object
 ):
     additional_check_instances = [x(lib_cove_bods_config, schema_object) for x in ADDITIONAL_CHECK_CLASSES]
+    additional_check_instances = [x for x in additional_check_instances if x.does_apply_to_schema()]
 
     # First pass
     for statement in json_data:
