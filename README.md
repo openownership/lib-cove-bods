@@ -28,6 +28,18 @@ You can also pass the raw option to see the JSON as it originally came out of th
 
     python -m pytest
 
+### Code linting
+
+Make sure dev dependencies are installed in your virtual environment:
+
+    pip install -e .[dev]
+
+Then run:
+
+    isort libcovebods/ tests/ setup.py
+    black libcovebods/ tests/ setup.py
+    flake8 libcovebods/ tests/ setup.py
+
 ### Updating schema files in data
 
 This library contains the actual data files for different versions of the schema, in the `libcovebods/data` directory.
