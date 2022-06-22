@@ -902,9 +902,34 @@ class CheckHasPublicListing(AdditionalCheck):
                     )
 
 
+class CheckIsBenificialInterestAndComponent(AdditionalCheck):
+    def does_apply_to_schema(self):
+        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.2")
+
+    def check_ownership_or_control_statement_first_pass(self, statement):
+        interests = statement.get("interests", [])
+        if isinstance(interests, list):
+            interests_with_beneficialOwnershipOrControl = [
+                i
+                for i in interests
+                if isinstance(i, dict) and i.get("beneficialOwnershipOrControl")
+            ]
+            if len(interests_with_beneficialOwnershipOrControl) > 0:
+                # If any interests has beneficialOwnershipOrControl then isComponent at the statement level must be false.
+                if statement.get("isComponent"):
+                    self._additional_check_results.append(
+                        {
+                            "type": "statement_has_beneficial_interest_but_also_is_component",
+                            "statement_type": "ownership_or_control",
+                            "statement": statement.get("statementID"),
+                        }
+                    )
+
+
 ADDITIONAL_CHECK_CLASSES = [
     LegacyChecks,
     CheckHasPublicListing,
+    CheckIsBenificialInterestAndComponent,
     LegacyStatistics,
     StatisticOwnershipOrControlInterestDirectOrIndirect,
 ]

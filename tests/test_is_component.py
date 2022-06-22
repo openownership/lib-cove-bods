@@ -1,10 +1,17 @@
 import os
 import tempfile
 
+import libcovebods.lib.common_checks
 from libcovebods.api import bods_json_output
 
 
-def test_iscomponent_true_but_has_component_statement_ids_1():
+def test_iscomponent_true_but_has_component_statement_ids_1(monkeypatch):
+
+    monkeypatch.setattr(
+        libcovebods.lib.common_checks,
+        "ADDITIONAL_CHECK_CLASSES",
+        [libcovebods.lib.common_checks.LegacyChecks],
+    )
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -62,7 +69,13 @@ def test_component_statement_ids_not_in_package_1():
     )
 
 
-def test_statement_is_component_but_is_not_used_1():
+def test_statement_is_component_but_is_not_used_1(monkeypatch):
+
+    monkeypatch.setattr(
+        libcovebods.lib.common_checks,
+        "ADDITIONAL_CHECK_CLASSES",
+        [libcovebods.lib.common_checks.LegacyChecks],
+    )
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -90,7 +103,13 @@ def test_statement_is_component_but_is_not_used_1():
     assert results["additional_checks"][0]["statement_type"] == "ownership_or_control"
 
 
-def test_statement_is_component_but_is_used_in_the_wrong_order_1():
+def test_statement_is_component_but_is_used_in_the_wrong_order_1(monkeypatch):
+
+    monkeypatch.setattr(
+        libcovebods.lib.common_checks,
+        "ADDITIONAL_CHECK_CLASSES",
+        [libcovebods.lib.common_checks.LegacyChecks],
+    )
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()

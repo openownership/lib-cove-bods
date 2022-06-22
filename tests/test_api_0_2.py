@@ -41,7 +41,20 @@ def test_iscompontent_os_03_dr_03():
     assert results["schema_version"] == "0.2"
     assert results["validation_errors_count"] == 0
     assert results["additional_fields_count"] == 0
-    assert results["additional_checks_count"] == 0
+
+    # When schema 0.2 was written, there were no checks here.
+    # However in 0.3 a new check was introduced that applies to 0.2 too, so we do expect a result here.
+    # https://github.com/openownership/lib-cove-bods/issues/77
+    assert results["additional_checks_count"] == 1
+    assert (
+        results["additional_checks"][0]["type"]
+        == "statement_has_beneficial_interest_but_also_is_component"
+    )
+    assert results["additional_checks"][0]["statement_type"] == "ownership_or_control"
+    assert (
+        results["additional_checks"][0]["statement"]
+        == "24e604f2-790f-4600-8ff2-7fd8e46f047e"
+    )
 
 
 def test_bad_statement_id_type():
