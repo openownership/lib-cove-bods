@@ -359,7 +359,7 @@ class LegacyChecks(AdditionalCheck):
         self.statement_ids_counted = {}
 
     def check_entity_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.entity_statements_seen.append(statement.get("statementID"))
@@ -426,7 +426,7 @@ class LegacyChecks(AdditionalCheck):
                 )
 
     def check_person_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.person_statements_seen.append(statement.get("statementID"))
@@ -508,7 +508,7 @@ class LegacyChecks(AdditionalCheck):
                 )
 
     def check_ownership_or_control_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.ownership_or_control_statements_seen.append(statement.get("statementID"))
@@ -652,7 +652,7 @@ class LegacyChecks(AdditionalCheck):
                 )
 
     def check_entity_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         if (
@@ -681,7 +681,7 @@ class LegacyChecks(AdditionalCheck):
                 )
 
     def check_person_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         if (
@@ -710,7 +710,7 @@ class LegacyChecks(AdditionalCheck):
                 )
 
     def check_ownership_or_control_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         interested_party = statement.get("interestedParty")
