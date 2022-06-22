@@ -342,6 +342,27 @@ class StatisticOwnershipOrControlInterestDirectOrIndirect(AdditionalCheck):
         }
 
 
+class StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.stat = 0
+
+    def check_ownership_or_control_statement_first_pass(self, statement):
+        if "interests" in statement and isinstance(statement["interests"], list):
+            interests_with_beneficialOwnershipOrControl = [
+                i
+                for i in statement["interests"]
+                if isinstance(i, dict) and i.get("beneficialOwnershipOrControl")
+            ]
+            if interests_with_beneficialOwnershipOrControl:
+                self.stat += 1
+
+    def get_statistics(self):
+        return {
+            "count_ownership_or_control_statement_with_at_least_one_interest_beneficial": self.stat,
+        }
+
+
 class LegacyChecks(AdditionalCheck):
     """Before the AdditionalCheck system was implemented, all this code was together in one class.
     As we work on checks in this class, we should move them to seperate classes if possible."""
@@ -1027,6 +1048,7 @@ ADDITIONAL_CHECK_CLASSES = [
     CheckEntitySecurityListingsMICSCodes,
     LegacyStatistics,
     StatisticOwnershipOrControlInterestDirectOrIndirect,
+    StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
 ]
 
 
