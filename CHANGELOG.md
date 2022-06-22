@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - New check: has public listing information but has public listing is false. For 0.3+
 - New check: statement has beneficial interest but also is component. For 0.2+
 - New check: statement entityType and entitySubtype.generalCategory do not align. For 0.3+
+- New check: marketIdentifierCode / operatingMarketIdentifierCode - check valid, and check one not missing. For 0.3+
+- New config option: requests_cache_dir
 
 ### Changed
 

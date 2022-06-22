@@ -946,11 +946,85 @@ class CheckEntityTypeAndEntitySubtypeAlign(AdditionalCheck):
                     )
 
 
+class CheckEntitySecurityListingsMICSCodes(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.mics_data = None
+
+    def does_apply_to_schema(self):
+        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    def check_entity_statement_first_pass(self, statement):
+        if isinstance(statement.get("publicListing"), dict) and isinstance(
+            statement["publicListing"].get("securitiesListings"), list
+        ):
+            for securitiesListing in statement["publicListing"].get(
+                "securitiesListings"
+            ):
+                if isinstance(securitiesListing, dict):
+                    marketIdentifierCode = securitiesListing.get("marketIdentifierCode")
+                    operatingMarketIdentifierCode = securitiesListing.get(
+                        "operatingMarketIdentifierCode"
+                    )
+                    if marketIdentifierCode and operatingMarketIdentifierCode:
+                        if (
+                            isinstance(marketIdentifierCode, str)
+                            and isinstance(operatingMarketIdentifierCode, str)
+                            and not self.is_market_identifier_code_and_operating_market_identifier_code_valid(
+                                marketIdentifierCode, operatingMarketIdentifierCode
+                            )
+                        ):
+                            self._additional_check_results.append(
+                                {
+                                    "type": "entity_security_listing_market_identifier_code_and_operating_market_identifier_code_not_valid",
+                                    "statement_type": "entity",
+                                    "statement": statement.get("statementID"),
+                                    "market_identifier_code": marketIdentifierCode,
+                                    "operating_market_identifier_code": operatingMarketIdentifierCode,
+                                }
+                            )
+                    elif marketIdentifierCode and not operatingMarketIdentifierCode:
+                        self._additional_check_results.append(
+                            {
+                                "type": "entity_security_listing_market_identifier_code_set_but_not_operating_market_identifier_code",
+                                "statement_type": "entity",
+                                "statement": statement.get("statementID"),
+                            }
+                        )
+                    elif operatingMarketIdentifierCode and not marketIdentifierCode:
+                        self._additional_check_results.append(
+                            {
+                                "type": "entity_security_listing_operating_market_identifier_code_set_but_not_market_identifier_code",
+                                "statement_type": "entity",
+                                "statement": statement.get("statementID"),
+                            }
+                        )
+
+    def is_market_identifier_code_and_operating_market_identifier_code_valid(
+        self, marketIdentifierCode, operatingMarketIdentifierCode
+    ):
+        # Instances of this object exist for each check only; so we cache mics_data with no cache busting because they will clear natually.
+        if not self.mics_data:
+            r = self._lib_cove_bods_config.get_requests_session_with_caching().get(
+                "https://raw.githubusercontent.com/openownership/ISO10383/main/mics.json"
+            )
+            r.raise_for_status()
+            self.mics_data = r.json()
+        for mic_data in self.mics_data:
+            if (
+                mic_data.get("MIC") == marketIdentifierCode
+                and mic_data.get("OPERATING MIC") == operatingMarketIdentifierCode
+            ):
+                return True
+        return False
+
+
 ADDITIONAL_CHECK_CLASSES = [
     LegacyChecks,
     CheckHasPublicListing,
     CheckIsBenificialInterestAndComponent,
     CheckEntityTypeAndEntitySubtypeAlign,
+    CheckEntitySecurityListingsMICSCodes,
     LegacyStatistics,
     StatisticOwnershipOrControlInterestDirectOrIndirect,
 ]

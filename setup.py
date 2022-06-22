@@ -17,6 +17,8 @@ setup(
         "libcove>=0.22.0",
         "libcoveweb>=0.21.0",
         "packaging",
+        "requests",
+        "requests-cache",
     ],
     extras_require={"dev": ["pytest", "flake8", "black==22.3.0", "isort"]},
     classifiers=[
