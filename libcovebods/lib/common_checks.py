@@ -926,10 +926,31 @@ class CheckIsBenificialInterestAndComponent(AdditionalCheck):
                     )
 
 
+class CheckEntityTypeAndEntitySubtypeAlign(AdditionalCheck):
+    def does_apply_to_schema(self):
+        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    def check_entity_statement_first_pass(self, statement):
+        if isinstance(statement.get("entitySubtype"), dict):
+            entitySubtype = statement["entitySubtype"].get("generalCategory")
+            if entitySubtype and isinstance(entitySubtype, str):
+                entityType = statement.get("entityType")
+                entitySubtypeFirstBit = entitySubtype.split("-").pop(0)
+                if entityType != entitySubtypeFirstBit:
+                    self._additional_check_results.append(
+                        {
+                            "type": "statement_entity_type_and_entity_sub_type_do_not_align",
+                            "statement_type": "entity",
+                            "statement": statement.get("statementID"),
+                        }
+                    )
+
+
 ADDITIONAL_CHECK_CLASSES = [
     LegacyChecks,
     CheckHasPublicListing,
     CheckIsBenificialInterestAndComponent,
+    CheckEntityTypeAndEntitySubtypeAlign,
     LegacyStatistics,
     StatisticOwnershipOrControlInterestDirectOrIndirect,
 ]
