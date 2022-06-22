@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Schema class has new method get_ownership_or_control_statement_interest_direct_or_indirect_list() for this
 - New check: has public listing information but has public listing is false. For 0.3+
 - New check: statement has beneficial interest but also is component. For 0.2+
+- New statistic: count ownership or control statement with at least one interest beneficial
 
 ### Changed
 
