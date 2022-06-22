@@ -14,7 +14,7 @@
       }
     ],
     "publicListing": {
-      "hasPublicListing": true,
+      "hasPublicListing": false,
       "companyFilingsURLs": ["http://example.com/"],
       "securitiesListings": []
     },
