@@ -73,8 +73,6 @@ class LegacyStatistics(AdditionalCheck):
         self.count_person_statements_types = {}
         for value in schema_object.get_person_statement_types_list():
             self.count_person_statements_types[value] = 0
-        self.count_person_statements_have_pep_status = 0
-        self.count_person_statements_have_pep_status_and_reason_missing_info = 0
         # Ownership or control
         self.count_ownership_or_control_statement = 0
         self.count_ownership_or_control_statement_interested_party_with_person = 0
@@ -165,20 +163,6 @@ class LegacyStatistics(AdditionalCheck):
             and statement["personType"] in self.count_person_statements_types
         ):
             self.count_person_statements_types[statement["personType"]] += 1
-        if self._schema_object.schema_version != "0.1":
-            if "hasPepStatus" in statement and statement["hasPepStatus"]:
-                self.count_person_statements_have_pep_status += 1
-                if "pepStatusDetails" in statement and isinstance(
-                    statement["pepStatusDetails"], list
-                ):
-                    if [
-                        x
-                        for x in statement["pepStatusDetails"]
-                        if x.get("missingInfoReason")
-                    ]:
-                        self.count_person_statements_have_pep_status_and_reason_missing_info += (
-                            1
-                        )
         if "addresses" in statement and isinstance(statement["addresses"], list):
             for address in statement["addresses"]:
                 self._process_address(address)
@@ -296,13 +280,6 @@ class LegacyStatistics(AdditionalCheck):
             "count_addresses_with_country": self.count_addresses_with_country,
             "count_addresses_with_postcode_duplicated_in_address": self.count_addresses_with_postcode_duplicated_in_address,
         }
-        if self._schema_object.schema_version != "0.1":
-            data[
-                "count_person_statements_have_pep_status"
-            ] = self.count_person_statements_have_pep_status
-            data[
-                "count_person_statements_have_pep_status_and_reason_missing_info"
-            ] = self.count_person_statements_have_pep_status_and_reason_missing_info
         return data
 
 
@@ -981,6 +958,37 @@ class CheckEntitySecurityListingsMICSCodes(AdditionalCheck):
                         )
 
 
+class PEPForSchema02Only(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_person_statements_have_pep_status = 0
+        self.count_person_statements_have_pep_status_and_reason_missing_info = 0
+
+    def does_apply_to_schema(self):
+        return self._schema_object.schema_version == "0.2"
+
+    def check_person_statement_first_pass(self, statement):
+        if "hasPepStatus" in statement and statement["hasPepStatus"]:
+            self.count_person_statements_have_pep_status += 1
+            if "pepStatusDetails" in statement and isinstance(
+                statement["pepStatusDetails"], list
+            ):
+                if [
+                    x
+                    for x in statement["pepStatusDetails"]
+                    if x.get("missingInfoReason")
+                ]:
+                    self.count_person_statements_have_pep_status_and_reason_missing_info += (
+                        1
+                    )
+
+    def get_statistics(self):
+        return {
+            "count_person_statements_have_pep_status": self.count_person_statements_have_pep_status,
+            "count_person_statements_have_pep_status_and_reason_missing_info": self.count_person_statements_have_pep_status_and_reason_missing_info,
+        }
+
+
 ADDITIONAL_CHECK_CLASSES = [
     LegacyChecks,
     CheckHasPublicListing,
@@ -989,6 +997,7 @@ ADDITIONAL_CHECK_CLASSES = [
     LegacyStatistics,
     StatisticOwnershipOrControlInterestDirectOrIndirect,
     StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
+    PEPForSchema02Only,
 ]
 
 

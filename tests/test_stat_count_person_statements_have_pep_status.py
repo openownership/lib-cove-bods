@@ -19,7 +19,7 @@ def test_not_in_old_schema():
     assert "count_person_statements_have_pep_status" not in results["statistics"]
 
 
-def test_1():
+def test_schema_0_2_basic_1():
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -43,7 +43,7 @@ def test_1():
     )
 
 
-def test_missing_1():
+def test_schema_0_2_missing_1():
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
