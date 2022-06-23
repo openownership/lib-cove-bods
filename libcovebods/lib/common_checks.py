@@ -1094,7 +1094,7 @@ class PEPForSchema03AndAbove(AdditionalCheck):
                 self.count_person_statements_have_pep_status += 1
                 self.count_person_statements_have_pep_status_statuses[status] += 1
             details = statement["politicalExposure"].get("details")
-            if details and status == "isNotPep":
+            if details and (not status or status == "isNotPep"):
                 self._additional_check_results.append(
                     {
                         "type": "has_pep_details_but_incorrect_pep_status",
