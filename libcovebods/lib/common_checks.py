@@ -1021,30 +1021,56 @@ class PEPForSchema02Only(AdditionalCheck):
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
         self.count_person_statements_have_pep_status = 0
+        # Schema 0.2 only has a boolean, but we are going to map them to these 2 values taken from schema 0.3
+        self.count_person_statements_have_pep_status_statuses = {
+            "isPep": 0,
+            "isNotPep": 0,
+        }
+
         self.count_person_statements_have_pep_status_and_reason_missing_info = 0
 
     def does_apply_to_schema(self):
         return self._schema_object.schema_version == "0.2"
 
     def check_person_statement_first_pass(self, statement):
-        if "hasPepStatus" in statement and statement["hasPepStatus"]:
+        if "hasPepStatus" in statement:
             self.count_person_statements_have_pep_status += 1
-            if "pepStatusDetails" in statement and isinstance(
-                statement["pepStatusDetails"], list
-            ):
-                if [
-                    x
-                    for x in statement["pepStatusDetails"]
-                    if x.get("missingInfoReason")
-                ]:
-                    self.count_person_statements_have_pep_status_and_reason_missing_info += (
-                        1
-                    )
+            if statement["hasPepStatus"]:
+                self.count_person_statements_have_pep_status_statuses["isPep"] += 1
+            else:
+                self.count_person_statements_have_pep_status_statuses["isNotPep"] += 1
 
     def get_statistics(self):
         return {
             "count_person_statements_have_pep_status": self.count_person_statements_have_pep_status,
-            "count_person_statements_have_pep_status_and_reason_missing_info": self.count_person_statements_have_pep_status_and_reason_missing_info,
+            "count_person_statements_have_pep_status_statuses": self.count_person_statements_have_pep_status_statuses,
+        }
+
+
+class PEPForSchema03AndAbove(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_person_statements_have_pep_status = 0
+        self.count_person_statements_have_pep_status_statuses = {}
+        for (
+            value
+        ) in schema_object.get_person_statement_political_exposure_status_list():
+            self.count_person_statements_have_pep_status_statuses[value] = 0
+
+    def does_apply_to_schema(self):
+        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    def check_person_statement_first_pass(self, statement):
+        if isinstance(statement.get("politicalExposure"), dict):
+            status = statement["politicalExposure"].get("status")
+            if status in self.count_person_statements_have_pep_status_statuses.keys():
+                self.count_person_statements_have_pep_status += 1
+                self.count_person_statements_have_pep_status_statuses[status] += 1
+
+    def get_statistics(self):
+        return {
+            "count_person_statements_have_pep_status": self.count_person_statements_have_pep_status,
+            "count_person_statements_have_pep_status_statuses": self.count_person_statements_have_pep_status_statuses,
         }
 
 
@@ -1058,6 +1084,7 @@ ADDITIONAL_CHECK_CLASSES = [
     StatisticOwnershipOrControlInterestDirectOrIndirect,
     StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
     PEPForSchema02Only,
+    PEPForSchema03AndAbove,
 ]
 
 

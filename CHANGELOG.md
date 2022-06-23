@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - New check: marketIdentifierCode / operatingMarketIdentifierCode - check valid, and check one not missing. For 0.3+
 - New config option: requests_cache_dir
 - New statistic: count ownership or control statement with at least one interest beneficial
+- New statistic: count person statements have pep status statuses
 
 ### Changed
 
@@ -27,6 +28,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Classes RunAdditionalChecks and  GetStatistics are gone, refactored to LegacyChecks and LegacyStatistics
   - New abstract class AdditionalCheck - can be extended by other classes to have better seperation in the future 
   - New function process_additional_checks available to do work
+
+## Removed
+
+- Removed statistic: count person statements have pep status and reason missing info
 
 ## [0.12.0] - 2021-10-26
 
