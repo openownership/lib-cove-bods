@@ -980,6 +980,20 @@ class PEPForSchema02Only(AdditionalCheck):
                 self.count_person_statements_have_pep_status_statuses["isPep"] += 1
             else:
                 self.count_person_statements_have_pep_status_statuses["isNotPep"] += 1
+        if isinstance(statement.get("pepStatusDetails"), list):
+            details_no_missing_info = [
+                x
+                for x in statement.get("pepStatusDetails")
+                if not x.get("missingInfoReason")
+            ]
+            if details_no_missing_info and not statement["hasPepStatus"]:
+                self._additional_check_results.append(
+                    {
+                        "type": "has_pep_details_without_missing_info_but_incorrect_pep_status",
+                        "statement_type": "person",
+                        "statement": statement.get("statementID"),
+                    }
+                )
 
     def get_statistics(self):
         return {
@@ -1007,6 +1021,15 @@ class PEPForSchema03AndAbove(AdditionalCheck):
             if status in self.count_person_statements_have_pep_status_statuses.keys():
                 self.count_person_statements_have_pep_status += 1
                 self.count_person_statements_have_pep_status_statuses[status] += 1
+            details = statement["politicalExposure"].get("details")
+            if details and status == "isNotPep":
+                self._additional_check_results.append(
+                    {
+                        "type": "has_pep_details_but_incorrect_pep_status",
+                        "statement_type": "person",
+                        "statement": statement.get("statementID"),
+                    }
+                )
 
     def get_statistics(self):
         return {

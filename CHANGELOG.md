@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - New check: marketIdentifierCode / operatingMarketIdentifierCode - check one not missing. For 0.3+
 - New statistic: count ownership or control statement with at least one interest beneficial
 - New statistic: count person statements have pep status statuses
+- New check: has pep details without missing info but incorrect pep status. For 0.2 only
+- New check: has pep details but incorrect pep status. For 0.3+
 
 ### Changed
 
