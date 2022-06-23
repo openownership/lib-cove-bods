@@ -129,6 +129,21 @@ class SchemaBODS(SchemaJsonMixin):
                 else:
                     return []
 
+    def get_person_statement_political_exposure_status_list(self):
+        for statement_schema in self._pkg_schema_obj["items"]["oneOf"]:
+            if (
+                statement_schema["properties"]["statementType"]["enum"][0]
+                == "personStatement"
+            ):
+                political_exposure_schema = statement_schema["properties"].get(
+                    "politicalExposure"
+                )
+                # This is only available in 0.3 and above.
+                if isinstance(political_exposure_schema, dict):
+                    return political_exposure_schema["properties"]["status"]["enum"]
+                else:
+                    return []
+
     def get_inconsistent_schema_version_used_for_statement(self, statement):
         # If version is not set at all, then we assume it's the default version
         if (
