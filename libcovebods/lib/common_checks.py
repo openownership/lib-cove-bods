@@ -994,6 +994,19 @@ class PEPForSchema02Only(AdditionalCheck):
                         "statement": statement.get("statementID"),
                     }
                 )
+            details_with_missing_info = [
+                x
+                for x in statement.get("pepStatusDetails")
+                if x.get("missingInfoReason")
+            ]
+            if details_with_missing_info and statement["hasPepStatus"]:
+                self._additional_check_results.append(
+                    {
+                        "type": "has_pep_details_with_missing_info_but_incorrect_pep_status",
+                        "statement_type": "person",
+                        "statement": statement.get("statementID"),
+                    }
+                )
 
     def get_statistics(self):
         return {
@@ -1030,6 +1043,18 @@ class PEPForSchema03AndAbove(AdditionalCheck):
                         "statement": statement.get("statementID"),
                     }
                 )
+            if isinstance(details, list):
+                details_with_missing_info = [
+                    x for x in details if x.get("missingInfoReason")
+                ]
+                if details_with_missing_info and status != "unknown":
+                    self._additional_check_results.append(
+                        {
+                            "type": "has_pep_details_with_missing_info_but_incorrect_pep_status",
+                            "statement_type": "person",
+                            "statement": statement.get("statementID"),
+                        }
+                    )
 
     def get_statistics(self):
         return {

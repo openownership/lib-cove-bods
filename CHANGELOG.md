@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - New statistic: count person statements have pep status statuses
 - New check: has pep details without missing info but incorrect pep status. For 0.2 only
 - New check: has pep details but incorrect pep status. For 0.3+
+- New check: has pep details with missing info but incorrect pep status. Different rules are used for 0.2 only and 0.3+
 
 ### Changed
 
