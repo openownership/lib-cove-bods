@@ -922,10 +922,49 @@ class CheckEntityTypeAndEntitySubtypeAlign(AdditionalCheck):
                     )
 
 
+class CheckEntitySecurityListingsMICSCodes(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.mics_data = None
+
+    def does_apply_to_schema(self):
+        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    def check_entity_statement_first_pass(self, statement):
+        if isinstance(statement.get("publicListing"), dict) and isinstance(
+            statement["publicListing"].get("securitiesListings"), list
+        ):
+            for securitiesListing in statement["publicListing"].get(
+                "securitiesListings"
+            ):
+                if isinstance(securitiesListing, dict):
+                    marketIdentifierCode = securitiesListing.get("marketIdentifierCode")
+                    operatingMarketIdentifierCode = securitiesListing.get(
+                        "operatingMarketIdentifierCode"
+                    )
+                    if marketIdentifierCode and not operatingMarketIdentifierCode:
+                        self._additional_check_results.append(
+                            {
+                                "type": "entity_security_listing_market_identifier_code_set_but_not_operating_market_identifier_code",
+                                "statement_type": "entity",
+                                "statement": statement.get("statementID"),
+                            }
+                        )
+                    elif operatingMarketIdentifierCode and not marketIdentifierCode:
+                        self._additional_check_results.append(
+                            {
+                                "type": "entity_security_listing_operating_market_identifier_code_set_but_not_market_identifier_code",
+                                "statement_type": "entity",
+                                "statement": statement.get("statementID"),
+                            }
+                        )
+
+
 ADDITIONAL_CHECK_CLASSES = [
     LegacyChecks,
     CheckHasPublicListing,
     CheckEntityTypeAndEntitySubtypeAlign,
+    CheckEntitySecurityListingsMICSCodes,
     LegacyStatistics,
     StatisticOwnershipOrControlInterestDirectOrIndirect,
 ]
