@@ -18,6 +18,9 @@
       "companyFilingsURLs": ["http://example.com/"],
       "securitiesListings": []
     },
+    "entitySubtype": {
+      "generalCategory": "stateBody-governmentDepartment"
+    },
     "publicationDetails": {
       "publicationDate": "2018-02-13",
       "bodsVersion": "0.3",

@@ -16,7 +16,17 @@
     "publicListing": {
       "hasPublicListing": true,
       "companyFilingsURLs": ["http://example.com/"],
-      "securitiesListings": []
+      "securitiesListings": [
+        {
+          "marketIdentifierCode": "PURE",
+          "operatingMarketIdentifierCode": "XCNQ",
+          "stockExchangeJurisdiction": "CA",
+          "stockExchangeName": "CANADIAN SECURITIES EXCHANGE - PURE",
+          "security": {
+            "ticker": "DEMO"
+          }
+        }
+      ]
     },
     "publicationDetails": {
       "publicationDate": "2018-02-13",

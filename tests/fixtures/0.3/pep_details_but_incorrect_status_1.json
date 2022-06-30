@@ -59,6 +59,12 @@
         "postCode": "N3 1LF"
       }
     ],
+    "politicalExposure": {
+      "status": "isNotPep",
+      "details": [
+        {"reason": "They stood for election but lost."}
+      ]
+    },
     "publicationDetails": {
       "publicationDate": "2018-02-13",
       "bodsVersion": "0.3",

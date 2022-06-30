@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="libcovebods",
-    version="0.12.0",
+    version="0.13.0",
     author="Open Data Services",
     author_email="code@opendataservices.coop",
     url="https://github.com/openownership/lib-cove-bods",
@@ -16,6 +16,7 @@ setup(
         "flattentool>=0.5.0",
         "libcove>=0.22.0",
         "libcoveweb>=0.21.0",
+        "packaging",
     ],
     extras_require={"dev": ["pytest", "flake8", "black==22.3.0", "isort"]},
     classifiers=[

@@ -36,7 +36,19 @@
         "pepStatusDetails":
         [
             {
-                "missingInfoReason": "They might not be actually, they might just have delusions of grandeur."
+                "jurisdiction": {
+                    "code": "gb"
+                },
+                "reason": "Member of Parliament",
+                "startDate": "2017-10-15",
+                "source": {
+                    "type": ["selfDeclaration"],
+                    "assertedBy": [
+                        {
+                            "name": "Michael Hubbard"
+                        }
+                    ]
+                }
             }
         ],
         "publicationDetails": {

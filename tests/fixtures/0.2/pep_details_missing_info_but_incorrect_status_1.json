@@ -32,11 +32,11 @@
                 "fullName": "Michael Hubbard"
             }
         ],
-        "hasPepStatus": false,
+        "hasPepStatus": true,
         "pepStatusDetails":
         [
             {
-                "missingInfoReason": "They might not be actually, they might just have delusions of grandeur."
+                "missingInfoReason": "They won't tell us"
             }
         ],
         "publicationDetails": {

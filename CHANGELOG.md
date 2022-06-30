@@ -7,13 +7,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.13.0] - 2022-06-30
+
 ### Added
 
 - Schema version 0.3
 - Schema class has new method is_schema_version_equal_to_or_greater_than()
 - New statistic: count of interest objects with different directOrIndirect values. For 0.3+
   - Schema class has new method get_ownership_or_control_statement_interest_direct_or_indirect_list() for this
-  
+- New check: has public listing information but has public listing is false. For 0.3+
+- New check: statement entityType and entitySubtype.generalCategory do not align. For 0.3+
+- New check: marketIdentifierCode / operatingMarketIdentifierCode - check one not missing. For 0.3+
+- New statistic: count ownership or control statement with at least one interest beneficial
+- New statistic: count person statements have pep status statuses
+- New check: has pep details without missing info but incorrect pep status. For 0.2 only
+- New check: has pep details but incorrect pep status. For 0.3+
+- New check: has pep details with missing info but incorrect pep status. Different rules are used for 0.2 only and 0.3+
+
 ### Changed
 
 - Updated included schema files, and added instructions on how to do that to the README
@@ -21,6 +31,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Classes RunAdditionalChecks and  GetStatistics are gone, refactored to LegacyChecks and LegacyStatistics
   - New abstract class AdditionalCheck - can be extended by other classes to have better seperation in the future 
   - New function process_additional_checks available to do work
+
+## Removed
+
+- Removed statistic: count person statements have pep status and reason missing info
 
 ## [0.12.0] - 2021-10-26
 

@@ -73,8 +73,6 @@ class LegacyStatistics(AdditionalCheck):
         self.count_person_statements_types = {}
         for value in schema_object.get_person_statement_types_list():
             self.count_person_statements_types[value] = 0
-        self.count_person_statements_have_pep_status = 0
-        self.count_person_statements_have_pep_status_and_reason_missing_info = 0
         # Ownership or control
         self.count_ownership_or_control_statement = 0
         self.count_ownership_or_control_statement_interested_party_with_person = 0
@@ -165,20 +163,6 @@ class LegacyStatistics(AdditionalCheck):
             and statement["personType"] in self.count_person_statements_types
         ):
             self.count_person_statements_types[statement["personType"]] += 1
-        if self._schema_object.schema_version != "0.1":
-            if "hasPepStatus" in statement and statement["hasPepStatus"]:
-                self.count_person_statements_have_pep_status += 1
-                if "pepStatusDetails" in statement and isinstance(
-                    statement["pepStatusDetails"], list
-                ):
-                    if [
-                        x
-                        for x in statement["pepStatusDetails"]
-                        if x.get("missingInfoReason")
-                    ]:
-                        self.count_person_statements_have_pep_status_and_reason_missing_info += (
-                            1
-                        )
         if "addresses" in statement and isinstance(statement["addresses"], list):
             for address in statement["addresses"]:
                 self._process_address(address)
@@ -296,13 +280,6 @@ class LegacyStatistics(AdditionalCheck):
             "count_addresses_with_country": self.count_addresses_with_country,
             "count_addresses_with_postcode_duplicated_in_address": self.count_addresses_with_postcode_duplicated_in_address,
         }
-        if self._schema_object.schema_version != "0.1":
-            data[
-                "count_person_statements_have_pep_status"
-            ] = self.count_person_statements_have_pep_status
-            data[
-                "count_person_statements_have_pep_status_and_reason_missing_info"
-            ] = self.count_person_statements_have_pep_status_and_reason_missing_info
         return data
 
 
@@ -342,6 +319,27 @@ class StatisticOwnershipOrControlInterestDirectOrIndirect(AdditionalCheck):
         }
 
 
+class StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.stat = 0
+
+    def check_ownership_or_control_statement_first_pass(self, statement):
+        if "interests" in statement and isinstance(statement["interests"], list):
+            interests_with_beneficialOwnershipOrControl = [
+                i
+                for i in statement["interests"]
+                if isinstance(i, dict) and i.get("beneficialOwnershipOrControl")
+            ]
+            if interests_with_beneficialOwnershipOrControl:
+                self.stat += 1
+
+    def get_statistics(self):
+        return {
+            "count_ownership_or_control_statement_with_at_least_one_interest_beneficial": self.stat,
+        }
+
+
 class LegacyChecks(AdditionalCheck):
     """Before the AdditionalCheck system was implemented, all this code was together in one class.
     As we work on checks in this class, we should move them to seperate classes if possible."""
@@ -359,7 +357,7 @@ class LegacyChecks(AdditionalCheck):
         self.statement_ids_counted = {}
 
     def check_entity_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.entity_statements_seen.append(statement.get("statementID"))
@@ -426,7 +424,7 @@ class LegacyChecks(AdditionalCheck):
                 )
 
     def check_person_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.person_statements_seen.append(statement.get("statementID"))
@@ -508,7 +506,7 @@ class LegacyChecks(AdditionalCheck):
                 )
 
     def check_ownership_or_control_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.ownership_or_control_statements_seen.append(statement.get("statementID"))
@@ -652,7 +650,7 @@ class LegacyChecks(AdditionalCheck):
                 )
 
     def check_entity_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         if (
@@ -681,7 +679,7 @@ class LegacyChecks(AdditionalCheck):
                 )
 
     def check_person_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         if (
@@ -710,7 +708,7 @@ class LegacyChecks(AdditionalCheck):
                 )
 
     def check_ownership_or_control_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behavoir of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
         interested_party = statement.get("interestedParty")
@@ -884,10 +882,205 @@ class LegacyChecks(AdditionalCheck):
             )
 
 
+class CheckHasPublicListing(AdditionalCheck):
+    def does_apply_to_schema(self):
+        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    def check_entity_statement_first_pass(self, statement):
+        if isinstance(statement.get("publicListing"), dict):
+            pl = statement.get("publicListing")
+            if pl.get("companyFilingsURLs") or pl.get("securitiesListings"):
+                if not pl.get("hasPublicListing"):
+                    self._additional_check_results.append(
+                        {
+                            "type": "has_public_listing_information_but_has_public_listing_is_false",
+                            "statement_type": "entity",
+                            "statement": statement.get("statementID"),
+                        }
+                    )
+
+
+class CheckEntityTypeAndEntitySubtypeAlign(AdditionalCheck):
+    def does_apply_to_schema(self):
+        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    def check_entity_statement_first_pass(self, statement):
+        if isinstance(statement.get("entitySubtype"), dict):
+            entitySubtype = statement["entitySubtype"].get("generalCategory")
+            if entitySubtype and isinstance(entitySubtype, str):
+                entityType = statement.get("entityType")
+                entitySubtypeFirstBit = entitySubtype.split("-").pop(0)
+                if entityType != entitySubtypeFirstBit:
+                    self._additional_check_results.append(
+                        {
+                            "type": "statement_entity_type_and_entity_sub_type_do_not_align",
+                            "statement_type": "entity",
+                            "statement": statement.get("statementID"),
+                        }
+                    )
+
+
+class CheckEntitySecurityListingsMICSCodes(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.mics_data = None
+
+    def does_apply_to_schema(self):
+        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    def check_entity_statement_first_pass(self, statement):
+        if isinstance(statement.get("publicListing"), dict) and isinstance(
+            statement["publicListing"].get("securitiesListings"), list
+        ):
+            for securitiesListing in statement["publicListing"].get(
+                "securitiesListings"
+            ):
+                if isinstance(securitiesListing, dict):
+                    marketIdentifierCode = securitiesListing.get("marketIdentifierCode")
+                    operatingMarketIdentifierCode = securitiesListing.get(
+                        "operatingMarketIdentifierCode"
+                    )
+                    if marketIdentifierCode and not operatingMarketIdentifierCode:
+                        self._additional_check_results.append(
+                            {
+                                "type": "entity_security_listing_market_identifier_code_set_but_not_operating_market_identifier_code",
+                                "statement_type": "entity",
+                                "statement": statement.get("statementID"),
+                            }
+                        )
+                    elif operatingMarketIdentifierCode and not marketIdentifierCode:
+                        self._additional_check_results.append(
+                            {
+                                "type": "entity_security_listing_operating_market_identifier_code_set_but_not_market_identifier_code",
+                                "statement_type": "entity",
+                                "statement": statement.get("statementID"),
+                            }
+                        )
+
+
+class PEPForSchema02Only(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_person_statements_have_pep_status = 0
+        # Schema 0.2 only has a boolean, but we are going to map them to these 2 values taken from schema 0.3
+        self.count_person_statements_have_pep_status_statuses = {
+            "isPep": 0,
+            "isNotPep": 0,
+        }
+
+        self.count_person_statements_have_pep_status_and_reason_missing_info = 0
+
+    def does_apply_to_schema(self):
+        return self._schema_object.schema_version == "0.2"
+
+    def check_person_statement_first_pass(self, statement):
+        if "hasPepStatus" in statement:
+            self.count_person_statements_have_pep_status += 1
+            if statement["hasPepStatus"]:
+                self.count_person_statements_have_pep_status_statuses["isPep"] += 1
+            else:
+                self.count_person_statements_have_pep_status_statuses["isNotPep"] += 1
+        if isinstance(statement.get("pepStatusDetails"), list):
+            details_no_missing_info = [
+                x
+                for x in statement.get("pepStatusDetails")
+                if not x.get("missingInfoReason")
+            ]
+            if details_no_missing_info and not statement["hasPepStatus"]:
+                self._additional_check_results.append(
+                    {
+                        "type": "has_pep_details_without_missing_info_but_incorrect_pep_status",
+                        "statement_type": "person",
+                        "statement": statement.get("statementID"),
+                    }
+                )
+            details_with_missing_info = [
+                x
+                for x in statement.get("pepStatusDetails")
+                if x.get("missingInfoReason")
+            ]
+            if details_with_missing_info and statement["hasPepStatus"]:
+                self._additional_check_results.append(
+                    {
+                        "type": "has_pep_details_with_missing_info_but_incorrect_pep_status",
+                        "statement_type": "person",
+                        "statement": statement.get("statementID"),
+                    }
+                )
+
+    def get_statistics(self):
+        return {
+            "count_person_statements_have_pep_status": self.count_person_statements_have_pep_status,
+            "count_person_statements_have_pep_status_statuses": self.count_person_statements_have_pep_status_statuses,
+        }
+
+
+class PEPForSchema03AndAbove(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_person_statements_have_pep_status = 0
+        self.count_person_statements_have_pep_status_statuses = {}
+        for (
+            value
+        ) in schema_object.get_person_statement_political_exposure_status_list():
+            self.count_person_statements_have_pep_status_statuses[value] = 0
+
+    def does_apply_to_schema(self):
+        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    def check_person_statement_first_pass(self, statement):
+        if isinstance(statement.get("politicalExposure"), dict):
+            status = statement["politicalExposure"].get("status")
+            if status in self.count_person_statements_have_pep_status_statuses.keys():
+                self.count_person_statements_have_pep_status += 1
+                self.count_person_statements_have_pep_status_statuses[status] += 1
+            has_pep_details_with_missing_info_but_incorrect_pep_status = False
+            details = statement["politicalExposure"].get("details")
+            if isinstance(details, list):
+                details_with_missing_info = [
+                    x for x in details if x.get("missingInfoReason")
+                ]
+                if details_with_missing_info and status != "unknown":
+                    has_pep_details_with_missing_info_but_incorrect_pep_status = True
+                    self._additional_check_results.append(
+                        {
+                            "type": "has_pep_details_with_missing_info_but_incorrect_pep_status",
+                            "statement_type": "person",
+                            "statement": statement.get("statementID"),
+                        }
+                    )
+            if (
+                details
+                and (not status or status == "isNotPep")
+                and not has_pep_details_with_missing_info_but_incorrect_pep_status
+            ):
+                # This check is a less specific version of has_pep_details_with_missing_info_but_incorrect_pep_status
+                # so if that one has already been issued then we want to skip this one.
+                self._additional_check_results.append(
+                    {
+                        "type": "has_pep_details_but_incorrect_pep_status",
+                        "statement_type": "person",
+                        "statement": statement.get("statementID"),
+                    }
+                )
+
+    def get_statistics(self):
+        return {
+            "count_person_statements_have_pep_status": self.count_person_statements_have_pep_status,
+            "count_person_statements_have_pep_status_statuses": self.count_person_statements_have_pep_status_statuses,
+        }
+
+
 ADDITIONAL_CHECK_CLASSES = [
     LegacyChecks,
+    CheckHasPublicListing,
+    CheckEntityTypeAndEntitySubtypeAlign,
+    CheckEntitySecurityListingsMICSCodes,
     LegacyStatistics,
     StatisticOwnershipOrControlInterestDirectOrIndirect,
+    StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
+    PEPForSchema02Only,
+    PEPForSchema03AndAbove,
 ]
 
 

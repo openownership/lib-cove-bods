@@ -59,6 +59,14 @@
         "postCode": "N3 1LF"
       }
     ],
+    "politicalExposure": {
+        "status": "isPep",
+        "details": [
+            {
+                "missingInfoReason": "They won't tell us."
+            }
+        ]
+    },
     "publicationDetails": {
       "publicationDate": "2018-02-13",
       "bodsVersion": "0.3",

@@ -4,7 +4,7 @@
     "statementType": "entityStatement",
     "isComponent": false,
     "statementDate": "2017-11-18",
-    "entityType": "registeredEntity",
+    "entityType": "stateBody",
     "name": "CHRINON LTD",
     "foundingDate": "2010-11-18",
     "identifiers": [
@@ -13,10 +13,8 @@
         "id": "07444723"
       }
     ],
-    "publicListing": {
-      "hasPublicListing": true,
-      "companyFilingsURLs": ["http://example.com/"],
-      "securitiesListings": []
+    "entitySubtype": {
+      "generalCategory": "stateBody-governmentDepartment"
     },
     "publicationDetails": {
       "publicationDate": "2018-02-13",
