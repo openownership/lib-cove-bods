@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="libcovebods",
-    version="0.13.0",
+    version="0.14.0",
     author="Open Data Services",
     author_email="code@opendataservices.coop",
     url="https://github.com/openownership/lib-cove-bods",
@@ -12,7 +12,7 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         "python-dateutil",
-        "Django>2.2,<2.3",
+        "Django>3.2,<3.3",
         "flattentool>=0.5.0",
         "libcove>=0.22.0",
         "libcoveweb>=0.21.0",
