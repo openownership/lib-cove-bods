@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="libcovebods",
-    version="0.13.0",
+    version="0.14.0",
     author="Open Data Services",
     author_email="code@opendataservices.coop",
     url="https://github.com/openownership/lib-cove-bods",
