@@ -12,7 +12,7 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         "python-dateutil",
-        "Django>2.2,<2.3",
+        "Django>3.2,<3.3",
         "flattentool>=0.5.0",
         "libcove>=0.22.0",
         "libcoveweb>=0.21.0",
