@@ -5,6 +5,7 @@ import tempfile
 import libcovebods.config
 import libcovebods.schema
 import libcovebods.lib.common_checks
+import libcovebods.additionalfields
 
 
 def main():
@@ -74,8 +75,9 @@ def main():
         with open(args.inputfilename) as fp:
             input_data = json.load(fp)
 
-        schema = libcoveofds.schema.OFDSSchema()
-        validator = libcoveofds.additionalfields.AdditionalFields(schema)
+        config = libcovebods.config.LibCoveBODSConfig()
+        schema = libcovebods.schema.SchemaBODS(input_data, config)
+        validator = libcovebods.additionalfields.AdditionalFields(schema)
 
         output = validator.process(input_data)
 

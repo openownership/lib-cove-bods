@@ -1,6 +1,9 @@
 from packaging import version as packaging_version
 import json
 from urllib.parse import  urlparse
+from libcove2.common import schema_dict_fields_generator
+
+
 
 try:
     from functools import cached_property
@@ -179,6 +182,10 @@ class SchemaBODS:
         return packaging_version.parse(self.schema_version) >= packaging_version.parse(
             version
         )
+
+
+    def get_package_schema_fields(self) -> set:
+        return set(schema_dict_fields_generator(self._pkg_schema_obj))
 
 
     # THESE FROM OLD LIBCOVE
