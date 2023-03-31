@@ -12,15 +12,14 @@ setup(
     python_requires=">=3.8",
     install_requires=[
         "python-dateutil",
-        "Django>3.2,<3.3",
-        "flattentool>=0.5.0",
-        "libcove>=0.22.0",
-        "libcoveweb>=0.21.0",
         "packaging",
         # Jsonschema 4.10 breaks the message
         #     'missingPersonType' is a dependency of 'missingPersonReason'
         # in tests/fixtures/0.1/badfile_all_validation_errors.json
         "jsonschema<4.10",
+        "pytz",
+        # These should be in libcove2
+        "requests",
     ],
     extras_require={"dev": ["pytest", "flake8", "black==22.3.0", "isort"]},
     classifiers=[

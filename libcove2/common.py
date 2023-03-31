@@ -1,4 +1,10 @@
 import re
+import os
+import datetime
+import requests
+from tempfile import NamedTemporaryFile
+import json
+
 
 LANGUAGE_RE = re.compile(
     "^(.*_(((([A-Za-z]{2,3}(-([A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-([A-Za-z]{4}))?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-([0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(x(-[A-Za-z0-9]{1,8})+))?)|(x(-[A-Za-z0-9]{1,8})+)))$"
@@ -90,3 +96,45 @@ def fields_present_generator(json_data, prefix=""):
         for item in json_data:
             if isinstance(item, dict):
                 yield from fields_present_generator(item, prefix)
+
+def org_id_file_fresh(org_id_file_contents, check_date):
+    """Unless the file was downloaded on greater than or equal to 'check_date' it is considered stale."""
+    org_id_file_date_downloaded_date = datetime.datetime.strptime(
+        org_id_file_contents.get("downloaded", "2000-1-1"), "%Y-%m-%d"
+    ).date()
+    return org_id_file_date_downloaded_date >= check_date
+
+def get_orgids_prefixes(orgids_url=None):
+    """Get org-ids.json file from file system (or fetch remotely if it doesn't exist)"""
+    local_org_ids_file = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "org-ids.json"
+    )
+    today = datetime.date.today()
+    if orgids_url is None:
+        orgids_url = "http://org-id.guide/download.json"
+    org_id_file_contents = None
+
+    # Try to grab the data from the local filesystem
+    try:
+        with open(local_org_ids_file) as fp:
+            org_id_file_contents = json.load(fp)
+    except FileNotFoundError:
+        pass
+
+    if org_id_file_contents is None or not org_id_file_fresh(
+        org_id_file_contents, today
+    ):
+        # Refresh the file
+        try:
+            org_id_file_contents = requests.get(orgids_url).json()
+        except requests.exceptions.RequestException as e:
+            # We have tried locally and remotely with no luck. We have to raise.
+            raise e
+
+        org_id_file_contents["downloaded"] = "%s" % today
+        # Use a tempfile and move to create new file here for atomicity
+        with NamedTemporaryFile(mode="w", delete=False) as tmp:
+            json.dump(org_id_file_contents, tmp, indent=2)
+        os.rename(tmp.name, local_org_ids_file)
+    # Return either the original file data, if it was found to be fresh, or the new data, if we were able to retrieve it.
+    return [org_list["code"] for org_list in org_id_file_contents["lists"]]

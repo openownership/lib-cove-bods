@@ -1,8 +1,14 @@
-from libcove.lib.common import SchemaJsonMixin
 from packaging import version as packaging_version
+import json
+from urllib.parse import  urlparse
+
+try:
+    from functools import cached_property
+except ImportError:
+    from cached_property import cached_property
 
 
-class SchemaBODS(SchemaJsonMixin):
+class SchemaBODS:
     def __init__(self, json_data=None, lib_cove_bods_config=None):
         self.config = lib_cove_bods_config
         # Information about this schema
@@ -173,3 +179,24 @@ class SchemaBODS(SchemaJsonMixin):
         return packaging_version.parse(self.schema_version) >= packaging_version.parse(
             version
         )
+
+
+    # THESE FROM OLD LIBCOVE
+
+    @cached_property
+    def pkg_schema_str(self):
+        uri_scheme = urlparse(self.pkg_schema_url).scheme
+        if uri_scheme == "http" or uri_scheme == "https":
+            response = get_request(
+                self.pkg_schema_url,
+                config=getattr(self, "config", None),
+                force_cache=getattr(self, "cache_schema", False),
+            )
+            return response.text
+        else:
+            with open(self.pkg_schema_url) as fp:
+                return fp.read()
+    @property
+    def _pkg_schema_obj(self):
+        return json.loads(self.pkg_schema_str)
+
