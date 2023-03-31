@@ -1,0 +1,116 @@
+from jsonschema import FormatChecker
+from jsonschema.exceptions import ValidationError
+from jsonschema.validators import Draft4Validator
+
+from libcovebods.schema import SchemaBODS
+
+
+
+def oneOf_draft4(validator, oneOf, instance, schema):
+    """
+    oneOf_draft4 validator from
+    https://github.com/Julian/jsonschema/blob/d16713a4296663f3d62c50b9f9a2893cb380b7af/jsonschema/_validators.py#L337
+    Modified to:
+    - sort the instance JSON, so we get a reproducible output that we
+      can can test more easily
+    - If `statementType` is available, use that pick the correct
+      sub-schema, and to yield those ValidationErrors. (Only
+      applicable for BODS).
+    """
+    subschemas = enumerate(oneOf)
+    all_errors = []
+    validStatementTypes = []
+    for index, subschema in subschemas:
+        errs = list(validator.descend(instance, subschema, schema_path=index))
+        if not errs:
+            first_valid = subschema
+            break
+        properties = subschema.get('properties', {})
+        if'statementType' in properties:
+            if 'statementType' in instance:
+                try:
+                    validStatementType = properties['statementType'].get('enum', [])[0]
+                except IndexError:
+                    continue
+                if instance['statementType'] == validStatementType:
+                    for err in errs:
+                        yield err
+                    return
+                else:
+                    validStatementTypes.append(validStatementType)
+            else:
+                yield ValidationError(
+                    'statementType',
+                    validator='required',
+                )
+                break
+        all_errors.extend(errs)
+    else:
+        if validStatementTypes:
+            yield ValidationError(
+                'Invalid code found in statementType',
+                instance=instance['statementType'],
+                path=('statementType',),
+                validator='enum',
+            )
+        else:
+            yield ValidationError(
+                "%s is not valid under any of the given schemas" % (
+                    json.dumps(instance, sort_keys=True, default=decimal_default),),
+                context=all_errors,
+            )
+
+    more_valid = [s for i, s in subschemas if validator.is_valid(instance, s)]
+    if more_valid:
+        more_valid.append(first_valid)
+        reprs = ", ".join(repr(schema) for schema in more_valid)
+        yield ValidationError(
+            "%r is valid under each of %s" % (instance, reprs)
+        )
+
+class JSONSchemaValidator:
+    """Validates data using the JSON Schema method"""
+
+    def __init__(self, schema: SchemaBODS):
+        self._schema = schema
+
+    def validate(self, json_data: dict) -> list:
+        """Call with data. Results are returned."""
+        validator = Draft4Validator(
+            schema=self._schema._pkg_schema_obj, format_checker=FormatChecker()
+        )
+        validator.VALIDATORS["oneOf"] = oneOf_draft4
+        output = []
+        for e in validator.iter_errors(json_data):
+            output.append(BODSValidationError(e, json_data, self._schema))
+        return output
+
+
+class BODSValidationError:
+    """Any problems found in data are returned as an instance of this class."""
+
+    def __init__(
+        self,
+        json_schema_exceptions_validation_error: ValidationError,
+        json_data: dict,
+        schema: SchemaBODS,
+    ):
+        self._message = json_schema_exceptions_validation_error.message
+        self._path = json_schema_exceptions_validation_error.path
+        self._schema_path = json_schema_exceptions_validation_error.schema_path
+        self._validator = json_schema_exceptions_validation_error.validator
+        self._validator_value = json_schema_exceptions_validation_error.validator_value
+        self._context = json_schema_exceptions_validation_error.context
+        self._instance = json_schema_exceptions_validation_error.instance
+
+    def json(self):
+        """Return representation of this error in JSON."""
+        return {
+            "message": self._message,
+            "path": list(self._path),
+            "schema_path": list(self._schema_path),
+            "validator": self._validator,
+            "validator_value": self._validator_value,
+            #"context": self._context,
+            "instance": self._instance,
+        }

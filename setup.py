@@ -18,6 +18,7 @@ setup(
         # in tests/fixtures/0.1/badfile_all_validation_errors.json
         "jsonschema<4.10",
         "pytz",
+        "jsonschema",
         # These should be in libcove2
         "requests",
     ],

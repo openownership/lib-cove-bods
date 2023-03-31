@@ -6,6 +6,7 @@ import libcovebods.config
 import libcovebods.schema
 import libcovebods.lib.common_checks
 import libcovebods.additionalfields
+import libcovebods.jsonschemavalidate
 
 
 def main():
@@ -88,10 +89,11 @@ def main():
         with open(args.inputfilename) as fp:
             input_data = json.load(fp)
 
-        schema = libcoveofds.schema.OFDSSchema()
-        validators = libcoveofds.jsonschemavalidate.JSONSchemaValidator(schema)
+        config = libcovebods.config.LibCoveBODSConfig()
+        schema = libcovebods.schema.SchemaBODS(input_data, config)
+        validator = libcovebods.jsonschemavalidate.JSONSchemaValidator(schema)
 
-        output = validators.validate(input_data)
+        output = validator.validate(input_data)
 
         output_json = [o.json() for o in output]
 
