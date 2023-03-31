@@ -4,7 +4,7 @@ import tempfile
 
 import pytest
 
-from libcovebods.api import bods_json_output
+from tests.api import bods_json_output
 from libcovebods.config import LibCoveBODSConfig
 
 BADFILE_RESULTS = [
