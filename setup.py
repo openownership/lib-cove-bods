@@ -9,7 +9,7 @@ setup(
     description="A data review library",
     packages=find_packages(),
     long_description="A data review library",
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     install_requires=[
         "python-dateutil",
         "Django>3.2,<3.3",
