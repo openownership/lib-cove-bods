@@ -1,12 +1,11 @@
 import argparse
 import json
-import shutil
-import tempfile
-import libcovebods.config
-import libcovebods.schema
-import libcovebods.lib.common_checks
+
 import libcovebods.additionalfields
+import libcovebods.config
 import libcovebods.jsonschemavalidate
+import libcovebods.lib.common_checks
+import libcovebods.schema
 
 
 def main():
@@ -56,9 +55,11 @@ def main():
 
         config = libcovebods.config.LibCoveBODSConfig()
         schema = libcovebods.schema.SchemaBODS(input_data, config)
-        output_data = libcovebods.lib.common_checks.process_additional_checks(input_data, config, schema)
+        output_data = libcovebods.lib.common_checks.process_additional_checks(
+            input_data, config, schema
+        )
 
-        print(json.dumps(output_data['additional_checks'], indent=4))
+        print(json.dumps(output_data["additional_checks"], indent=4))
 
     elif args.subparser_name == "statistics" or args.subparser_name == "s":
 
@@ -67,9 +68,11 @@ def main():
 
         config = libcovebods.config.LibCoveBODSConfig()
         schema = libcovebods.schema.SchemaBODS(input_data, config)
-        output_data = libcovebods.lib.common_checks.process_additional_checks(input_data, config, schema)
+        output_data = libcovebods.lib.common_checks.process_additional_checks(
+            input_data, config, schema
+        )
 
-        print(json.dumps(output_data['statistics'], indent=4))
+        print(json.dumps(output_data["statistics"], indent=4))
 
     elif args.subparser_name == "additionalfields" or args.subparser_name == "af":
 
@@ -98,7 +101,6 @@ def main():
         output_json = [o.json() for o in output]
 
         print(json.dumps(output_json, indent=4))
-
 
 
 if __name__ == "__main__":

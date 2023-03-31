@@ -1,9 +1,9 @@
-from packaging import version as packaging_version
 import json
-from urllib.parse import  urlparse
+from urllib.parse import urlparse
+
+from packaging import version as packaging_version
+
 from libcove2.common import schema_dict_fields_generator
-
-
 
 try:
     from functools import cached_property
@@ -183,10 +183,8 @@ class SchemaBODS:
             version
         )
 
-
     def get_package_schema_fields(self) -> set:
         return set(schema_dict_fields_generator(self._pkg_schema_obj))
-
 
     # THESE FROM OLD LIBCOVE
 
@@ -194,16 +192,12 @@ class SchemaBODS:
     def pkg_schema_str(self):
         uri_scheme = urlparse(self.pkg_schema_url).scheme
         if uri_scheme == "http" or uri_scheme == "https":
-            response = get_request(
-                self.pkg_schema_url,
-                config=getattr(self, "config", None),
-                force_cache=getattr(self, "cache_schema", False),
-            )
-            return response.text
+            pass
+            # TODO
         else:
             with open(self.pkg_schema_url) as fp:
                 return fp.read()
+
     @property
     def _pkg_schema_obj(self):
         return json.loads(self.pkg_schema_str)
-

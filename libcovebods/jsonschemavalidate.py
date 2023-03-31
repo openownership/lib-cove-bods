@@ -1,9 +1,34 @@
+import json
+from decimal import Decimal
+
 from jsonschema import FormatChecker
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator
 
 from libcovebods.schema import SchemaBODS
 
+
+class NumberStr(float):
+    def __init__(self, o):
+        # We don't call the parent here, since we're deliberately altering it's functionality
+        # pylint: disable=W0231
+        self.o = o
+
+    def __repr__(self):
+        return str(self.o)
+
+    # This is needed for this trick to work in python 3.4
+    def __float__(self):
+        return self
+
+
+def decimal_default(o):
+    if isinstance(o, Decimal):
+        if int(o) == o:
+            return int(o)
+        else:
+            return NumberStr(o)
+    raise TypeError(f"{repr(o)} is not JSON serializable")
 
 
 def oneOf_draft4(validator, oneOf, instance, schema):
@@ -25,14 +50,14 @@ def oneOf_draft4(validator, oneOf, instance, schema):
         if not errs:
             first_valid = subschema
             break
-        properties = subschema.get('properties', {})
-        if'statementType' in properties:
-            if 'statementType' in instance:
+        properties = subschema.get("properties", {})
+        if "statementType" in properties:
+            if "statementType" in instance:
                 try:
-                    validStatementType = properties['statementType'].get('enum', [])[0]
+                    validStatementType = properties["statementType"].get("enum", [])[0]
                 except IndexError:
                     continue
-                if instance['statementType'] == validStatementType:
+                if instance["statementType"] == validStatementType:
                     for err in errs:
                         yield err
                     return
@@ -40,23 +65,23 @@ def oneOf_draft4(validator, oneOf, instance, schema):
                     validStatementTypes.append(validStatementType)
             else:
                 yield ValidationError(
-                    'statementType',
-                    validator='required',
+                    "statementType",
+                    validator="required",
                 )
                 break
         all_errors.extend(errs)
     else:
         if validStatementTypes:
             yield ValidationError(
-                'Invalid code found in statementType',
-                instance=instance['statementType'],
-                path=('statementType',),
-                validator='enum',
+                "Invalid code found in statementType",
+                instance=instance["statementType"],
+                path=("statementType",),
+                validator="enum",
             )
         else:
             yield ValidationError(
-                "%s is not valid under any of the given schemas" % (
-                    json.dumps(instance, sort_keys=True, default=decimal_default),),
+                "%s is not valid under any of the given schemas"
+                % (json.dumps(instance, sort_keys=True, default=decimal_default),),
                 context=all_errors,
             )
 
@@ -64,9 +89,8 @@ def oneOf_draft4(validator, oneOf, instance, schema):
     if more_valid:
         more_valid.append(first_valid)
         reprs = ", ".join(repr(schema) for schema in more_valid)
-        yield ValidationError(
-            "%r is valid under each of %s" % (instance, reprs)
-        )
+        yield ValidationError("%r is valid under each of %s" % (instance, reprs))
+
 
 class JSONSchemaValidator:
     """Validates data using the JSON Schema method"""
@@ -111,6 +135,6 @@ class BODSValidationError:
             "schema_path": list(self._schema_path),
             "validator": self._validator,
             "validator_value": self._validator_value,
-            #"context": self._context,
+            # "context": self._context,
             "instance": self._instance,
         }

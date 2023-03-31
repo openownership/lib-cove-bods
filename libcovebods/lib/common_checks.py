@@ -1,7 +1,6 @@
 from collections import defaultdict
 
 from libcove2.common import get_orgids_prefixes
-
 from libcovebods.lib.common import (
     get_year_from_bods_birthdate_or_deathdate,
     is_interest_current,
