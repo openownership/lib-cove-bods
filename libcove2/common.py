@@ -4,7 +4,7 @@ import datetime
 import requests
 from tempfile import NamedTemporaryFile
 import json
-
+import shutil
 
 LANGUAGE_RE = re.compile(
     "^(.*_(((([A-Za-z]{2,3}(-([A-Za-z]{3}(-[A-Za-z]{3}){0,2}))?)|[A-Za-z]{4}|[A-Za-z]{5,8})(-([A-Za-z]{4}))?(-([A-Za-z]{2}|[0-9]{3}))?(-([A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(-([0-9A-WY-Za-wy-z](-[A-Za-z0-9]{2,8})+))*(-(x(-[A-Za-z0-9]{1,8})+))?)|(x(-[A-Za-z0-9]{1,8})+)))$"
@@ -135,6 +135,6 @@ def get_orgids_prefixes(orgids_url=None):
         # Use a tempfile and move to create new file here for atomicity
         with NamedTemporaryFile(mode="w", delete=False) as tmp:
             json.dump(org_id_file_contents, tmp, indent=2)
-        os.rename(tmp.name, local_org_ids_file)
+        shutil.move(tmp.name, local_org_ids_file)
     # Return either the original file data, if it was found to be fresh, or the new data, if we were able to retrieve it.
     return [org_list["code"] for org_list in org_id_file_contents["lists"]]
