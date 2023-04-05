@@ -47,6 +47,6 @@ def bods_json_output(
         "validation_errors_count": len(jsonschemavalidate_output),
         "validation_errors": [o.json() for o in jsonschemavalidate_output],
         "additional_fields_count": len(additionalfields_output),
-        "additional_fields": len(additionalfields_output),
+        "additional_fields": additionalfields_output,
         "file_type": "json",
     }

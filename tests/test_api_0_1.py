@@ -793,11 +793,8 @@ def test_basic_missing_statement_ids():
                 == 0
             )
 
-    for validation_error, data in results["validation_errors"]:
-        validation_error_data = json.loads(validation_error)
-        assert (
-            "'statementID' is missing but required" in validation_error_data["message"]
-        )
+    for validation_error in results["validation_errors"]:
+        assert validation_error["message"] == "'statementID' is missing but required"
 
 
 def test_basic_statement_id_and_type_errors():
@@ -834,25 +831,19 @@ def test_basic_statement_id_and_type_errors():
         == 0
     )
 
-    validation_error_data, data = unpack_validation_error(
-        results["validation_errors"][0]
-    )
-    assert "'shortID' is too short" in validation_error_data["message"]
-    assert data[0]["path"] == "1/statementID"
-    assert data[0]["value"] == "shortID"
+    validation_error = results["validation_errors"][0]
+    assert "'statementID' is missing but required" in validation_error["message"]
+    assert validation_error["path"] == "0"
+    assert validation_error["path"] == "2"
 
-    validation_error_data, data = unpack_validation_error(
-        results["validation_errors"][1]
-    )
-    assert "'statementID' is missing but required" in validation_error_data["message"]
-    assert data[0]["path"] == "0"
-    assert data[1]["path"] == "2"
+    validation_error = results["validation_errors"][1]
+    assert "'shortID' is too short" in validation_error["message"]
+    assert validation_error["path"] == "1/statementID"
+    assert validation_error["value"] == "shortID"
 
-    validation_error_data, data = unpack_validation_error(
-        results["validation_errors"][3]
-    )
-    assert "'statementType' is missing but required" in validation_error_data["message"]
-    assert data[0]["path"] == "3"
+    validation_error = results["validation_errors"][2]
+    assert "'statementType' is missing but required" in validation_error["message"]
+    assert validation_error["path"] == "3"
 
     validation_error_data, data = unpack_validation_error(
         results["validation_errors"][2]
@@ -889,7 +880,24 @@ def test_additional_fields_1():
     assert results["additional_fields_count"] == 2
     assert results["additional_checks_count"] == 0
     assert results["file_type"] == "json"
-    assert results["data_only"] == [("", "cats", 1), ("", "dogs", 1)]
+    assert results["additional_fields"] == {
+        "/cats": {
+            "additional_field_descendance": {},
+            "count": 1,
+            "examples": [2],
+            "field_name": "cats",
+            "path": "",
+            "root_additional_field": True,
+        },
+        "/dogs": {
+            "additional_field_descendance": {},
+            "count": 1,
+            "examples": [0],
+            "field_name": "dogs",
+            "path": "",
+            "root_additional_field": True,
+        },
+    }
     assert results["statistics"]["count_entity_statements"] == 1
     for k in results["statistics"]["count_entity_statements_types"]:
         if k == "registeredEntity":

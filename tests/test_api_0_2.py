@@ -60,7 +60,9 @@ def test_bad_statement_id_type():
 
     assert results["schema_version"] == "0.2"
     assert results["validation_errors_count"] == 1
-    validation_error = json.loads(results["validation_errors"][0][0])
-    assert validation_error["message"].startswith("'statementID' should be a string.")
+    assert (
+        results["validation_errors"][0]["message"]
+        == "'statementID' should be a string."
+    )
     assert results["additional_fields_count"] == 0
     assert results["additional_checks_count"] == 0
