@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Support for Python 3.6 as that is end of life
 - Support for Python 3.7 as that is end of life in a few months
 
+
+### Changed
+
+- Refactor common_checks; functionality unchanged; split legacy classes and create new classes:
+  -  StatisticAddress
+
+
 ## [0.14.0] - 2022-07-20
 
 ### Changed

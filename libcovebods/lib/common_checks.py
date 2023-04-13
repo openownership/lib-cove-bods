@@ -101,11 +101,6 @@ class LegacyStatistics(AdditionalCheck):
         self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(
             int
         )
-        # Others
-        self.count_addresses = 0
-        self.count_addresses_with_postcode = 0
-        self.count_addresses_with_country = 0
-        self.count_addresses_with_postcode_duplicated_in_address = 0
 
     def check_statement_first_pass(self, statement):
         if isinstance(statement.get("replacesStatements"), list):
@@ -151,9 +146,6 @@ class LegacyStatistics(AdditionalCheck):
                         self.count_entity_statements_types_with_any_identifier_with_id_and_scheme[
                             statement["entityType"]
                         ] += 1
-        if "addresses" in statement and isinstance(statement["addresses"], list):
-            for address in statement["addresses"]:
-                self._process_address(address)
 
     def check_person_statement_first_pass(self, statement):
         self.count_person_statements += 1
@@ -163,15 +155,6 @@ class LegacyStatistics(AdditionalCheck):
             and statement["personType"] in self.count_person_statements_types
         ):
             self.count_person_statements_types[statement["personType"]] += 1
-        if "addresses" in statement and isinstance(statement["addresses"], list):
-            for address in statement["addresses"]:
-                self._process_address(address)
-        if "placeOfBirth" in statement and isinstance(statement["placeOfBirth"], dict):
-            self._process_address(statement["placeOfBirth"])
-        if "placeOfResidence" in statement and isinstance(
-            statement["placeOfResidence"], dict
-        ):
-            self._process_address(statement["placeOfResidence"])
 
     def check_ownership_or_control_statement_first_pass(self, statement):
         try:
@@ -231,24 +214,6 @@ class LegacyStatistics(AdditionalCheck):
             self.subject_statement_ids_by_year[year].add(
                 statement["subject"]["describedByEntityStatement"]
             )
-        if "addresses" in statement and isinstance(statement["addresses"], list):
-            for address in statement["addresses"]:
-                self._process_address(address)
-
-    def _process_address(self, address):
-        self.count_addresses += 1
-        if address.get("postCode"):
-            self.count_addresses_with_postcode += 1
-        if address.get("country"):
-            self.count_addresses_with_country += 1
-        if (
-            address.get("postCode")
-            and address.get("address")
-            and isinstance(address.get("postCode"), str)
-            and isinstance(address.get("address"), str)
-            and address.get("postCode").lower() in address.get("address").lower()
-        ):
-            self.count_addresses_with_postcode_duplicated_in_address += 1
 
     def get_statistics(self):
         data = {
@@ -275,6 +240,51 @@ class LegacyStatistics(AdditionalCheck):
             "count_ownership_or_control_statement_interested_party_with_person_by_year": self.count_ownership_or_control_statement_interested_party_with_person_by_year,
             "count_ownership_or_control_statement_interested_party_with_unspecified_by_year": self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year,
             "count_replaces_statements_missing": self.count_replaces_statements_missing,
+        }
+        return data
+
+
+class StatisticAddress(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_addresses = 0
+        self.count_addresses_with_postcode = 0
+        self.count_addresses_with_country = 0
+        self.count_addresses_with_postcode_duplicated_in_address = 0
+
+    def check_entity_statement_first_pass(self, statement):
+        if "addresses" in statement and isinstance(statement["addresses"], list):
+            for address in statement["addresses"]:
+                self._process_address(address)
+
+    def check_person_statement_first_pass(self, statement):
+        if "addresses" in statement and isinstance(statement["addresses"], list):
+            for address in statement["addresses"]:
+                self._process_address(address)
+        if "placeOfBirth" in statement and isinstance(statement["placeOfBirth"], dict):
+            self._process_address(statement["placeOfBirth"])
+        if "placeOfResidence" in statement and isinstance(
+            statement["placeOfResidence"], dict
+        ):
+            self._process_address(statement["placeOfResidence"])
+
+    def _process_address(self, address):
+        self.count_addresses += 1
+        if address.get("postCode"):
+            self.count_addresses_with_postcode += 1
+        if address.get("country"):
+            self.count_addresses_with_country += 1
+        if (
+            address.get("postCode")
+            and address.get("address")
+            and isinstance(address.get("postCode"), str)
+            and isinstance(address.get("address"), str)
+            and address.get("postCode").lower() in address.get("address").lower()
+        ):
+            self.count_addresses_with_postcode_duplicated_in_address += 1
+
+    def get_statistics(self):
+        data = {
             "count_addresses": self.count_addresses,
             "count_addresses_with_postcode": self.count_addresses_with_postcode,
             "count_addresses_with_country": self.count_addresses_with_country,
@@ -1077,6 +1087,7 @@ ADDITIONAL_CHECK_CLASSES = [
     CheckEntityTypeAndEntitySubtypeAlign,
     CheckEntitySecurityListingsMICSCodes,
     LegacyStatistics,
+    StatisticAddress,
     StatisticOwnershipOrControlInterestDirectOrIndirect,
     StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
     PEPForSchema02Only,
