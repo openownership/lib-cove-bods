@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Refactor common_checks; functionality unchanged; split legacy classes and create new classes:
   -  StatisticAddress
   -  StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing
+  -  LegacyChecksNeedingHistory
 
 
 ## [0.14.0] - 2022-07-20
