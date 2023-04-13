@@ -87,9 +87,6 @@ class LegacyStatistics(AdditionalCheck):
             self.count_ownership_or_control_statement_interest_statement_types[
                 value
             ] = 0
-        self.count_replaces_statements_missing = 0
-        self.statement_ids = set()
-        self.current_statement_ids = set()
         self.count_ownership_or_control_statement_by_year = defaultdict(int)
         self.subject_statement_ids_by_year = defaultdict(set)
         self.count_ownership_or_control_statement_interested_party_with_entity_by_year = defaultdict(
@@ -101,16 +98,6 @@ class LegacyStatistics(AdditionalCheck):
         self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(
             int
         )
-
-    def check_statement_first_pass(self, statement):
-        if isinstance(statement.get("replacesStatements"), list):
-            for replaces_statement_id in statement.get("replacesStatements"):
-                if replaces_statement_id not in self.statement_ids:
-                    self.count_replaces_statements_missing += 1
-                if replaces_statement_id in self.current_statement_ids:
-                    self.current_statement_ids.remove(replaces_statement_id)
-        if "statementID" in statement and isinstance(statement["statementID"], str):
-            self.statement_ids.add(statement["statementID"])
 
     def check_entity_statement_first_pass(self, statement):
         self.count_entity_statements += 1
@@ -201,8 +188,6 @@ class LegacyStatistics(AdditionalCheck):
                         self.count_ownership_or_control_statement_interest_statement_types[
                             interest["type"]
                         ] += 1
-                    if is_interest_current(interest) and "statementID" in statement:
-                        self.current_statement_ids.add(statement["statementID"])
 
         if "statementDate" in statement:
             self.count_ownership_or_control_statement_by_year[year] += 1
@@ -224,9 +209,6 @@ class LegacyStatistics(AdditionalCheck):
             "count_person_statements": self.count_person_statements,
             "count_person_statements_types": self.count_person_statements_types,
             "count_ownership_or_control_statement": self.count_ownership_or_control_statement,
-            "count_ownership_or_control_statement_current": len(
-                self.current_statement_ids
-            ),
             "count_ownership_or_control_statement_interested_party_with_person": self.count_ownership_or_control_statement_interested_party_with_person,
             "count_ownership_or_control_statement_interested_party_with_entity": self.count_ownership_or_control_statement_interested_party_with_entity,
             "count_ownership_or_control_statement_interested_party_with_unspecified": self.count_ownership_or_control_statement_interested_party_with_unspecified,
@@ -239,6 +221,44 @@ class LegacyStatistics(AdditionalCheck):
             "count_ownership_or_control_statement_interested_party_with_entity_by_year": self.count_ownership_or_control_statement_interested_party_with_entity_by_year,
             "count_ownership_or_control_statement_interested_party_with_person_by_year": self.count_ownership_or_control_statement_interested_party_with_person_by_year,
             "count_ownership_or_control_statement_interested_party_with_unspecified_by_year": self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year,
+        }
+        return data
+
+
+class StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing(
+    AdditionalCheck
+):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_replaces_statements_missing = 0
+        self.statement_ids = set()
+        self.current_statement_ids = set()
+
+    def check_statement_first_pass(self, statement):
+        if isinstance(statement.get("replacesStatements"), list):
+            for replaces_statement_id in statement.get("replacesStatements"):
+                if replaces_statement_id not in self.statement_ids:
+                    self.count_replaces_statements_missing += 1
+                if replaces_statement_id in self.current_statement_ids:
+                    self.current_statement_ids.remove(replaces_statement_id)
+        if "statementID" in statement and isinstance(statement["statementID"], str):
+            self.statement_ids.add(statement["statementID"])
+
+    def check_ownership_or_control_statement_first_pass(self, statement):
+        if (
+            "interests" in statement
+            and isinstance(statement["interests"], list)
+            and "statementID" in statement
+        ):
+            for interest in statement["interests"]:
+                if isinstance(interest, dict) and is_interest_current(interest):
+                    self.current_statement_ids.add(statement["statementID"])
+
+    def get_statistics(self):
+        data = {
+            "count_ownership_or_control_statement_current": len(
+                self.current_statement_ids
+            ),
             "count_replaces_statements_missing": self.count_replaces_statements_missing,
         }
         return data
@@ -1088,6 +1108,7 @@ ADDITIONAL_CHECK_CLASSES = [
     CheckEntitySecurityListingsMICSCodes,
     LegacyStatistics,
     StatisticAddress,
+    StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing,
     StatisticOwnershipOrControlInterestDirectOrIndirect,
     StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
     PEPForSchema02Only,
