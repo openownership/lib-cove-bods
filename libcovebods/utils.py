@@ -23,3 +23,17 @@ def is_interest_current(interest):
             return False
     else:
         return True
+
+
+def get_sample_data(full_data, max_rows_per_statement_type=50):
+    sample_data = []
+    count_statement_types = {
+        "entityStatement": 0,
+        "personStatement": 0,
+        "ownershipOrControlStatement": 0
+    }
+    for statement in full_data:
+        if statement.get("statementType") in count_statement_types and count_statement_types[statement["statementType"]] < max_rows_per_statement_type:
+            sample_data.append(statement)
+            count_statement_types[statement["statementType"]] += 1
+    return sample_data

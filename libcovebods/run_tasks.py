@@ -17,6 +17,19 @@ TASK_CLASSES = [
     libcovebods.tasks.peps.PEPForSchema03AndAbove,
 ]
 
+TASK_CLASSES_IN_SAMPLE_MODE = [
+    libcovebods.tasks.checks.LegacyChecks,
+    libcovebods.tasks.checks.CheckHasPublicListing,
+    libcovebods.tasks.checks.CheckEntityTypeAndEntitySubtypeAlign,
+    libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodes,
+    libcovebods.tasks.statistics.LegacyStatistics,
+    libcovebods.tasks.statistics.StatisticAddress,
+    libcovebods.tasks.statistics.StatisticOwnershipOrControlInterestDirectOrIndirect,
+    libcovebods.tasks.statistics.StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
+    libcovebods.tasks.peps.PEPForSchema02Only,
+    libcovebods.tasks.peps.PEPForSchema03AndAbove,
+]
+
 
 def process_additional_checks(
     json_data, lib_cove_bods_config, schema_object, task_classes=TASK_CLASSES
