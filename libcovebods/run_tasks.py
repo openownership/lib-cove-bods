@@ -4,10 +4,13 @@ import libcovebods.tasks.statistics
 
 TASK_CLASSES = [
     libcovebods.tasks.checks.LegacyChecks,
+    libcovebods.tasks.checks.LegacyChecksNeedingHistory,
     libcovebods.tasks.checks.CheckHasPublicListing,
     libcovebods.tasks.checks.CheckEntityTypeAndEntitySubtypeAlign,
     libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodes,
     libcovebods.tasks.statistics.LegacyStatistics,
+    libcovebods.tasks.statistics.StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing,
+    libcovebods.tasks.statistics.StatisticAddress,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlInterestDirectOrIndirect,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
     libcovebods.tasks.peps.PEPForSchema02Only,
