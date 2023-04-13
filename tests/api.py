@@ -3,7 +3,7 @@ import json
 import libcovebods.additionalfields
 import libcovebods.config
 import libcovebods.jsonschemavalidate
-import libcovebods.lib.common_checks
+import libcovebods.run_tasks
 import libcovebods.schema
 
 
@@ -24,7 +24,7 @@ def bods_json_output(
     schema = libcovebods.schema.SchemaBODS(input_data, lib_cove_bods_config)
 
     # Additional checks and stats
-    output_data = libcovebods.lib.common_checks.process_additional_checks(
+    output_data = libcovebods.run_tasks.process_additional_checks(
         input_data, lib_cove_bods_config, schema
     )
 
