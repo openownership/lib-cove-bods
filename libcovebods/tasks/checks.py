@@ -603,7 +603,6 @@ class CheckEntityTypeAndEntitySubtypeAlign(AdditionalCheck):
 class CheckEntitySecurityListingsMICSCodes(AdditionalCheck):
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
-        self.mics_data = None
 
     def does_apply_to_schema(self):
         return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
