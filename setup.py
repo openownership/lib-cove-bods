@@ -13,6 +13,7 @@ setup(
     install_requires=[
         "python-dateutil",
         "packaging",
+        "ijson",
         # Jsonschema 4.10 breaks the message
         #     'missingPersonType' is a dependency of 'missingPersonReason'
         # in tests/fixtures/0.1/badfile_all_validation_errors.json
