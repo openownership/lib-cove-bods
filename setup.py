@@ -21,6 +21,7 @@ setup(
         #     'missingPersonType' is a dependency of 'missingPersonReason'
         # in tests/fixtures/0.1/badfile_all_validation_errors.json
         "jsonschema<4.10",
+        "ijson",
     ],
     extras_require={"dev": ["pytest", "flake8", "black==22.3.0", "isort"]},
     classifiers=[
