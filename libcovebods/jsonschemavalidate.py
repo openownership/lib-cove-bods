@@ -126,6 +126,13 @@ class BODSValidationError:
         self._validator_value = json_schema_exceptions_validation_error.validator_value
         self._context = json_schema_exceptions_validation_error.context
         self._instance = json_schema_exceptions_validation_error.instance
+        self._extra = {}
+
+        if self._validator == 'required':
+            if "'" in self._message:
+                self._extra["required_key_which_is_missing"] = self._message.split("'")[1]
+            else:
+                self._extra["required_key_which_is_missing"] = self._message
 
     def json(self):
         """Return representation of this error in JSON."""
@@ -137,4 +144,5 @@ class BODSValidationError:
             "validator_value": self._validator_value,
             # "context": self._context,
             "instance": self._instance,
+            "extra": self._extra,
         }
