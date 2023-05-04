@@ -128,9 +128,11 @@ class BODSValidationError:
         self._instance = json_schema_exceptions_validation_error.instance
         self._extra = {}
 
-        if self._validator == 'required':
+        if self._validator == "required":
             if "'" in self._message:
-                self._extra["required_key_which_is_missing"] = self._message.split("'")[1]
+                self._extra["required_key_which_is_missing"] = self._message.split("'")[
+                    1
+                ]
             else:
                 self._extra["required_key_which_is_missing"] = self._message
 

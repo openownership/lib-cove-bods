@@ -23,4 +23,3 @@ def is_interest_current(interest):
             return False
     else:
         return True
-
