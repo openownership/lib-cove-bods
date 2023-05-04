@@ -87,9 +87,6 @@ class LegacyStatistics(AdditionalCheck):
             self.count_ownership_or_control_statement_interest_statement_types[
                 value
             ] = 0
-        self.count_replaces_statements_missing = 0
-        self.statement_ids = set()
-        self.current_statement_ids = set()
         self.count_ownership_or_control_statement_by_year = defaultdict(int)
         self.subject_statement_ids_by_year = defaultdict(set)
         self.count_ownership_or_control_statement_interested_party_with_entity_by_year = defaultdict(
@@ -101,21 +98,6 @@ class LegacyStatistics(AdditionalCheck):
         self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(
             int
         )
-        # Others
-        self.count_addresses = 0
-        self.count_addresses_with_postcode = 0
-        self.count_addresses_with_country = 0
-        self.count_addresses_with_postcode_duplicated_in_address = 0
-
-    def check_statement_first_pass(self, statement):
-        if isinstance(statement.get("replacesStatements"), list):
-            for replaces_statement_id in statement.get("replacesStatements"):
-                if replaces_statement_id not in self.statement_ids:
-                    self.count_replaces_statements_missing += 1
-                if replaces_statement_id in self.current_statement_ids:
-                    self.current_statement_ids.remove(replaces_statement_id)
-        if "statementID" in statement and isinstance(statement["statementID"], str):
-            self.statement_ids.add(statement["statementID"])
 
     def check_entity_statement_first_pass(self, statement):
         self.count_entity_statements += 1
@@ -151,9 +133,6 @@ class LegacyStatistics(AdditionalCheck):
                         self.count_entity_statements_types_with_any_identifier_with_id_and_scheme[
                             statement["entityType"]
                         ] += 1
-        if "addresses" in statement and isinstance(statement["addresses"], list):
-            for address in statement["addresses"]:
-                self._process_address(address)
 
     def check_person_statement_first_pass(self, statement):
         self.count_person_statements += 1
@@ -163,15 +142,6 @@ class LegacyStatistics(AdditionalCheck):
             and statement["personType"] in self.count_person_statements_types
         ):
             self.count_person_statements_types[statement["personType"]] += 1
-        if "addresses" in statement and isinstance(statement["addresses"], list):
-            for address in statement["addresses"]:
-                self._process_address(address)
-        if "placeOfBirth" in statement and isinstance(statement["placeOfBirth"], dict):
-            self._process_address(statement["placeOfBirth"])
-        if "placeOfResidence" in statement and isinstance(
-            statement["placeOfResidence"], dict
-        ):
-            self._process_address(statement["placeOfResidence"])
 
     def check_ownership_or_control_statement_first_pass(self, statement):
         try:
@@ -218,8 +188,6 @@ class LegacyStatistics(AdditionalCheck):
                         self.count_ownership_or_control_statement_interest_statement_types[
                             interest["type"]
                         ] += 1
-                    if is_interest_current(interest) and "statementID" in statement:
-                        self.current_statement_ids.add(statement["statementID"])
 
         if "statementDate" in statement:
             self.count_ownership_or_control_statement_by_year[year] += 1
@@ -231,9 +199,94 @@ class LegacyStatistics(AdditionalCheck):
             self.subject_statement_ids_by_year[year].add(
                 statement["subject"]["describedByEntityStatement"]
             )
+
+    def get_statistics(self):
+        data = {
+            "count_entity_statements": self.count_entity_statements,
+            "count_entity_statements_types": self.count_entity_statements_types,
+            "count_entity_statements_types_with_any_identifier": self.count_entity_statements_types_with_any_identifier,
+            "count_entity_statements_types_with_any_identifier_with_id_and_scheme": self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
+            "count_person_statements": self.count_person_statements,
+            "count_person_statements_types": self.count_person_statements_types,
+            "count_ownership_or_control_statement": self.count_ownership_or_control_statement,
+            "count_ownership_or_control_statement_interested_party_with_person": self.count_ownership_or_control_statement_interested_party_with_person,
+            "count_ownership_or_control_statement_interested_party_with_entity": self.count_ownership_or_control_statement_interested_party_with_entity,
+            "count_ownership_or_control_statement_interested_party_with_unspecified": self.count_ownership_or_control_statement_interested_party_with_unspecified,
+            "count_ownership_or_control_statement_interest_statement_types": self.count_ownership_or_control_statement_interest_statement_types,
+            "count_ownership_or_control_statement_by_year": self.count_ownership_or_control_statement_by_year,
+            "count_ownership_or_control_statement_subject_by_year": {
+                year: len(year_set)
+                for year, year_set in self.subject_statement_ids_by_year.items()
+            },
+            "count_ownership_or_control_statement_interested_party_with_entity_by_year": self.count_ownership_or_control_statement_interested_party_with_entity_by_year,
+            "count_ownership_or_control_statement_interested_party_with_person_by_year": self.count_ownership_or_control_statement_interested_party_with_person_by_year,
+            "count_ownership_or_control_statement_interested_party_with_unspecified_by_year": self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year,
+        }
+        return data
+
+
+class StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing(
+    AdditionalCheck
+):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_replaces_statements_missing = 0
+        self.statement_ids = set()
+        self.current_statement_ids = set()
+
+    def check_statement_first_pass(self, statement):
+        if isinstance(statement.get("replacesStatements"), list):
+            for replaces_statement_id in statement.get("replacesStatements"):
+                if replaces_statement_id not in self.statement_ids:
+                    self.count_replaces_statements_missing += 1
+                if replaces_statement_id in self.current_statement_ids:
+                    self.current_statement_ids.remove(replaces_statement_id)
+        if "statementID" in statement and isinstance(statement["statementID"], str):
+            self.statement_ids.add(statement["statementID"])
+
+    def check_ownership_or_control_statement_first_pass(self, statement):
+        if (
+            "interests" in statement
+            and isinstance(statement["interests"], list)
+            and "statementID" in statement
+        ):
+            for interest in statement["interests"]:
+                if isinstance(interest, dict) and is_interest_current(interest):
+                    self.current_statement_ids.add(statement["statementID"])
+
+    def get_statistics(self):
+        data = {
+            "count_ownership_or_control_statement_current": len(
+                self.current_statement_ids
+            ),
+            "count_replaces_statements_missing": self.count_replaces_statements_missing,
+        }
+        return data
+
+
+class StatisticAddress(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_addresses = 0
+        self.count_addresses_with_postcode = 0
+        self.count_addresses_with_country = 0
+        self.count_addresses_with_postcode_duplicated_in_address = 0
+
+    def check_entity_statement_first_pass(self, statement):
         if "addresses" in statement and isinstance(statement["addresses"], list):
             for address in statement["addresses"]:
                 self._process_address(address)
+
+    def check_person_statement_first_pass(self, statement):
+        if "addresses" in statement and isinstance(statement["addresses"], list):
+            for address in statement["addresses"]:
+                self._process_address(address)
+        if "placeOfBirth" in statement and isinstance(statement["placeOfBirth"], dict):
+            self._process_address(statement["placeOfBirth"])
+        if "placeOfResidence" in statement and isinstance(
+            statement["placeOfResidence"], dict
+        ):
+            self._process_address(statement["placeOfResidence"])
 
     def _process_address(self, address):
         self.count_addresses += 1
@@ -252,29 +305,6 @@ class LegacyStatistics(AdditionalCheck):
 
     def get_statistics(self):
         data = {
-            "count_entity_statements": self.count_entity_statements,
-            "count_entity_statements_types": self.count_entity_statements_types,
-            "count_entity_statements_types_with_any_identifier": self.count_entity_statements_types_with_any_identifier,
-            "count_entity_statements_types_with_any_identifier_with_id_and_scheme": self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
-            "count_person_statements": self.count_person_statements,
-            "count_person_statements_types": self.count_person_statements_types,
-            "count_ownership_or_control_statement": self.count_ownership_or_control_statement,
-            "count_ownership_or_control_statement_current": len(
-                self.current_statement_ids
-            ),
-            "count_ownership_or_control_statement_interested_party_with_person": self.count_ownership_or_control_statement_interested_party_with_person,
-            "count_ownership_or_control_statement_interested_party_with_entity": self.count_ownership_or_control_statement_interested_party_with_entity,
-            "count_ownership_or_control_statement_interested_party_with_unspecified": self.count_ownership_or_control_statement_interested_party_with_unspecified,
-            "count_ownership_or_control_statement_interest_statement_types": self.count_ownership_or_control_statement_interest_statement_types,
-            "count_ownership_or_control_statement_by_year": self.count_ownership_or_control_statement_by_year,
-            "count_ownership_or_control_statement_subject_by_year": {
-                year: len(year_set)
-                for year, year_set in self.subject_statement_ids_by_year.items()
-            },
-            "count_ownership_or_control_statement_interested_party_with_entity_by_year": self.count_ownership_or_control_statement_interested_party_with_entity_by_year,
-            "count_ownership_or_control_statement_interested_party_with_person_by_year": self.count_ownership_or_control_statement_interested_party_with_person_by_year,
-            "count_ownership_or_control_statement_interested_party_with_unspecified_by_year": self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year,
-            "count_replaces_statements_missing": self.count_replaces_statements_missing,
             "count_addresses": self.count_addresses,
             "count_addresses_with_postcode": self.count_addresses_with_postcode,
             "count_addresses_with_country": self.count_addresses_with_country,
@@ -342,25 +372,19 @@ class StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial(AdditionalChec
 
 class LegacyChecks(AdditionalCheck):
     """Before the AdditionalCheck system was implemented, all this code was together in one class.
-    As we work on checks in this class, we should move them to seperate classes if possible."""
+    As we work on checks in this class, we should move them to seperate classes if possible.
+
+    This now only has legacy checks that don't need to store a history.
+    Ones that need to store history are in LegacyChecksNeedingHistory."""
 
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
-        self.person_statements_seen = []
-        self.person_statements_seen_in_ownership_or_control_statement = []
-        self.entity_statements_seen = []
-        self.entity_statements_seen_in_ownership_or_control_statement = []
-        self.ownership_or_control_statements_seen = []
-        self.statement_ids_seen_in_component_statement_ids = []
-        self.possible_out_of_order_statements = []
         self.orgids_prefixes = get_orgids_prefixes()
-        self.statement_ids_counted = {}
 
     def check_entity_statement_first_pass(self, statement):
         # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
-        self.entity_statements_seen.append(statement.get("statementID"))
         identifiers = statement.get("identifiers")
         if isinstance(identifiers, list):
             for identifier in identifiers:
@@ -409,25 +433,11 @@ class LegacyChecks(AdditionalCheck):
                                 "statement": statement.get("statementID"),
                             }
                         )
-            if (
-                statement.get("isComponent")
-                and statement.get("statementID")
-                and statement.get("statementID")
-                in self.statement_ids_seen_in_component_statement_ids
-            ):
-                self._additional_check_results.append(
-                    {
-                        "type": "statement_is_component_but_is_after_use_in_component_statement_id",
-                        "statement_type": "entity",
-                        "statement": statement.get("statementID"),
-                    }
-                )
 
     def check_person_statement_first_pass(self, statement):
         # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
         if not statement.get("statementID"):
             return
-        self.person_statements_seen.append(statement.get("statementID"))
         if "birthDate" in statement:
             birth_year = get_year_from_bods_birthdate_or_deathdate(
                 statement["birthDate"]
@@ -491,6 +501,116 @@ class LegacyChecks(AdditionalCheck):
                                 "statement": statement.get("statementID"),
                             }
                         )
+
+    def check_ownership_or_control_statement_first_pass(self, statement):
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        if not statement.get("statementID"):
+            return
+        (
+            inconsistent_schema_version_error,
+            inconsistent_schema_version_used,
+        ) = self._schema_object.get_inconsistent_schema_version_used_for_statement(
+            statement
+        )
+        if inconsistent_schema_version_error:
+            self._additional_check_results.append(
+                {
+                    "type": "inconsistent_schema_version_used",
+                    "schema_version": inconsistent_schema_version_used,
+                    "statement_type": "ownership_or_control",
+                    "statement": statement.get("statementID"),
+                }
+            )
+        if self._schema_object.schema_version != "0.1":
+            if (
+                "isComponent" in statement
+                and statement["isComponent"]
+                and "componentStatementIDs" in statement
+                and statement["componentStatementIDs"]
+            ):
+                self._additional_check_results.append(
+                    {
+                        "type": "ownership_or_control_statement_has_is_compontent_and_component_statement_ids",
+                        "statement": statement.get("statementID"),
+                    }
+                )
+        # If any interest has beneficialOwnershipOrControl then a person statement ID must be specified.
+        interests = statement.get("interests", [])
+        if isinstance(interests, list):
+            interests_with_beneficialOwnershipOrControl = [
+                i
+                for i in interests
+                if isinstance(i, dict) and i.get("beneficialOwnershipOrControl")
+            ]
+            if (
+                len(interests_with_beneficialOwnershipOrControl) > 0
+                and isinstance(statement.get("interestedParty", {}), dict)
+                and not statement.get("interestedParty").get(
+                    "describedByPersonStatement"
+                )
+            ):
+                self._additional_check_results.append(
+                    {
+                        "type": "statement_is_beneficialOwnershipOrControl_but_no_person_specified",
+                        "statement_type": "ownership_or_control",
+                        "statement": statement.get("statementID"),
+                    }
+                )
+
+    def _check_addresses_list_for_alternatives(self, statement):
+        # Does this addresses list have any alternative?
+        found_alternative = False
+        for address in statement["addresses"]:
+            if "type" in address and address["type"] == "alternative":
+                found_alternative = True
+
+        if not found_alternative:
+            return
+
+        # It does! Well, if it has an alternative it must have another address that is not an alternative
+        found_non_alternative = False
+        for address in statement["addresses"]:
+            if "type" in address and address["type"] != "alternative":
+                found_non_alternative = True
+
+        if not found_non_alternative:
+            self._additional_check_results.append(
+                {
+                    "type": "alternative_address_with_no_other_address_types",
+                    "statement_type": (
+                        "person"
+                        if statement.get("statementType") == "personStatement"
+                        else "entity"
+                    ),
+                    "statement": statement.get("statementID"),
+                }
+            )
+
+
+class LegacyChecksNeedingHistory(AdditionalCheck):
+    """Before the AdditionalCheck system was implemented, all this code was together in one class.
+    As we work on checks in this class, we should move them to seperate classes if possible.
+
+    This now only has legacy checks that need to store a history.
+    Ones that don't need to store history are in LegacyChecks."""
+
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.person_statements_seen = []
+        self.person_statements_seen_in_ownership_or_control_statement = []
+        self.entity_statements_seen = []
+        self.entity_statements_seen_in_ownership_or_control_statement = []
+        self.ownership_or_control_statements_seen = []
+        self.statement_ids_seen_in_component_statement_ids = []
+        self.possible_out_of_order_statements = []
+        self.statement_ids_counted = {}
+
+    def check_entity_statement_first_pass(self, statement):
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        if not statement.get("statementID"):
+            return
+        self.entity_statements_seen.append(statement.get("statementID"))
+        if self._schema_object.schema_version != "0.1":
             if (
                 statement.get("isComponent")
                 and statement.get("statementID")
@@ -500,10 +620,16 @@ class LegacyChecks(AdditionalCheck):
                 self._additional_check_results.append(
                     {
                         "type": "statement_is_component_but_is_after_use_in_component_statement_id",
-                        "statement_type": "person",
+                        "statement_type": "entity",
                         "statement": statement.get("statementID"),
                     }
                 )
+
+    def check_person_statement_first_pass(self, statement):
+        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        if not statement.get("statementID"):
+            return
+        self.person_statements_seen.append(statement.get("statementID"))
 
     def check_ownership_or_control_statement_first_pass(self, statement):
         # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
@@ -577,34 +703,7 @@ class LegacyChecks(AdditionalCheck):
                             ),
                         }
                     )
-        (
-            inconsistent_schema_version_error,
-            inconsistent_schema_version_used,
-        ) = self._schema_object.get_inconsistent_schema_version_used_for_statement(
-            statement
-        )
-        if inconsistent_schema_version_error:
-            self._additional_check_results.append(
-                {
-                    "type": "inconsistent_schema_version_used",
-                    "schema_version": inconsistent_schema_version_used,
-                    "statement_type": "ownership_or_control",
-                    "statement": statement.get("statementID"),
-                }
-            )
         if self._schema_object.schema_version != "0.1":
-            if (
-                "isComponent" in statement
-                and statement["isComponent"]
-                and "componentStatementIDs" in statement
-                and statement["componentStatementIDs"]
-            ):
-                self._additional_check_results.append(
-                    {
-                        "type": "ownership_or_control_statement_has_is_compontent_and_component_statement_ids",
-                        "statement": statement.get("statementID"),
-                    }
-                )
             if (
                 statement.get("isComponent")
                 and statement.get("statementID")
@@ -625,28 +724,6 @@ class LegacyChecks(AdditionalCheck):
             ):
                 self.statement_ids_seen_in_component_statement_ids.extend(
                     statement["componentStatementIDs"]
-                )
-        # If any interest has beneficialOwnershipOrControl then a person statement ID must be specified.
-        interests = statement.get("interests", [])
-        if isinstance(interests, list):
-            interests_with_beneficialOwnershipOrControl = [
-                i
-                for i in interests
-                if isinstance(i, dict) and i.get("beneficialOwnershipOrControl")
-            ]
-            if (
-                len(interests_with_beneficialOwnershipOrControl) > 0
-                and isinstance(statement.get("interestedParty", {}), dict)
-                and not statement.get("interestedParty").get(
-                    "describedByPersonStatement"
-                )
-            ):
-                self._additional_check_results.append(
-                    {
-                        "type": "statement_is_beneficialOwnershipOrControl_but_no_person_specified",
-                        "statement_type": "ownership_or_control",
-                        "statement": statement.get("statementID"),
-                    }
                 )
 
     def check_entity_statement_second_pass(self, statement):
@@ -852,35 +929,6 @@ class LegacyChecks(AdditionalCheck):
             else:
                 self.statement_ids_counted[statement_id] = 1
 
-    def _check_addresses_list_for_alternatives(self, statement):
-        # Does this addresses list have any alternative?
-        found_alternative = False
-        for address in statement["addresses"]:
-            if "type" in address and address["type"] == "alternative":
-                found_alternative = True
-
-        if not found_alternative:
-            return
-
-        # It does! Well, if it has an alternative it must have another address that is not an alternative
-        found_non_alternative = False
-        for address in statement["addresses"]:
-            if "type" in address and address["type"] != "alternative":
-                found_non_alternative = True
-
-        if not found_non_alternative:
-            self._additional_check_results.append(
-                {
-                    "type": "alternative_address_with_no_other_address_types",
-                    "statement_type": (
-                        "person"
-                        if statement.get("statementType") == "personStatement"
-                        else "entity"
-                    ),
-                    "statement": statement.get("statementID"),
-                }
-            )
-
 
 class CheckHasPublicListing(AdditionalCheck):
     def does_apply_to_schema(self):
@@ -923,7 +971,6 @@ class CheckEntityTypeAndEntitySubtypeAlign(AdditionalCheck):
 class CheckEntitySecurityListingsMICSCodes(AdditionalCheck):
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
-        self.mics_data = None
 
     def does_apply_to_schema(self):
         return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
@@ -1073,10 +1120,13 @@ class PEPForSchema03AndAbove(AdditionalCheck):
 
 ADDITIONAL_CHECK_CLASSES = [
     LegacyChecks,
+    LegacyChecksNeedingHistory,
     CheckHasPublicListing,
     CheckEntityTypeAndEntitySubtypeAlign,
     CheckEntitySecurityListingsMICSCodes,
     LegacyStatistics,
+    StatisticAddress,
+    StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing,
     StatisticOwnershipOrControlInterestDirectOrIndirect,
     StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
     PEPForSchema02Only,
