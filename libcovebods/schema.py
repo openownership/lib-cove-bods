@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from packaging import version as packaging_version
 
 from libcove2.common import schema_dict_fields_generator
+from libcovebods.config import LibCoveBODSConfig
 
 try:
     from functools import cached_property
@@ -13,7 +14,7 @@ except ImportError:
 
 class SchemaBODS:
     def __init__(self, json_data=None, lib_cove_bods_config=None):
-        self.config = lib_cove_bods_config
+        self.config = lib_cove_bods_config or LibCoveBODSConfig()
         # Information about this schema
         # ... what version the data tried to set (used later to check for inconsistent statements)
         self.schema_version_attempted = None
