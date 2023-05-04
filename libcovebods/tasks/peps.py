@@ -13,8 +13,22 @@ class PEPForSchema02Only(AdditionalCheck):
 
         self.count_person_statements_have_pep_status_and_reason_missing_info = 0
 
-    def does_apply_to_schema(self):
-        return self._schema_object.schema_version == "0.2"
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.schema_version == "0.2"
+
+    @staticmethod
+    def get_additional_check_types_possible(
+        lib_cove_bods_config, schema_object
+    ) -> list:
+        return (
+            [
+                "has_pep_details_without_missing_info_but_incorrect_pep_status",
+                "has_pep_details_with_missing_info_but_incorrect_pep_status",
+            ]
+            if schema_object.schema_version == "0.2"
+            else []
+        )
 
     def check_person_statement_first_pass(self, statement):
         if "hasPepStatus" in statement:
@@ -68,8 +82,22 @@ class PEPForSchema03AndAbove(AdditionalCheck):
         ) in schema_object.get_person_statement_political_exposure_status_list():
             self.count_person_statements_have_pep_status_statuses[value] = 0
 
-    def does_apply_to_schema(self):
-        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    @staticmethod
+    def get_additional_check_types_possible(
+        lib_cove_bods_config, schema_object
+    ) -> list:
+        return (
+            [
+                "has_pep_details_with_missing_info_but_incorrect_pep_status",
+                "has_pep_details_but_incorrect_pep_status",
+            ]
+            if schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+            else []
+        )
 
     def check_person_statement_first_pass(self, statement):
         if isinstance(statement.get("politicalExposure"), dict):

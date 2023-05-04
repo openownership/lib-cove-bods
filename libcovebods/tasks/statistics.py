@@ -266,9 +266,11 @@ class StatisticAddress(AdditionalCheck):
         }
         return data
 
+
 class StatisticOwnershipOrControlInterestDirectOrIndirect(AdditionalCheck):
-    def does_apply_to_schema(self):
-        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.3")
 
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)

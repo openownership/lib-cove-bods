@@ -3,12 +3,26 @@ from libcovebods.base_task import AdditionalCheck
 from libcovebods.utils import get_year_from_bods_birthdate_or_deathdate
 
 
-
 class LegacyChecks(AdditionalCheck):
     """Before the AdditionalCheck system was implemented, all this code was together in one class.
     As we work on checks in this class, we should move them to seperate classes if possible.
     This now only has legacy checks that don't need to store a history.
     Ones that need to store history are in LegacyChecksNeedingHistory."""
+
+    @staticmethod
+    def get_additional_check_types_possible(
+        lib_cove_bods_config, schema_object
+    ) -> list:
+        return [
+            "entity_identifier_scheme_not_known",
+            "inconsistent_schema_version_used",
+            "wrong_address_type_used",
+            "person_birth_year_too_early",
+            "person_birth_year_too_late",
+            "ownership_or_control_statement_has_is_compontent_and_component_statement_ids",
+            "statement_is_beneficialOwnershipOrControl_but_no_person_specified",
+            "alternative_address_with_no_other_address_types",
+        ]
 
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
@@ -225,6 +239,23 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
     As we work on checks in this class, we should move them to seperate classes if possible.
     This now only has legacy checks that need to store a history.
     Ones that don't need to store history are in LegacyChecks."""
+
+    @staticmethod
+    def get_additional_check_types_possible(
+        lib_cove_bods_config, schema_object
+    ) -> list:
+        return [
+            "statement_is_component_but_is_after_use_in_component_statement_id",
+            "entity_statement_out_of_order",
+            "person_statement_out_of_order",
+            "entity_statement_not_used_in_ownership_or_control_statement",
+            "statement_is_component_but_not_used_in_component_statement_ids",
+            "person_statement_not_used_in_ownership_or_control_statement",
+            "entity_statement_missing",
+            "person_statement_missing",
+            "component_statement_id_not_in_package",
+            "duplicate_statement_id",
+        ]
 
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
@@ -563,8 +594,15 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
 
 
 class CheckHasPublicListing(AdditionalCheck):
-    def does_apply_to_schema(self):
-        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    @staticmethod
+    def get_additional_check_types_possible(
+        lib_cove_bods_config, schema_object
+    ) -> list:
+        return ["has_public_listing_information_but_has_public_listing_is_false"]
 
     def check_entity_statement_first_pass(self, statement):
         if isinstance(statement.get("publicListing"), dict):
@@ -581,8 +619,15 @@ class CheckHasPublicListing(AdditionalCheck):
 
 
 class CheckEntityTypeAndEntitySubtypeAlign(AdditionalCheck):
-    def does_apply_to_schema(self):
-        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    @staticmethod
+    def get_additional_check_types_possible(
+        lib_cove_bods_config, schema_object
+    ) -> list:
+        return ["statement_entity_type_and_entity_sub_type_do_not_align"]
 
     def check_entity_statement_first_pass(self, statement):
         if isinstance(statement.get("entitySubtype"), dict):
@@ -604,8 +649,22 @@ class CheckEntitySecurityListingsMICSCodes(AdditionalCheck):
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
 
-    def does_apply_to_schema(self):
-        return self._schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+
+    @staticmethod
+    def get_additional_check_types_possible(
+        lib_cove_bods_config, schema_object
+    ) -> list:
+        return (
+            [
+                "entity_security_listing_market_identifier_code_set_but_not_operating_market_identifier_code",
+                "entity_security_listing_operating_market_identifier_code_set_but_not_market_identifier_code",
+            ]
+            if schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+            else []
+        )
 
     def check_entity_statement_first_pass(self, statement):
         if isinstance(statement.get("publicListing"), dict) and isinstance(

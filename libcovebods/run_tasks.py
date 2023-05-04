@@ -35,10 +35,9 @@ def process_additional_checks(
     json_data, lib_cove_bods_config, schema_object, task_classes=TASK_CLASSES
 ):
     additional_check_instances = [
-        x(lib_cove_bods_config, schema_object) for x in task_classes
-    ]
-    additional_check_instances = [
-        x for x in additional_check_instances if x.does_apply_to_schema()
+        x(lib_cove_bods_config, schema_object)
+        for x in task_classes
+        if x.does_apply_to_schema(lib_cove_bods_config, schema_object)
     ]
 
     # First pass
