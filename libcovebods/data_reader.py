@@ -4,6 +4,15 @@ import ijson
 
 
 class DataReader:
+    """Class to hold information on where to get data and provides methods to access it.
+
+    This is then passed around to any code that wants access to data.
+
+    This is done so that later we can add a get_iterator() function here
+    that returns statements in a memory efficient way and code that can use
+    an iterator (like Python Checks) can call get_iterator() and not get_all_data()
+    """
+
     def __init__(self, filename, sample_mode=False, sample_mode_max_row_count=50):
         self._filename = filename
         self._sample_mode = sample_mode

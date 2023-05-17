@@ -4,7 +4,7 @@ import os
 import libcovebods.data_reader
 
 
-def test_full_1():
+def test_full_get_all_data_1():
 
     json_filename = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "fixtures", "0.3", "basic_1.json"
@@ -19,7 +19,7 @@ def test_full_1():
     assert expected == actual
 
 
-def test_sample_but_no_change_1():
+def test_sample_but_no_change_get_all_data_1():
 
     json_filename = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
@@ -40,7 +40,7 @@ def test_sample_but_no_change_1():
     assert expected == actual
 
 
-def test_sample_some_removed_1():
+def test_sample_some_removed_get_all_data_1():
 
     json_filename = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
@@ -66,7 +66,7 @@ def test_sample_some_removed_1():
     assert expected == actual
 
 
-def test_sample_bad_statements_are_included_1():
+def test_sample_bad_statements_are_included_get_all_data_1():
 
     json_filename = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),

@@ -1,9 +1,11 @@
 import json
+from typing import Optional
 from urllib.parse import urlparse
 
+from libcove2.common import schema_dict_fields_generator
 from packaging import version as packaging_version
 
-from libcove2.common import schema_dict_fields_generator
+import libcovebods.data_reader
 from libcovebods.config import LibCoveBODSConfig
 
 try:
@@ -13,7 +15,11 @@ except ImportError:
 
 
 class SchemaBODS:
-    def __init__(self, json_data=None, lib_cove_bods_config=None):
+    def __init__(
+        self,
+        data_reader: Optional[libcovebods.data_reader.DataReader] = None,
+        lib_cove_bods_config=None,
+    ):
         self.config = lib_cove_bods_config or LibCoveBODSConfig()
         # Information about this schema
         # ... what version the data tried to set (used later to check for inconsistent statements)
@@ -26,12 +32,23 @@ class SchemaBODS:
         # ... any error encountered when working out the version
         self.schema_error = None
         # Now try to work out version from information passed
-        self.__work_out_schema_version(json_data)
+        self.__work_out_schema_version(data_reader)
 
-    def __work_out_schema_version(self, json_data=None):
+    def __work_out_schema_version(
+        self, data_reader: Optional[libcovebods.data_reader.DataReader] = None
+    ):
 
         # If no data is passed, then we assume it's the default version
-        if not isinstance(json_data, list) or len(json_data) == 0:
+        if not data_reader:
+            self.pkg_schema_url = self.config.config["schema_url"]
+            self.schema_host = self.config.config["schema_url_host"]
+            self.schema_version_attempted = self.config.config["schema_version"]
+            self.schema_version = self.config.config["schema_version"]
+            return
+
+        # If bad data passed, then we assume it's the default version
+        all_data = data_reader.get_all_data()
+        if not isinstance(all_data, list) or len(all_data) == 0:
             self.pkg_schema_url = self.config.config["schema_url"]
             self.schema_host = self.config.config["schema_url_host"]
             self.schema_version_attempted = self.config.config["schema_version"]
@@ -39,7 +56,7 @@ class SchemaBODS:
             return
 
         # We look at the first statement to try to find a version
-        statement = json_data[0]
+        statement = all_data[0]
 
         # If version is not set at all, then we assume it's the default version
         if (

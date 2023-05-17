@@ -1,3 +1,4 @@
+import libcovebods.data_reader
 import libcovebods.tasks.checks
 import libcovebods.tasks.peps
 import libcovebods.tasks.statistics
@@ -32,16 +33,20 @@ TASK_CLASSES_IN_SAMPLE_MODE = [
 
 
 def process_additional_checks(
-    json_data, lib_cove_bods_config, schema_object, task_classes=TASK_CLASSES
+    data_reader: libcovebods.data_reader.DataReader,
+    lib_cove_bods_config,
+    schema_object,
+    task_classes=TASK_CLASSES,
 ):
     additional_check_instances = [
         x(lib_cove_bods_config, schema_object)
         for x in task_classes
         if x.does_apply_to_schema(lib_cove_bods_config, schema_object)
     ]
+    all_data = data_reader.get_all_data()
 
     # First pass
-    for statement in json_data:
+    for statement in all_data:
         statement_type = statement.get("statementType")
         for additional_check_instance in additional_check_instances:
             additional_check_instance.check_statement_first_pass(statement)
@@ -58,7 +63,7 @@ def process_additional_checks(
                 )
 
     # Second Pass
-    for statement in json_data:
+    for statement in all_data:
         statement_type = statement.get("statementType")
         if statement_type == "entityStatement":
             for additional_check_instance in additional_check_instances:

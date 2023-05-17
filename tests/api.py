@@ -1,7 +1,6 @@
-import json
-
 import libcovebods.additionalfields
 import libcovebods.config
+import libcovebods.data_reader
 import libcovebods.jsonschemavalidate
 import libcovebods.run_tasks
 import libcovebods.schema
@@ -14,29 +13,28 @@ def bods_json_output(
     json_data=None,
     lib_cove_bods_config=None,
 ):
-    # Data
-    with open(input_file_name) as fp:
-        input_data = json.load(fp)
+    # Data Reader
+    data_reader = libcovebods.data_reader.DataReader(input_file_name)
 
     # classes
     if not lib_cove_bods_config:
         lib_cove_bods_config = libcovebods.config.LibCoveBODSConfig()
-    schema = libcovebods.schema.SchemaBODS(input_data, lib_cove_bods_config)
+    schema = libcovebods.schema.SchemaBODS(data_reader, lib_cove_bods_config)
 
     # Additional checks and stats
     output_data = libcovebods.run_tasks.process_additional_checks(
-        input_data, lib_cove_bods_config, schema
+        data_reader, lib_cove_bods_config, schema
     )
 
     # Additional fields
     additionalfields_validator = libcovebods.additionalfields.AdditionalFields(schema)
-    additionalfields_output = additionalfields_validator.process(input_data)
+    additionalfields_output = additionalfields_validator.process(data_reader)
 
     # JSON Schema
     jsonschemavalidate_validator = libcovebods.jsonschemavalidate.JSONSchemaValidator(
         schema
     )
-    jsonschemavalidate_output = jsonschemavalidate_validator.validate(input_data)
+    jsonschemavalidate_output = jsonschemavalidate_validator.validate(data_reader)
 
     # Put it all together ...
     return {

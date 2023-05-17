@@ -5,6 +5,7 @@ from jsonschema import FormatChecker
 from jsonschema.exceptions import ValidationError
 from jsonschema.validators import Draft4Validator
 
+import libcovebods.data_reader
 from libcovebods.schema import SchemaBODS
 
 
@@ -98,15 +99,16 @@ class JSONSchemaValidator:
     def __init__(self, schema: SchemaBODS):
         self._schema = schema
 
-    def validate(self, json_data: dict) -> list:
+    def validate(self, data_reader: libcovebods.data_reader.DataReader) -> list:
         """Call with data. Results are returned."""
         validator = Draft4Validator(
             schema=self._schema._pkg_schema_obj, format_checker=FormatChecker()
         )
         validator.VALIDATORS["oneOf"] = oneOf_draft4
         output = []
-        for e in validator.iter_errors(json_data):
-            output.append(BODSValidationError(e, json_data, self._schema))
+        all_data = data_reader.get_all_data()
+        for e in validator.iter_errors(all_data):
+            output.append(BODSValidationError(e, all_data, self._schema))
         return output
 
 
