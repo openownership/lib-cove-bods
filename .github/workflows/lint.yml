@@ -21,3 +21,4 @@ jobs:
     - run: isort --check-only libcovebods/ tests/ setup.py
     - run: black --check libcovebods/ tests/ setup.py
     - run: flake8 libcovebods/ tests/ setup.py
+    - run: mypy --install-types --non-interactive -p libcovebods
