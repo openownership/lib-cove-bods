@@ -208,8 +208,9 @@ class SchemaBODS:
     def pkg_schema_str(self):
         uri_scheme = urlparse(self.pkg_schema_url).scheme
         if uri_scheme == "http" or uri_scheme == "https":
-            pass
-            # TODO
+            raise NotImplementedError(
+                "Downloading schema files over HTTP/HTTPS is not supported"
+            )
         else:
             with open(self.pkg_schema_url) as fp:
                 return fp.read()

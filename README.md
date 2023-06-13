@@ -18,7 +18,7 @@ pip install -e .
 
 Call `libcovebods`.
 
-    libcovebods -h tests/fixtures/0.1/basic_1.json
+    libcovebods -h
     
 ### Running tests
 
