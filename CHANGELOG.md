@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.15.0] - 2023-06-16
+
 This Release marks a very big refactoring to use with new cove and new libcove2 library.
 
 ### Added
