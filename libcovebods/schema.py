@@ -1,10 +1,26 @@
-from libcove.lib.common import SchemaJsonMixin
+import json
+from typing import Optional
+from urllib.parse import urlparse
+
+from libcove2.common import schema_dict_fields_generator  # type: ignore
 from packaging import version as packaging_version
 
+import libcovebods.data_reader
+from libcovebods.config import LibCoveBODSConfig
 
-class SchemaBODS(SchemaJsonMixin):
-    def __init__(self, json_data=None, lib_cove_bods_config=None):
-        self.config = lib_cove_bods_config
+try:
+    from functools import cached_property
+except ImportError:
+    from cached_property import cached_property  # type: ignore
+
+
+class SchemaBODS:
+    def __init__(
+        self,
+        data_reader: Optional[libcovebods.data_reader.DataReader] = None,
+        lib_cove_bods_config=None,
+    ):
+        self.config = lib_cove_bods_config or LibCoveBODSConfig()
         # Information about this schema
         # ... what version the data tried to set (used later to check for inconsistent statements)
         self.schema_version_attempted = None
@@ -14,14 +30,25 @@ class SchemaBODS(SchemaJsonMixin):
         self.pkg_schema_url = None
         self.schema_host = None
         # ... any error encountered when working out the version
-        self.schema_error = None
+        self.schema_error: Optional[dict] = None
         # Now try to work out version from information passed
-        self.__work_out_schema_version(json_data)
+        self.__work_out_schema_version(data_reader)
 
-    def __work_out_schema_version(self, json_data=None):
+    def __work_out_schema_version(
+        self, data_reader: Optional[libcovebods.data_reader.DataReader] = None
+    ):
 
         # If no data is passed, then we assume it's the default version
-        if not isinstance(json_data, list) or len(json_data) == 0:
+        if not data_reader:
+            self.pkg_schema_url = self.config.config["schema_url"]
+            self.schema_host = self.config.config["schema_url_host"]
+            self.schema_version_attempted = self.config.config["schema_version"]
+            self.schema_version = self.config.config["schema_version"]
+            return
+
+        # If bad data passed, then we assume it's the default version
+        all_data = data_reader.get_all_data()
+        if not isinstance(all_data, list) or len(all_data) == 0:
             self.pkg_schema_url = self.config.config["schema_url"]
             self.schema_host = self.config.config["schema_url_host"]
             self.schema_version_attempted = self.config.config["schema_version"]
@@ -29,7 +56,7 @@ class SchemaBODS(SchemaJsonMixin):
             return
 
         # We look at the first statement to try to find a version
-        statement = json_data[0]
+        statement = all_data[0]
 
         # If version is not set at all, then we assume it's the default version
         if (
@@ -173,3 +200,21 @@ class SchemaBODS(SchemaJsonMixin):
         return packaging_version.parse(self.schema_version) >= packaging_version.parse(
             version
         )
+
+    def get_package_schema_fields(self) -> set:
+        return set(schema_dict_fields_generator(self._pkg_schema_obj))
+
+    @cached_property
+    def pkg_schema_str(self):
+        uri_scheme = urlparse(self.pkg_schema_url).scheme
+        if uri_scheme == "http" or uri_scheme == "https":
+            raise NotImplementedError(
+                "Downloading schema files over HTTP/HTTPS is not supported"
+            )
+        else:
+            with open(self.pkg_schema_url) as fp:
+                return fp.read()
+
+    @property
+    def _pkg_schema_obj(self):
+        return json.loads(self.pkg_schema_str)

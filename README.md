@@ -16,14 +16,10 @@ pip install -e .
 
 ### Running the command line tool
 
-Call `libcovebods` and pass the filename of some JSON data.
+Call `libcovebods`.
 
-    libcovebods tests/fixtures/0.1/basic_1.json
+    libcovebods -h
     
-You can also pass the raw option to see the JSON as it originally came out of the library.
-
-    libcovebods --raw tests/fixtures/0.1/basic_1.json
-
 ### Running tests
 
     python -m pytest
@@ -60,9 +56,3 @@ you have checked out:
 
 Due to https://github.com/openownership/data-standard/issues/375 you may have to do some editing by hand when using early versions of the schema, pre 0.3. Open the files in `libcovebods/data`. At the top level there is an `oneOf` with 3 statement types - people, entity, and ownershipOrControl. In each of these statement types, there is an enum for the `statementType` field. This enum should have one option only - the value for whatever type of statement it is. (ie The person statement should only have the `personStatement` value). This tool may have added extra options - if so, remove them by hand.
 
-## Code for use by external users
-
-The only code that should be used directly by users is the `libcovebods.config` and `libcovebods.api` modules.
-
-Other code ( Code in `lib`, etc) 
-should not be used by external users of this library directly, as the structure and use of these may change more frequently.

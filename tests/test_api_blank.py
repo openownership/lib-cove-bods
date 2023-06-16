@@ -1,7 +1,7 @@
 import os
 import tempfile
 
-from libcovebods.api import bods_json_output
+from tests.api import bods_json_output
 
 # Schema version of a blank string is not allowed.
 # This file has tests to make sure that this mistake is picked up and reported by this library.

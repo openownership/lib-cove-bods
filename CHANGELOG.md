@@ -7,22 +7,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+This Release marks a very big refactoring to use with new cove and new libcove2 library.
+
 ### Added
 
 - DataReader class
+- Sample mode
+   - Flag to DataReader classes
+   - libcovebods/run_tasks.py has TASK_CLASSES and TASK_CLASSES_IN_SAMPLE_MODE
+- Classes for python checks have new method get_additional_check_types_possible so Cove can get more info
+
+## Changed
+
+- CLI interface
+- libcovebods/additionalfields.py has AdditionalFields class for additional fields checks
+- libcovebods/jsonschemavalidate.py has JSONSchemaValidator for JSON schema checks
+- libcovebods/run_tasks.py has process_additional_checks for Python checks that produce statistics and additional checks
+  - legacy Task classes have been split and  new classes created:
+    -  StatisticAddress
+    -  StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing
+    -  LegacyChecksNeedingHistory
+  - classes for each task - does_apply_to_schema method becomes static so can be called without setting up any complex things that __init__ may do
 
 ### Removed
 
 - Support for Python 3.6 as that is end of life
 - Support for Python 3.7 as that is end of life in a few months
-
-
-### Changed
-
-- Refactor common_checks; functionality unchanged; split legacy classes and create new classes:
-  -  StatisticAddress
-  -  StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing
-  -  LegacyChecksNeedingHistory
+- All old API's
 
 
 ## [0.14.0] - 2022-07-20

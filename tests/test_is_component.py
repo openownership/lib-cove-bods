@@ -1,7 +1,7 @@
 import os
 import tempfile
 
-from libcovebods.api import bods_json_output
+from tests.api import bods_json_output
 
 
 def test_iscomponent_true_but_has_component_statement_ids_1():

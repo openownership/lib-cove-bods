@@ -1,8 +1,7 @@
-import json
 import os
 import tempfile
 
-from libcovebods.api import bods_json_output
+from tests.api import bods_json_output
 
 
 def test_basic_1():
@@ -60,7 +59,6 @@ def test_bad_statement_id_type():
 
     assert results["schema_version"] == "0.2"
     assert results["validation_errors_count"] == 1
-    validation_error = json.loads(results["validation_errors"][0][0])
-    assert validation_error["message"].startswith("'statementID' should be a string.")
+    assert results["validation_errors"][0]["message"] == "{} is not of type 'string'"
     assert results["additional_fields_count"] == 0
     assert results["additional_checks_count"] == 0

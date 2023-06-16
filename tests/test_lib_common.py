@@ -3,7 +3,7 @@ import datetime
 import dateutil.utils
 from pytz import UTC
 
-from libcovebods.lib.common import (
+from libcovebods.utils import (
     get_year_from_bods_birthdate_or_deathdate,
     is_interest_current,
 )

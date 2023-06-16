@@ -1,7 +1,7 @@
 import os
 import tempfile
 
-from libcovebods.api import bods_json_output
+from tests.api import bods_json_output
 
 # Schema version of 0.2.0 is not allowed - schema 0.2 actually specifies MAJOR.MINOR
 # This file has tests to make sure that this mistake is picked up and reported by this library.
