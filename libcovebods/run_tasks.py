@@ -2,6 +2,7 @@ import libcovebods.data_reader
 import libcovebods.tasks.checks
 import libcovebods.tasks.peps
 import libcovebods.tasks.statistics
+from libcovebods.utils import get_statement_type
 
 TASK_CLASSES = [
     libcovebods.tasks.checks.LegacyChecks,
@@ -10,6 +11,12 @@ TASK_CLASSES = [
     libcovebods.tasks.checks.CheckEntityTypeAndEntitySubtypeAlign,
     libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodes,
     libcovebods.tasks.statistics.LegacyStatistics,
+    libcovebods.tasks.statistics.StatisticsCountEntityStatements,
+    libcovebods.tasks.statistics.StatisticsCountEntityRecordStatements,
+    libcovebods.tasks.statistics.StatisticsCountPersonStatements,
+    libcovebods.tasks.statistics.StatisticsCountPersonRecordStatements,
+    libcovebods.tasks.statistics.StatisticsCountOwnershipOrControlStatements,
+    libcovebods.tasks.statistics.StatisticsCountOwnershipOrControlRecordStatements,
     libcovebods.tasks.statistics.StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing,
     libcovebods.tasks.statistics.StatisticAddress,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlInterestDirectOrIndirect,
@@ -24,6 +31,10 @@ TASK_CLASSES_IN_SAMPLE_MODE = [
     libcovebods.tasks.checks.CheckEntityTypeAndEntitySubtypeAlign,
     libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodes,
     libcovebods.tasks.statistics.LegacyStatistics,
+    libcovebods.tasks.statistics.StatisticsCountEntityStatements,
+    libcovebods.tasks.statistics.StatisticsCountEntityRecordStatements,
+    libcovebods.tasks.statistics.StatisticsCountPersonStatements,
+    libcovebods.tasks.statistics.StatisticsCountPersonRecordStatements,
     libcovebods.tasks.statistics.StatisticAddress,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlInterestDirectOrIndirect,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
@@ -47,7 +58,8 @@ def process_additional_checks(
 
     # First pass
     for statement in all_data:
-        statement_type = statement.get("statementType")
+        #statement_type = statement.get("statementType")
+        statement_type = get_statement_type(statement, schema_object)
         for additional_check_instance in additional_check_instances:
             additional_check_instance.check_statement_first_pass(statement)
         if statement_type == "entityStatement":
@@ -64,7 +76,8 @@ def process_additional_checks(
 
     # Second Pass
     for statement in all_data:
-        statement_type = statement.get("statementType")
+        #statement_type = statement.get("statementType")
+        statement_type = get_statement_type(statement, schema_object)
         if statement_type == "entityStatement":
             for additional_check_instance in additional_check_instances:
                 additional_check_instance.check_entity_statement_second_pass(statement)
