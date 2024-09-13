@@ -8,9 +8,10 @@ TASK_CLASSES = [
     libcovebods.tasks.checks.LegacyChecks,
     libcovebods.tasks.checks.LegacyChecksNeedingHistory,
     libcovebods.tasks.checks.CheckHasPublicListing,
+    libcovebods.tasks.checks.CheckHasPublicListingRecord,
     libcovebods.tasks.checks.CheckEntityTypeAndEntitySubtypeAlign,
     libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodes,
-    libcovebods.tasks.statistics.LegacyStatistics,
+    libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodesRecord,
     libcovebods.tasks.statistics.StatisticsCountEntityStatements,
     libcovebods.tasks.statistics.StatisticsCountEntityRecordStatements,
     libcovebods.tasks.statistics.StatisticsCountPersonStatements,
@@ -28,9 +29,10 @@ TASK_CLASSES = [
 TASK_CLASSES_IN_SAMPLE_MODE = [
     libcovebods.tasks.checks.LegacyChecks,
     libcovebods.tasks.checks.CheckHasPublicListing,
+    libcovebods.tasks.checks.CheckHasPublicListingRecord,
     libcovebods.tasks.checks.CheckEntityTypeAndEntitySubtypeAlign,
     libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodes,
-    libcovebods.tasks.statistics.LegacyStatistics,
+    libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodesRecord,
     libcovebods.tasks.statistics.StatisticsCountEntityStatements,
     libcovebods.tasks.statistics.StatisticsCountEntityRecordStatements,
     libcovebods.tasks.statistics.StatisticsCountPersonStatements,
@@ -56,9 +58,13 @@ def process_additional_checks(
     ]
     all_data = data_reader.get_all_data()
 
+    # If not list of statements put in list so that additional checks
+    # can be run (jsonschema validation will handle reporting error)
+    if not isinstance(all_data, list):
+        all_data = [all_data]
+
     # First pass
     for statement in all_data:
-        #statement_type = statement.get("statementType")
         statement_type = get_statement_type(statement, schema_object)
         for additional_check_instance in additional_check_instances:
             additional_check_instance.check_statement_first_pass(statement)
