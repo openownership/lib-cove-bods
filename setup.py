@@ -18,6 +18,7 @@ setup(
         #     'missingPersonType' is a dependency of 'missingPersonReason'
         # in tests/fixtures/0.1/badfile_all_validation_errors.json
         "jsonschema==4.23.0",
+        "jscc==0.2.4",
         "pytz",
         "ijson",
         # Required for jsonschema to validate URIs

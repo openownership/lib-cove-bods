@@ -7,12 +7,19 @@ from packaging import version as packaging_version
 
 import libcovebods.data_reader
 from libcovebods.config import LibCoveBODSConfig
+from libcovebods.schema_dir import schema_registry, get_scheme_file_data
 
 try:
     from functools import cached_property
 except ImportError:
     from cached_property import cached_property  # type: ignore
 
+def record_based_statement(statement):
+    if ("recordDetails" in statement or "recordId" in statement or
+        "recordType" in statement):
+        return True
+    else:
+        return False
 
 class SchemaBODS:
     def __init__(
@@ -49,6 +56,16 @@ class SchemaBODS:
         # If bad data passed, then we assume it's the default version
         all_data = data_reader.get_all_data()
         if not isinstance(all_data, list) or len(all_data) == 0:
+            if not isinstance(all_data, list):
+                if record_based_statement(all_data):
+                    self.schema_version = self.config.config["schema_latest_version"]
+                    self.pkg_schema_url = self.config.config["schema_versions"][
+                        self.schema_version
+                    ]["schema_url"]
+                    self.schema_host = self.config.config["schema_versions"][
+                        self.schema_version
+                    ]["schema_url_host"]
+                    return
             self.pkg_schema_url = self.config.config["schema_url"]
             self.schema_host = self.config.config["schema_url_host"]
             self.schema_version_attempted = self.config.config["schema_version"]
@@ -66,7 +83,7 @@ class SchemaBODS:
             or "bodsVersion" not in statement["publicationDetails"]
         ):
             # Use default version if not record based else latest version (revisit)
-            if not "recordDetails" in statement:
+            if not record_based_statement(statement):
                 self.pkg_schema_url = self.config.config["schema_url"]
                 self.schema_host = self.config.config["schema_url_host"]
                 self.schema_version_attempted = self.config.config["schema_version"]
@@ -92,7 +109,7 @@ class SchemaBODS:
                 "schema_version": str(self.schema_version_attempted),
             }
             # Use latest non-record version if not record based else latest version (revisit)
-            if not "recordDetails" in statement:
+            if not record_based_statement(statement):
                 self.schema_version = self.config.config["schema_latest_nonrecord_version"]
                 self.pkg_schema_url = self.config.config["schema_versions"][
                     self.schema_version
@@ -118,7 +135,7 @@ class SchemaBODS:
                 "schema_version": self.schema_version_attempted,
             }
             # Use latest non-record version if not record based else latest version (revisit)
-            if not "recordDetails" in statement:
+            if not record_based_statement(statement):
                 self.schema_version = self.config.config["schema_latest_nonrecord_version"]
                 self.pkg_schema_url = self.config.config["schema_versions"][
                     self.schema_version
@@ -154,13 +171,8 @@ class SchemaBODS:
                 ):
                     return statement_schema["properties"]["entityType"]["enum"]
         else:
-            for statement_schema in self._pkg_schema_obj['items']['allOf']:
-                if (
-                    statement_schema['if']['properties']['recordType']['const']
-                    == 'entity'
-                ):
-                    entity_type = statement_schema['then']['properties']['recordDetails']['properties']['entityType']
-                    return entity_type['properties']['type']['enum']
+            entity_schema = get_scheme_file_data(self.pkg_schema_url, 'entity')
+            return entity_schema['properties']['entityType']['properties']['type']['enum']
 
     def get_person_statement_types_list(self):
         if self.is_schema_version_equal_to_or_less_than("0.3"):
@@ -171,15 +183,8 @@ class SchemaBODS:
                 ):
                     return statement_schema["properties"]["personType"]["enum"]
         else:
-            for statement_schema in self._pkg_schema_obj['items']['allOf']:
-                if (
-                    statement_schema['if']['properties']['recordType']['const']
-                    == 'person'
-                ):
-                    person_type = statement_schema['then']['properties']['recordDetails']['properties']['personType']
-                    # Inconsistancy with schema for entity record (investigate???)
-                    #return person_type['properties']['type']['enum']
-                    return person_type['enum']
+            person_schema = get_scheme_file_data(self.pkg_schema_url, 'person')
+            return person_schema['properties']['personType']['enum']
 
     def get_ownership_or_control_statement_interest_statement_types_list(self):
         if self.is_schema_version_equal_to_or_less_than("0.3"):
@@ -190,14 +195,8 @@ class SchemaBODS:
                 ):
                     return statement_schema["properties"]["interests"]["items"]["properties"]["type"]["enum"]
         else:
-            for statement_schema in self._pkg_schema_obj['items']['allOf']:
-                if (
-                    statement_schema['if']['properties']['recordType']['const']
-                    == 'relationship'
-                ):
-                    interests = statement_schema['then']['properties']['recordDetails']['properties']["interests"]
-                    print(interests)
-                    return interests["items"]["properties"]["type"]["enum"]
+            relationship_schema = get_scheme_file_data(self.pkg_schema_url, 'relationship')
+            return relationship_schema["$defs"]["Interest"]["properties"]["type"]["enum"]
 
     def get_ownership_or_control_statement_interest_direct_or_indirect_list(self):
         if self.is_schema_version_equal_to_or_less_than("0.3"):
@@ -215,13 +214,8 @@ class SchemaBODS:
                     else:
                         return []
         else:
-            for statement_schema in self._pkg_schema_obj['items']['allOf']:
-                if (
-                    statement_schema['if']['properties']['recordType']['const']
-                    == 'relationship'
-                ):
-                    interests = statement_schema['then']['properties']['recordDetails']['properties']["interests"]
-                    return interests["items"]["properties"]["directOrIndirect"]
+            relationship_schema = get_scheme_file_data(self.pkg_schema_url, 'relationship')
+            return relationship_schema["$defs"]["Interest"]["properties"]["directOrIndirect"]["enum"]
 
     def get_person_statement_political_exposure_status_list(self):
         if self.is_schema_version_equal_to_or_less_than("0.3"):
@@ -239,13 +233,8 @@ class SchemaBODS:
                     else:
                         return []
         else:
-            for statement_schema in self._pkg_schema_obj['items']['allOf']:
-                if (
-                    statement_schema['if']['properties']['recordType']['const']
-                    == 'person'
-                ):
-                    exposure = statement_schema['then']['properties']['recordDetails']['properties']["politicalExposure"]
-                    return exposure["properties"]["status"]["enum"]
+            person_schema = get_scheme_file_data(self.pkg_schema_url, 'person')
+            return person_schema['properties']["politicalExposure"]["properties"]["status"]["enum"]
 
     def get_inconsistent_schema_version_used_for_statement(self, statement):
         # If version is not set at all, then we assume it's the default version
@@ -282,20 +271,37 @@ class SchemaBODS:
             version
         )
 
+    def is_schema_version_less_than(self, version):
+        return packaging_version.parse(self.schema_version) <= packaging_version.parse(
+            version
+        )
+
     def get_package_schema_fields(self) -> set:
-        return set(schema_dict_fields_generator(self._pkg_schema_obj))
+        if self.is_schema_version_equal_to_or_greater_than("0.4"):
+            print("Start:")
+            return set(schema_dict_fields_generator(self._pkg_schema_obj.contents("urn:statement"),
+                                                    registry=self._pkg_schema_obj))
+        else:
+            print("Start old:", self.schema_version)
+            return set(schema_dict_fields_generator(self._pkg_schema_obj))
 
     @cached_property
     def pkg_schema_str(self):
-        uri_scheme = urlparse(self.pkg_schema_url).scheme
-        if uri_scheme == "http" or uri_scheme == "https":
-            raise NotImplementedError(
-                "Downloading schema files over HTTP/HTTPS is not supported"
-            )
+        if self.is_schema_version_equal_to_or_greater_than("0.4"):
+            return ""
         else:
-            with open(self.pkg_schema_url) as fp:
-                return fp.read()
+            uri_scheme = urlparse(self.pkg_schema_url).scheme
+            if uri_scheme == "http" or uri_scheme == "https":
+                raise NotImplementedError(
+                    "Downloading schema files over HTTP/HTTPS is not supported"
+                )
+            else:
+                with open(self.pkg_schema_url) as fp:
+                    return fp.read()
 
     @property
     def _pkg_schema_obj(self):
-        return json.loads(self.pkg_schema_str)
+        if self.is_schema_version_equal_to_or_greater_than("0.4"):
+            return schema_registry(self.pkg_schema_url)
+        else:
+            return json.loads(self.pkg_schema_str)

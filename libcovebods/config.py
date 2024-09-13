@@ -19,7 +19,7 @@ LIB_COVE_BODS_CONFIG_DEFAULT = {
             "schema_url_host": _schema_folder,
         },
         "0.4": {
-            "schema_url": os.path.join(_schema_folder, "schema-0-4-0.json"),
+            "schema_url": os.path.join(_schema_folder, "schema-0-4-0"),
             "schema_url_host": _schema_folder,
         },
     },
