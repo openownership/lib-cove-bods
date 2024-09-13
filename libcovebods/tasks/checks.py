@@ -1,7 +1,8 @@
+from datetime import datetime, timedelta
 from libcove2.common import get_orgids_prefixes  # type: ignore
 
 from libcovebods.base_task import AdditionalCheck
-from libcovebods.utils import get_year_from_bods_birthdate_or_deathdate
+from libcovebods.utils import get_year_from_bods_birthdate_or_deathdate, parse_date_field
 
 
 class LegacyChecks(AdditionalCheck):
@@ -775,3 +776,145 @@ class CheckEntitySecurityListingsMICSCodesRecord(AdditionalCheck):
                                 "statement": statement.get("statementId"),
                             }
                         )
+
+class CheckSourceRetrievedAtFutureDate(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.4")
+
+    def check_statement_first_pass(self, statement):
+        if ("source" in statement and isinstance(statement["source"], dict) and
+            "retrievedAt" in statement["source"] and statement["source"]["retrievedAt"]):
+            retrieved_at = parse_date_field(statement["source"]["retrievedAt"])
+            if retrieved_at and retrieved_at > datetime.now():
+                self._additional_check_results.append(
+                            {
+                                "type": "statement_source_retrieved_at_future_date",
+                                "statement_type": None,
+                                "statement": statement.get("statementId"),
+                            })
+
+class CheckStatementDateFutureDate(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.4")
+
+    def check_statement_first_pass(self, statement):
+        if ("statementDate" in statement and statement["statementDate"]):
+            statement_date = parse_date_field(statement["statementDate"])
+            if statement_date and statement_date > datetime.now():
+                self._additional_check_results.append(
+                            {
+                                "type": "statement_date_is_future_date",
+                                "statement_type": None,
+                                "statement": statement.get("statementId"),
+                            })
+
+class CheckAnnotationCreationDateFutureDate(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.4")
+
+    def check_statement_first_pass(self, statement):
+        if "annotations" in statement and isinstance(statement["annotations"], list):
+            for annotation in statement["annotations"]:
+                print(annotation)
+                if (isinstance(annotation, dict) and "creationDate" in annotation and
+                    annotation["creationDate"]):
+                    creation_date = parse_date_field(annotation["creationDate"])
+                    print(creation_date)
+                    if creation_date and creation_date > datetime.now():
+                        self._additional_check_results.append(
+                            {
+                                "type": "statement_annotation_creation_date_is_future_date",
+                                "statement_type": None,
+                                "statement": statement.get("statementId"),
+                            })
+
+
+class CheckStatementPublicationDateFutureDate(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.4")
+
+    def check_statement_first_pass(self, statement):
+        if ("publicationDetails" in statement and isinstance(statement["publicationDetails"], dict)
+            and "publicationDate" in statement["publicationDetails"] and 
+            statement["publicationDetails"]["publicationDate"]):
+            publication_date = parse_date_field(statement["publicationDetails"]["publicationDate"])
+            if publication_date and publication_date > datetime.now():
+                self._additional_check_results.append(
+                            {
+                                "type": "statement_publication_date_is_future_date",
+                                "statement_type": None,
+                                "statement": statement.get("statementId"),
+                            })
+
+
+class CheckStatementPersonDateOfDeathSane(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.4")
+
+    def check_person_statement_first_pass(self, statement):
+        if ("recordDetails" in statement and isinstance(statement["recordDetails"], dict)
+            and "deathDate" in statement["recordDetails"] and
+            statement["recordDetails"]["deathDate"]):
+            death_date = parse_date_field(statement["recordDetails"]["deathDate"])
+            if death_date:
+                if (death_date > datetime.now() or death_date < datetime.strptime("1800-01-01", "%Y-%m-%d")):
+                    self._additional_check_results.append(
+                            {
+                                "type": "statement_person_death_date_not_sensible_value",
+                                "statement_type": None,
+                                "statement": statement.get("statementId"),
+                            })
+                elif ("birthDate" in statement["recordDetails"] and
+                      statement["recordDetails"]["birthDate"]):
+                    birth_date = parse_date_field(statement["recordDetails"]["birthDate"])
+                    if death_date < birth_date or (death_date - birth_date).days > 43830:
+                        self._additional_check_results.append(
+                            {
+                                "type": "statement_person_death_date_not_sensible_value",
+                                "statement_type": None,
+                                "statement": statement.get("statementId"),
+                            })
+
+
+class CheckStatementEntityFoundationDissolutionDates(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.4")
+
+    def check_entity_statement_first_pass(self, statement):
+        if ("recordDetails" in statement and isinstance(statement["recordDetails"], dict)
+            and "foundingDate" in statement["recordDetails"] and
+            statement["recordDetails"]["foundingDate"] and "dissolutionDate" in
+            statement["recordDetails"] and statement["recordDetails"]["dissolutionDate"]):
+            founding_date = parse_date_field(statement["recordDetails"]["foundingDate"])
+            dissolution_date = parse_date_field(statement["recordDetails"]["dissolutionDate"])
+            if founding_date > dissolution_date:
+                self._additional_check_results.append(
+                            {
+                                "type": "statement_entity_dissolution_before_founding_date",
+                                "statement_type": None,
+                                "statement": statement.get("statementId"),
+                            })
