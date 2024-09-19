@@ -18,6 +18,17 @@ TASK_CLASSES = [
     libcovebods.tasks.checks.CheckStatementPublicationDateFutureDate,
     libcovebods.tasks.checks.CheckStatementPersonDateOfDeathSane,
     libcovebods.tasks.checks.CheckStatementEntityFoundationDissolutionDates,
+    libcovebods.tasks.checks.CheckStatementPersonBirthDateSensible,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterestsStartEndDates,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterestsShareValues,
+    libcovebods.tasks.checks.CheckStatementDeclarationSubject,
+    libcovebods.tasks.checks.CheckStatementIsComponent,
+    libcovebods.tasks.checks.CheckStatementDuplicateStatementId,
+    libcovebods.tasks.checks.CheckStatementSeries,
+    libcovebods.tasks.checks.CheckStatementRelationshipParties,
+    libcovebods.tasks.checks.CheckAnnotationStatementPointerTarget,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterests,
+    libcovebods.tasks.checks.CheckStatementSerialisation,
     libcovebods.tasks.statistics.StatisticsCountEntityStatements,
     libcovebods.tasks.statistics.StatisticsCountEntityRecordStatements,
     libcovebods.tasks.statistics.StatisticsCountPersonStatements,
@@ -45,6 +56,12 @@ TASK_CLASSES_IN_SAMPLE_MODE = [
     libcovebods.tasks.checks.CheckStatementPublicationDateFutureDate,
     libcovebods.tasks.checks.CheckStatementPersonDateOfDeathSane,
     libcovebods.tasks.checks.CheckStatementEntityFoundationDissolutionDates,
+    libcovebods.tasks.checks.CheckStatementPersonBirthDateSensible,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterestsStartEndDates,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterestsShareValues,
+    libcovebods.tasks.checks.CheckStatementDuplicateStatementId,
+    libcovebods.tasks.checks.CheckAnnotationStatementPointerTarget,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterests,
     libcovebods.tasks.statistics.StatisticsCountEntityStatements,
     libcovebods.tasks.statistics.StatisticsCountEntityRecordStatements,
     libcovebods.tasks.statistics.StatisticsCountPersonStatements,
@@ -96,6 +113,8 @@ def process_additional_checks(
     for statement in all_data:
         #statement_type = statement.get("statementType")
         statement_type = get_statement_type(statement, schema_object)
+        for additional_check_instance in additional_check_instances:
+            additional_check_instance.check_statement_second_pass(statement)
         if statement_type == "entityStatement":
             for additional_check_instance in additional_check_instances:
                 additional_check_instance.check_entity_statement_second_pass(statement)
