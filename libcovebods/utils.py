@@ -55,3 +55,19 @@ def parse_date_field(date_str):
                 return datetime.datetime.strptime(date_str, "%Y-%m-%d")
     else:
         return None
+
+def numeric_value(value):
+    try:
+        float(value)
+        return True
+    except:
+        return False
+
+def sort_by_date(list_with_date, index):
+    out = []
+    for item in list_with_date:
+        date = parse_date_field(item[index])
+        new_item = item.copy()
+        new_item[index] = date
+        out.append(new_item)
+    return sorted(out, key=lambda x: x[index])
