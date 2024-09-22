@@ -508,3 +508,23 @@ class StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial(AdditionalChec
         return {
             "count_ownership_or_control_statement_with_at_least_one_interest_beneficial": self.stat,
         }
+
+
+class StatisticDeclarationSubjects(AdditionalCheck):
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.4")
+
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self._declaration_subjects = {}
+
+    def check_statement_first_pass(self, statement):
+        if ("recordId" in statement and "declarationSubject" in statement and
+            statement["recordId"] == statement["declarationSubject"]):
+                self._declaration_subjects[statement["recordId"]] = 1
+
+    def get_statistics(self):
+        return {
+            "count_declaration_subjects": len(self._declaration_subjects),
+        }
