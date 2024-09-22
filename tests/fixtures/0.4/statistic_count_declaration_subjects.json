@@ -1,0 +1,152 @@
+[
+  {
+    "statementId": "1dc0e987-5c57-4a1c-b3ad-61353b66a9b7",
+    "declarationSubject": "c359f58d2977",
+    "statementDate": "2020-03-04",
+    "recordId": "c359f58d2977",
+    "recordType": "entity",
+    "recordStatus": "new",
+    "recordDetails": {
+      "isComponent": false,
+      "entityType": {
+        "type": "registeredEntity"
+      }
+    }
+  },
+  {
+    "statementId": "afca12b4-b44a-4c74-8ad1-2110e263946f",
+    "declarationSubject": "c359f58d2977",
+    "statementDate": "2020-04-04",
+    "recordId": "c359f58d2977",
+    "recordType": "entity",
+    "recordStatus": "updated",
+    "recordDetails": {
+      "isComponent": false,
+      "entityType": {
+        "type": "registeredEntity"
+      }
+    }
+  },
+  {
+    "statementId": "46c5218d-2e48-4858-adaf-a596848c1de3",
+    "declarationSubject": "c359f58d2977",
+    "statementDate": "2021-03-04",
+    "recordId": "c359f58d2977",
+    "recordType": "entity",
+    "recordStatus": "closed",
+    "recordDetails": {
+      "isComponent": false,
+      "entityType": {
+        "type": "registeredEntity"
+      }
+    }
+  },
+  {
+    "statementId": "019a93f1-e470-42e9-957b-03559861b2e2",
+    "declarationSubject": "c359f58d2977",
+    "statementDate": "2020-03-04",
+    "recordId": "10478c6cf6de",
+    "recordType": "person",
+    "recordStatus": "new",
+    "recordDetails": {
+      "isComponent": false,
+      "personType": "knownPerson"
+    }
+  },
+  {
+    "statementId": "ecdff7a6-e231-42dc-bfcd-7c124c33cd6a",
+    "declarationSubject": "c359f58d2977",
+    "statementDate": "2021-03-04",
+    "recordId": "10478c6cf6de",
+    "recordType": "person",
+    "recordStatus": "updated",
+    "recordDetails": {
+      "isComponent": false,
+      "personType": "knownPerson"
+    }
+  },
+  {
+    "statementId": "8729fec1-eb01-4866-ba40-dd5525d43db8",
+    "declarationSubject": "ad3f6c2fcc9e",
+    "statementDate": "2018-12-17",
+    "recordId": "ad3f6c2fcc9e",
+    "recordStatus": "new",
+    "recordType": "entity",
+    "recordDetails": {
+      "isComponent": false,
+      "entityType": {
+        "type": "registeredEntity"
+      }
+    }
+  },
+  {
+    "statementId": "e2bbe3ce-f5b4-42d0-bb68-9b405e8fd6a0",
+    "declarationSubject": "ad3f6c2fcc9e",
+    "statementDate": "2018-12-17",
+    "recordId": "d4ab89ea169a",
+    "recordStatus": "new",
+    "recordType": "entity",
+    "recordDetails": {
+      "isComponent": true,
+      "entityType": {
+        "type": "registeredEntity"
+      }
+    }
+  },
+  {
+    "statementId": "6b9cfb52-505a-49cb-ab02-cc856a4e5c66",
+    "declarationSubject": "ad3f6c2fcc9e",
+    "statementDate": "2018-12-17",
+    "recordId": "c25d4d612c2c",
+    "recordStatus": "new",
+    "recordType": "person",
+    "recordDetails": {
+      "isComponent": false,
+      "personType": "knownPerson"
+    }
+  },
+  {
+    "statementId": "7fff3986-233f-413f-bec8-3b28c62a4a51",
+    "declarationSubject": "ad3f6c2fcc9e",
+    "statementDate": "2018-12-17",
+    "recordId": "4cf2837bd01f",
+    "recordStatus": "new",
+    "recordType": "relationship",
+    "recordDetails": {
+      "isComponent": true,
+      "subject": "ad3f6c2fcc9e",
+      "interestedParty": "d4ab89ea169a"
+    }
+  },
+  {
+    "statementId": "860155d1-a4fb-4742-9735-7a7deb899075",
+    "declarationSubject": "ad3f6c2fcc9e",
+    "statementDate": "2018-12-17",
+    "recordId": "05e81af035e4",
+    "recordStatus": "new",
+    "recordType": "relationship",
+    "recordDetails": {
+      "isComponent": true,
+      "subject": "d4ab89ea169a",
+      "interestedParty": "c25d4d612c2c"
+    }
+  },
+  {
+    "statementId": "cdb6acc7-426e-4a7a-9410-895d556fd329",
+    "declarationSubject": "ad3f6c2fcc9e",
+    "statementDate": "2018-12-17",
+    "recordId": "d8d75ccf40e4",
+    "recordStatus": "new",
+    "recordType": "relationship",
+    "recordDetails": {
+      "isComponent": false,
+      "subject": "ad3f6c2fcc9e",
+      "interestedParty": "c25d4d612c2c",
+      "componentRecords": [
+        "d4ab89ea169a",
+        "4cf2837bd01f",
+        "05e81af035e4"
+      ]
+    }
+  }
+]
