@@ -3,6 +3,7 @@ import tempfile
 
 from tests.api import bods_json_output
 
+
 def test_retrievedat_not_future_date_invalid_1():
 
     cove_temp_folder = tempfile.mkdtemp(
@@ -1336,7 +1337,7 @@ def test_statement_series_valid_2():
     assert results["additional_fields_count"] == 0
     assert results["additional_checks_count"] == 0
 
-def test_statement_series_invalid_1():
+def test_statement_relationship_component_records_are_record_ids_invalid_1():
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -1358,7 +1359,7 @@ def test_statement_series_invalid_1():
     assert results["additional_fields_count"] == 0
     assert results["additional_checks_count"] == 1
 
-def test_statement_series_invalid_2():
+def test_statement_relationship_component_records_are_record_ids_invalid_2():
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -1380,7 +1381,7 @@ def test_statement_series_invalid_2():
     assert results["additional_fields_count"] == 0
     assert results["additional_checks_count"] == 1
 
-def test_statement_series_valid_1():
+def test_statement_relationship_component_records_are_record_ids_valid_1():
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()

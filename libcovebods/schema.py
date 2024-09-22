@@ -7,7 +7,7 @@ from packaging import version as packaging_version
 
 import libcovebods.data_reader
 from libcovebods.config import LibCoveBODSConfig
-from libcovebods.schema_dir import schema_registry, get_scheme_file_data
+from libcovebods.schema_dir import get_scheme_file_data, schema_registry
 
 try:
     from functools import cached_property

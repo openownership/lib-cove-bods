@@ -3,6 +3,7 @@ import tempfile
 
 from tests.api import bods_json_output
 
+
 def test_schema_0_4_count():
 
     cove_temp_folder = tempfile.mkdtemp(

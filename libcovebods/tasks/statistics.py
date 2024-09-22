@@ -61,8 +61,10 @@ class StatisticsCountEntityStatements(AdditionalCheck):
         data = {
             "count_entity_statements": self.count_entity_statements,
             "count_entity_statements_types": self.count_entity_statements_types,
-            "count_entity_statements_types_with_any_identifier": self.count_entity_statements_types_with_any_identifier,
-            "count_entity_statements_types_with_any_identifier_with_id_and_scheme": self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
+            "count_entity_statements_types_with_any_identifier":
+                                             self.count_entity_statements_types_with_any_identifier,
+            "count_entity_statements_types_with_any_identifier_with_id_and_scheme":
+                          self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
         }
         return data
 
@@ -125,8 +127,10 @@ class StatisticsCountEntityRecordStatements(AdditionalCheck):
         data = {
             "count_entity_statements": self.count_entity_statements,
             "count_entity_statements_types": self.count_entity_statements_types,
-            "count_entity_statements_types_with_any_identifier": self.count_entity_statements_types_with_any_identifier,
-            "count_entity_statements_types_with_any_identifier_with_id_and_scheme": self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
+            "count_entity_statements_types_with_any_identifier":
+                                             self.count_entity_statements_types_with_any_identifier,
+            "count_entity_statements_types_with_any_identifier_with_id_and_scheme":
+                          self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
         }
         return data
 
@@ -281,18 +285,25 @@ class StatisticsCountOwnershipOrControlStatements(AdditionalCheck):
     def get_statistics(self):
         data = {
             "count_ownership_or_control_statement": self.count_ownership_or_control_statement,
-            "count_ownership_or_control_statement_interested_party_with_person": self.count_ownership_or_control_statement_interested_party_with_person,
-            "count_ownership_or_control_statement_interested_party_with_entity": self.count_ownership_or_control_statement_interested_party_with_entity,
-            "count_ownership_or_control_statement_interested_party_with_unspecified": self.count_ownership_or_control_statement_interested_party_with_unspecified,
-            "count_ownership_or_control_statement_interest_statement_types": self.count_ownership_or_control_statement_interest_statement_types,
+            "count_ownership_or_control_statement_interested_party_with_person":
+                         self.count_ownership_or_control_statement_interested_party_with_person,
+            "count_ownership_or_control_statement_interested_party_with_entity":
+                         self.count_ownership_or_control_statement_interested_party_with_entity,
+            "count_ownership_or_control_statement_interested_party_with_unspecified":
+                    self.count_ownership_or_control_statement_interested_party_with_unspecified,
+            "count_ownership_or_control_statement_interest_statement_types":
+                             self.count_ownership_or_control_statement_interest_statement_types,
             "count_ownership_or_control_statement_by_year": self.count_ownership_or_control_statement_by_year,
             "count_ownership_or_control_statement_subject_by_year": {
                 year: len(year_set)
                 for year, year_set in self.subject_statement_ids_by_year.items()
             },
-            "count_ownership_or_control_statement_interested_party_with_entity_by_year": self.count_ownership_or_control_statement_interested_party_with_entity_by_year,
-            "count_ownership_or_control_statement_interested_party_with_person_by_year": self.count_ownership_or_control_statement_interested_party_with_person_by_year,
-            "count_ownership_or_control_statement_interested_party_with_unspecified_by_year": self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year,
+            "count_ownership_or_control_statement_interested_party_with_entity_by_year":
+                  self.count_ownership_or_control_statement_interested_party_with_entity_by_year,
+            "count_ownership_or_control_statement_interested_party_with_person_by_year":
+                  self.count_ownership_or_control_statement_interested_party_with_person_by_year,
+            "count_ownership_or_control_statement_interested_party_with_unspecified_by_year":
+             self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year,
         }
         return data
 
@@ -353,14 +364,18 @@ class StatisticsCountOwnershipOrControlRecordStatements(AdditionalCheck):
     def get_statistics(self):
         data = {
             "count_ownership_or_control_statement": self.count_ownership_or_control_statement,
-            "count_ownership_or_control_statement_interested_party": self.count_ownership_or_control_statement_interested_party,
-            "count_ownership_or_control_statement_interest_statement_types": self.count_ownership_or_control_statement_interest_statement_types,
-            "count_ownership_or_control_statement_by_year": self.count_ownership_or_control_statement_by_year,
+            "count_ownership_or_control_statement_interested_party":
+                                   self.count_ownership_or_control_statement_interested_party,
+            "count_ownership_or_control_statement_interest_statement_types":
+                           self.count_ownership_or_control_statement_interest_statement_types,
+            "count_ownership_or_control_statement_by_year":
+                                            self.count_ownership_or_control_statement_by_year,
             "count_ownership_or_control_statement_subject_by_year": {
                 year: len(year_set)
                 for year, year_set in self.subject_statement_ids_by_year.items()
             },
-            "count_ownership_or_control_statement_interested_party_by_year": self.count_ownership_or_control_statement_interested_party_by_year,
+            "count_ownership_or_control_statement_interested_party_by_year":
+                           self.count_ownership_or_control_statement_interested_party_by_year,
         }
         return data
 
@@ -447,7 +462,8 @@ class StatisticAddress(AdditionalCheck):
             "count_addresses": self.count_addresses,
             "count_addresses_with_postcode": self.count_addresses_with_postcode,
             "count_addresses_with_country": self.count_addresses_with_country,
-            "count_addresses_with_postcode_duplicated_in_address": self.count_addresses_with_postcode_duplicated_in_address,
+            "count_addresses_with_postcode_duplicated_in_address":
+                         self.count_addresses_with_postcode_duplicated_in_address,
         }
         return data
 
@@ -485,7 +501,8 @@ class StatisticOwnershipOrControlInterestDirectOrIndirect(AdditionalCheck):
 
     def get_statistics(self):
         return {
-            "count_ownership_or_control_statement_interest_direct_or_indirect": self.count_ownership_or_control_statement_interest_direct_or_indirect,
+            "count_ownership_or_control_statement_interest_direct_or_indirect":
+                           self.count_ownership_or_control_statement_interest_direct_or_indirect,
         }
 
 

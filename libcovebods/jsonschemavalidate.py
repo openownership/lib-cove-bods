@@ -3,8 +3,7 @@ from decimal import Decimal
 
 from jsonschema import FormatChecker
 from jsonschema.exceptions import ValidationError
-from jsonschema.validators import Draft4Validator
-from jsonschema.validators import Draft202012Validator
+from jsonschema.validators import Draft4Validator, Draft202012Validator
 
 import libcovebods.data_reader
 from libcovebods.schema import SchemaBODS
@@ -157,7 +156,7 @@ class BODSValidationError:
             path_ending = self._path[-1]
             if isinstance(self._path[-1], int) and len(self._path) >= 2:
                 # We're dealing with elements in an array of items at this point
-                path_ending = "{}/[number]".format(self._path[-2])
+                path_ending = f"{self._path[-2]}/[number]"
             elif isinstance(self._path[0], int) and len(self._path) == 1:
                 path_ending = "[number]"
         else:

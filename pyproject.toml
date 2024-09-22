@@ -8,3 +8,4 @@ lint.select = [
     "C4",  # flake8-comprehensions
     "UP",  # pyupgrade
 ]
+line-length = 140

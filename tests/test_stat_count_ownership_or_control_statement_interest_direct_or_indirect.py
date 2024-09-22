@@ -38,7 +38,8 @@ def test_schema_0_3_basic_1():
     assert results["schema_version"] == "0.3"
 
     # We want to test the dict has the correct keys!
-    # So these tests are deliberately written so they will error if the specified key is not in that dict
+    # So these tests are deliberately written so they will error if the specified key
+    # is not in that dict
     assert (
         1
         == results["statistics"][

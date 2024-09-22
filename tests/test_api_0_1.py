@@ -1239,7 +1239,8 @@ def test_badfile_all_validation_errors():
         "badfile_all_validation_errors.json",
     )
     # This file is generated with
-    #  libcovebods jsv tests/fixtures/0.1/badfile_all_validation_errors.json  > tests/fixtures/0.1/badfile_all_validation_errors.expected.json
+    #  libcovebods jsv tests/fixtures/0.1/badfile_all_validation_errors.json  >
+    #  tests/fixtures/0.1/badfile_all_validation_errors.expected.json
     expected_json_filename = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
         "fixtures",

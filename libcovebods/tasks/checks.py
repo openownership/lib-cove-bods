@@ -1,14 +1,17 @@
-import pycountry
-
 from collections import defaultdict
-from datetime import datetime, timedelta
-from jsonpointer import resolve_pointer
+from datetime import datetime
 
+import jsonpointer
+import pycountry
 from libcove2.common import get_orgids_prefixes  # type: ignore
 
 from libcovebods.base_task import AdditionalCheck
-from libcovebods.utils import (get_year_from_bods_birthdate_or_deathdate,
-                               parse_date_field, numeric_value, sort_by_date)
+from libcovebods.utils import (
+    get_year_from_bods_birthdate_or_deathdate,
+    numeric_value,
+    parse_date_field,
+    sort_by_date,
+)
 
 
 class LegacyChecks(AdditionalCheck):
@@ -37,7 +40,8 @@ class LegacyChecks(AdditionalCheck):
         self.orgids_prefixes = get_orgids_prefixes()
 
     def check_entity_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         identifiers = statement.get("identifiers")
@@ -47,7 +51,7 @@ class LegacyChecks(AdditionalCheck):
                     if (
                         "scheme" in identifier
                         and identifier["scheme"]
-                        and not identifier["scheme"] in self.orgids_prefixes
+                        and identifier["scheme"] not in self.orgids_prefixes
                     ):
                         self._additional_check_results.append(
                             {
@@ -90,7 +94,8 @@ class LegacyChecks(AdditionalCheck):
                         )
 
     def check_person_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         if "birthDate" in statement:
@@ -158,7 +163,8 @@ class LegacyChecks(AdditionalCheck):
                         )
 
     def check_ownership_or_control_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         (
@@ -277,7 +283,8 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
         self.statement_ids_counted = {}
 
     def check_entity_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.entity_statements_seen.append(statement.get("statementID"))
@@ -297,13 +304,15 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
                 )
 
     def check_person_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.person_statements_seen.append(statement.get("statementID"))
 
     def check_ownership_or_control_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.ownership_or_control_statements_seen.append(statement.get("statementID"))
@@ -398,7 +407,8 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
                 )
 
     def check_entity_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         if (
@@ -427,7 +437,8 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
                 )
 
     def check_person_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         if (
@@ -456,7 +467,8 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
                 )
 
     def check_ownership_or_control_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         interested_party = statement.get("interestedParty")
@@ -857,7 +869,7 @@ class CheckStatementPublicationDateFutureDate(AdditionalCheck):
 
     def check_statement_first_pass(self, statement):
         if ("publicationDetails" in statement and isinstance(statement["publicationDetails"], dict)
-            and "publicationDate" in statement["publicationDetails"] and 
+            and "publicationDate" in statement["publicationDetails"] and
             statement["publicationDetails"]["publicationDate"]):
             publication_date = parse_date_field(statement["publicationDetails"]["publicationDate"])
             if publication_date and publication_date > datetime.now().date():
@@ -1094,7 +1106,7 @@ class CheckStatementDeclarationSubject(AdditionalCheck):
 
     def check_statement_second_pass(self, statement):
         if "declarationSubject" in statement:
-            if not statement["declarationSubject"] in self._statements:
+            if statement["declarationSubject"] not in self._statements:
                 self._additional_check_results.append(
                             {
                                 "type": "statement_declaration_subject_not_exist",
@@ -1103,7 +1115,7 @@ class CheckStatementDeclarationSubject(AdditionalCheck):
                             })
             else:
                 for record_type in self._statements[statement["declarationSubject"]]:
-                    if not record_type in ('entity', 'person'):
+                    if record_type not in ('entity', 'person'):
                         self._additional_check_results.append(
                             {
                                 "type": "statement_declaration_subject_not_entity_person",
@@ -1135,20 +1147,11 @@ class CheckStatementIsComponent(AdditionalCheck):
                     self._components[component_id] = statement["recordId"]
 
     def check_statement_second_pass(self, statement):
-         print("Boo!")
          if ("recordId" in statement and "recordDetails" in statement and
             isinstance(statement["recordDetails"], dict) and "isComponent" in statement["recordDetails"]):
-                print(statement["recordId"], statement["recordDetails"]["isComponent"], self._statements,
-                      self._components)
                 if statement["recordDetails"]["isComponent"] is True:
-                    #print(statement["recordId"] in self._statements, self._statements[statement["recordId"]],
-                    #      self._statements[self._components[statement["recordId"]]])
-                    print("iscomponent:", statement["recordId"], self._statements)
-                    if not statement["recordId"] in self._components or not (self._statements[statement["recordId"]]
+                    if statement["recordId"] not in self._components or not (self._statements[statement["recordId"]]
                         < self._statements[self._components[statement["recordId"]]]):
-                        #print("Failed:", statement["recordId"], self._components,
-                        #      self._statements[statement["recordId"]], self._statements[self._components[statement["recordId"]]])
-                        print("Failed:", statement["recordId"], self._components)
                         self._additional_check_results.append(
                             {
                                 "type": "statement_entity_is_component_not_in_component_details",
@@ -1212,7 +1215,6 @@ class CheckStatementSeries(AdditionalCheck):
             sorted_series = sort_by_date(self._series[series], 0)
             statuses = [s[1] for s in sorted_series]
             types = [s[2] for s in sorted_series]
-            print(series, statuses, types)
             if len([s for s in statuses if s == 'new']) > 1:
                 self._additional_check_results.append(
                             {
@@ -1270,7 +1272,7 @@ class CheckComponentRecordsRecordIds(AdditionalCheck):
             if ("componentRecords" in statement["recordDetails"] and
                 isinstance(statement["recordDetails"]["componentRecords"], list)):
                 for component in statement["recordDetails"]["componentRecords"]:
-                    if not component in self._records:
+                    if component not in self._records:
                         if component in self._statements:
                             self._additional_check_results.append(
                             {
@@ -1304,7 +1306,7 @@ class CheckStatementRelationshipParties(AdditionalCheck):
         if "recordDetails" in statement and isinstance(statement["recordDetails"], dict):
             if ("subject" in statement["recordDetails"] and
                 isinstance(statement["recordDetails"]["subject"], str)):
-                if not statement["recordDetails"]["subject"] in self._records:
+                if statement["recordDetails"]["subject"] not in self._records:
                     self._additional_check_results.append(
                             {
                                 "type": "subject_must_be_record_id",
@@ -1320,14 +1322,14 @@ class CheckStatementRelationshipParties(AdditionalCheck):
                             })
             if ("interestedParty" in statement["recordDetails"] and
                 isinstance(statement["recordDetails"]["interestedParty"], str)):
-                if not statement["recordDetails"]["interestedParty"] in self._records:
+                if statement["recordDetails"]["interestedParty"] not in self._records:
                     self._additional_check_results.append(
                             {
                                 "type": "interested_party_must_be_record_id",
                                 "statement_type": None,
                                 "statement": statement.get("statementId"),
                             })
-                elif not self._records[statement["recordDetails"]["interestedParty"]] in ('entity', 'person'):
+                elif self._records[statement["recordDetails"]["interestedParty"]] not in ('entity', 'person'):
                     self._additional_check_results.append(
                             {
                                 "type": "interested_party_can_only_refer_to_entity_or_person",
@@ -1362,10 +1364,8 @@ class CheckAnnotationStatementPointerTarget(AdditionalCheck):
             for annotation in statement["annotations"]:
                 if "statementPointerTarget" in annotation:
                     try:
-                        resolve_pointer(statement, annotation["statementPointerTarget"])
-                    #print("Pointer check:", resolve_pointer(statement, statement["annotations"]["statementPointerTarget"]),
-                    #      statement, statement["annotations"]["statementPointerTarget"])
-                    except:
+                        jsonpointer.resolve_pointer(statement, annotation["statementPointerTarget"])
+                    except (jsonpointer.JsonPointerException, TypeError):
                         self._additional_check_results.append(
                             {
                                 "type": "annotation_statement_pointer_target_invalid",
@@ -1420,8 +1420,8 @@ class CheckStatementRelationshipInterests(AdditionalCheck):
                                 entity_type = self._records[statement["recordDetails"]["subject"]][1]
                                 print("Entity type:", entity_type)
                                 if (not entity_type or not isinstance(statement["recordDetails"], dict) or
-                                   not "type" in entity_type or not entity_type["type"] == 'arrangement' or
-                                   not "subtype" in entity_type or not entity_type["subtype"] == 'nomination'):
+                                   "type" not in entity_type or not entity_type["type"] == 'arrangement' or
+                                   "subtype" not in entity_type or not entity_type["subtype"] == 'nomination'):
                                     self._additional_check_results.append(
                                     {
                                         "type": "relationship_interests_subject_should_be_entity_nomination_arrangement",
@@ -1444,7 +1444,7 @@ class CheckStatementRelationshipInterests(AdditionalCheck):
                                 entity_type = self._records[statement["recordDetails"]["subject"]][1]
                                 print("Entity type:", entity_type)
                                 if (not entity_type or not isinstance(statement["recordDetails"], dict) or
-                                   not "subtype" in entity_type or not entity_type["subtype"] == 'trust'):
+                                   "subtype" not in entity_type or not entity_type["subtype"] == 'trust'):
                                     self._additional_check_results.append(
                                     {
                                         "type": "relationship_interests_subject_should_be_entity_trust",
@@ -1466,7 +1466,7 @@ class CheckStatementSerialisation(AdditionalCheck):
     def check_statement_first_pass(self, statement):
         if "recordId" in statement:
             self._count += 1
-            if not statement["recordId"] in self._records:
+            if statement["recordId"] not in self._records:
                 self._records[statement["recordId"]] = self._count
 
     def check_ownership_or_control_statement_second_pass(self, statement):
@@ -1530,14 +1530,14 @@ class CheckStatementPersonIdentifiersHaveCorrectScheme(AdditionalCheck):
                                    "UNO", "XBA", "XIM", "XCC", "XCO", "XEC", "XPO", "XOM", "XXA", "XXB",
                                    "XXC", "XXX", "ZIM")
                     if (not pycountry.countries.get(alpha_3=identifier["scheme"].split("-")[0]) and
-                        not identifier["scheme"].split("-")[0] in other_codes):
+                        identifier["scheme"].split("-")[0] not in other_codes):
                         self._additional_check_results.append(
                             {
                                 "type": "person_identifiers_no_valid_iso_3166_1_alpha_3_code",
                                 "statement_type": None,
                                 "statement": statement.get("statementId"),
                             })
-                    elif not identifier["scheme"].split("-")[1] in ('PASSPORT', 'TAXID', 'IDCARD'):
+                    elif identifier["scheme"].split("-")[1] not in ('PASSPORT', 'TAXID', 'IDCARD'):
                         self._additional_check_results.append(
                             {
                                 "type": "person_identifiers_not_passport_taxid_idcard",

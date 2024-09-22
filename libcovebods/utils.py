@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 
 from dateutil import parser
@@ -58,7 +57,7 @@ def numeric_value(value):
     try:
         float(value)
         return True
-    except:
+    except ValueError:
         return False
 
 def sort_by_date(list_with_date, index):

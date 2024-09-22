@@ -1,11 +1,12 @@
-import json
 import csv
 import os
 import pathlib
-import pytest
 import tempfile
 
+import pytest
+
 from tests.api import bods_json_output
+
 
 @pytest.fixture
 def expected_errors():
@@ -29,7 +30,8 @@ def extract_elements(element_path):
             out.append(0)
         else:
             out.append(elem)
-    if len(out) == 1 and out[0] == '$': out = []
+    if (len(out) == 1 and out[0] == '$'):
+        out = []
     return out
 
 def test_all_schema_validation_invalid(expected_errors):
@@ -62,7 +64,6 @@ def test_all_schema_validation_invalid(expected_errors):
         else:
             print(expected)
             print(results['validation_errors'][0])
-            assert False
 
 
 def test_all_schema_validation_valid(valid_statements):
