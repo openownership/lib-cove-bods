@@ -583,6 +583,8 @@ def test_statement_person_birth_date_sensible_valid_2():
 
     results = bods_json_output(cove_temp_folder, json_filename)
 
+    print(results)
+
     assert results["schema_version"] == "0.4"
     assert results["validation_errors_count"] == 0
     assert results["additional_fields_count"] == 0
@@ -824,6 +826,8 @@ def test_statement_relationship_interests_share_values_invalid_6():
 
     results = bods_json_output(cove_temp_folder, json_filename)
 
+    print(results)
+
     assert results["schema_version"] == "0.4"
     assert results["validation_errors_count"] == 0
     assert results["additional_fields_count"] == 0
@@ -931,7 +935,7 @@ def test_statement_entity_is_component_invalid_2():
     assert results["schema_version"] == "0.4"
     assert results["validation_errors_count"] == 0
     assert results["additional_fields_count"] == 0
-    assert results["additional_checks_count"] == 1
+    assert results["additional_checks_count"] == 3 # 2 extra ordering errors
 
 def test_statement_entity_is_component_valid_1():
 
@@ -975,7 +979,7 @@ def test_statement_person_is_component_invalid_1():
     assert results["schema_version"] == "0.4"
     assert results["validation_errors_count"] == 0
     assert results["additional_fields_count"] == 0
-    assert results["additional_checks_count"] == 1
+    assert results["additional_checks_count"] == 2 # Extra ordering error
 
 def test_statement_person_is_component_invalid_2():
 
@@ -1097,7 +1101,8 @@ def test_statement_duplicate_statement_id_invalid_1():
         "fixtures",
         "0.4",
         "additional-checks",
-        "statement_duplicate_statement_id-invalid-1.json",
+        #"statement_duplicate_statement_id-invalid-1.json",
+        "statement_must_have_unique_statement_identifier-invalid-1.json",
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -1119,7 +1124,30 @@ def test_statement_duplicate_statement_id_invalid_2():
         "fixtures",
         "0.4",
         "additional-checks",
-        "statement_duplicate_statement_id-invalid-2.json",
+        #"statement_duplicate_statement_id-invalid-2.json",
+        "statement_must_have_unique_statement_identifier-invalid-1.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 1
+
+def test_statement_duplicate_statement_id_invalid_3():
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_must_have_unique_statement_identifier-invalid-3.json",
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -1141,7 +1169,8 @@ def test_statement_duplicate_statement_id_valid_1():
         "fixtures",
         "0.4",
         "additional-checks",
-        "statement_duplicate_statement_id-valid-1.json",
+        #"statement_duplicate_statement_id-valid-1.json",
+        "statement_must_have_unique_statement_identifier-valid-1.json",
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
@@ -1461,7 +1490,7 @@ def test_relationship_interested_party_entity_or_person_invalid_1():
     assert results["additional_fields_count"] == 0
     assert results["additional_checks_count"] == 1
 
-def test_relationship_subject_refers_to_entity_invalid_1():
+def test_statement_annotiation_statement_pointer_target_invalid_1():
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -1483,7 +1512,7 @@ def test_relationship_subject_refers_to_entity_invalid_1():
     assert results["additional_fields_count"] == 0
     assert results["additional_checks_count"] == 1
 
-def test_relationship_subject_refers_to_entity_invalid_2():
+def test_statement_annotiation_statement_pointer_target_invalid_2():
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -1505,7 +1534,7 @@ def test_relationship_subject_refers_to_entity_invalid_2():
     assert results["additional_fields_count"] == 0
     assert results["additional_checks_count"] == 1
 
-def test_relationship_subject_refers_to_entity_invalid_3():
+def test_statement_annotiation_statement_pointer_target_invalid_3():
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -1528,7 +1557,7 @@ def test_relationship_subject_refers_to_entity_invalid_3():
     assert results["additional_checks_count"] == 1
 
 
-def test_relationship_subject_refers_to_entity_valid_1():
+def test_statement_annotiation_statement_pointer_target_valid_1():
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -1550,7 +1579,7 @@ def test_relationship_subject_refers_to_entity_valid_1():
     assert results["additional_fields_count"] == 0
     assert results["additional_checks_count"] == 0
 
-def test_relationship_subject_refers_to_entity_valid_2():
+def test_statement_annotiation_statement_pointer_target_valid_2():
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -1936,6 +1965,251 @@ def test_statement_serialisation_valid_1():
         "0.4",
         "additional-checks",
         "statement_serialisation-valid-1.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 0
+
+def test_statement_person_identifiers_have_correct_scheme_invalid_1():
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_person_identifiers_have_correct_scheme-invalid-1.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 1
+
+def test_statement_person_identifiers_have_correct_scheme_invalid_2():
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_person_identifiers_have_correct_scheme-invalid-2.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 1
+
+def test_statement_person_identifiers_have_correct_scheme_invalid_3():
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_person_identifiers_have_correct_scheme-invalid-3.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 1
+
+def test_statement_person_identifiers_have_correct_scheme_invalid_4():
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_person_identifiers_have_correct_scheme-invalid-4.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 1
+
+def test_statement_person_identifiers_have_correct_scheme_invalid_5():
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_person_identifiers_have_correct_scheme-invalid-5.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 1
+
+def test_statement_person_identifiers_have_correct_scheme_invalid_6():
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_person_identifiers_have_correct_scheme-invalid-6.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 1
+
+def test_statement_person_identifiers_have_correct_scheme_valid_1():
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_person_identifiers_have_correct_scheme-valid-1.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 0
+
+def test_statement_person_identifiers_have_correct_scheme_valid_2():
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_person_identifiers_have_correct_scheme-valid-2.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 0
+
+def test_statement_entity_identifier_scheme_known_invalid_1():
+    # Testing CheckStatementEntityIdentifiersHaveKnownScheme
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_entity_identifier_scheme_known-invalid-1.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 1
+
+def test_statement_entity_identifier_scheme_known_invalid_2():
+    # Testing CheckStatementEntityIdentifiersHaveKnownScheme
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_entity_identifier_scheme_known-invalid-2.json",
+    )
+
+    results = bods_json_output(cove_temp_folder, json_filename)
+
+    print(results)
+
+    assert results["schema_version"] == "0.4"
+    assert results["validation_errors_count"] == 0
+    assert results["additional_fields_count"] == 0
+    assert results["additional_checks_count"] == 1
+
+def test_statement_entity_identifier_scheme_known_valid_1():
+    # Testing CheckStatementEntityIdentifiersHaveKnownScheme
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        "fixtures",
+        "0.4",
+        "additional-checks",
+        "statement_entity_identifier_scheme_known-valid-1.json",
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)

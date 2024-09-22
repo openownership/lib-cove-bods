@@ -8,8 +8,10 @@
     "recordDetails": {
       "isComponent": false,
       "personType": "knownPerson",
-      "birthDate": "1800",
-      "deathDate":"1990-05-01"
+      "identifiers": [{
+        "id": "test",
+        "scheme": "GBR-TAXID"
+      }]
     }
   }
 ]
