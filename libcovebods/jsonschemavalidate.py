@@ -108,7 +108,9 @@ class JSONSchemaValidator:
             # Make the validator
             statement_schema = registry.contents("urn:statement")
             validator = Draft202012Validator(
-                schema=statement_schema, registry=registry, format_checker=FormatChecker()
+                schema=statement_schema,
+                registry=registry,
+                format_checker=FormatChecker(),
             )
         else:
             validator = Draft4Validator(
@@ -151,7 +153,7 @@ class BODSValidationError:
     def json(self):
         """Return representation of this error in JSON."""
 
-        #print(self._path, self._message)
+        # print(self._path, self._message)
         if self._path:
             path_ending = self._path[-1]
             if isinstance(self._path[-1], int) and len(self._path) >= 2:
@@ -160,7 +162,7 @@ class BODSValidationError:
             elif isinstance(self._path[0], int) and len(self._path) == 1:
                 path_ending = "[number]"
         else:
-            path_ending = '$'
+            path_ending = "$"
 
         return {
             "message": self._message,

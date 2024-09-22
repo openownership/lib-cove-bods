@@ -25,6 +25,7 @@ def is_interest_current(interest):
     else:
         return True
 
+
 def get_statement_type(statement, schema_object):
     if schema_object.is_schema_version_equal_to_or_greater_than("0.4"):
         record_type = statement.get("recordType")
@@ -37,6 +38,7 @@ def get_statement_type(statement, schema_object):
             return None
     else:
         return statement.get("statementType")
+
 
 def parse_date_field(date_str):
     print(date_str)
@@ -53,12 +55,14 @@ def parse_date_field(date_str):
     else:
         return None
 
+
 def numeric_value(value):
     try:
         float(value)
         return True
     except ValueError:
         return False
+
 
 def sort_by_date(list_with_date, index):
     out = []

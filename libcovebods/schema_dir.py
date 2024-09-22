@@ -12,9 +12,12 @@ def get_schema_paths(schema_dir):
     Returns an array of paths, filenames, and contents (parsed JSON) for each of the schema files.
     """
     schema_paths = [
-        (path, name, data) for path, name, _, data in walk_json_data(top=schema_dir) if is_json_schema(data)
+        (path, name, data)
+        for path, name, _, data in walk_json_data(top=schema_dir)
+        if is_json_schema(data)
     ]
     return schema_paths
+
 
 def schema_registry(schema_dir):
     """
@@ -23,10 +26,13 @@ def schema_registry(schema_dir):
     """
     schemas = []
     for _, _, schema in get_schema_paths(schema_dir):
-        schemas.append((schema.get("$id"), Resource(contents=schema, specification=DRAFT202012)))
+        schemas.append(
+            (schema.get("$id"), Resource(contents=schema, specification=DRAFT202012))
+        )
 
     registry = Registry().with_resources(schemas)
     return registry
+
 
 def get_scheme_file_data(schema_dir, component):
     for file_path in Path(schema_dir).glob("*.json"):

@@ -61,12 +61,11 @@ class StatisticsCountEntityStatements(AdditionalCheck):
         data = {
             "count_entity_statements": self.count_entity_statements,
             "count_entity_statements_types": self.count_entity_statements_types,
-            "count_entity_statements_types_with_any_identifier":
-                                             self.count_entity_statements_types_with_any_identifier,
-            "count_entity_statements_types_with_any_identifier_with_id_and_scheme":
-                          self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
+            "count_entity_statements_types_with_any_identifier": self.count_entity_statements_types_with_any_identifier,
+            "count_entity_statements_types_with_any_identifier_with_id_and_scheme": self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
         }
         return data
+
 
 class StatisticsCountEntityRecordStatements(AdditionalCheck):
     @staticmethod
@@ -93,9 +92,12 @@ class StatisticsCountEntityRecordStatements(AdditionalCheck):
             and isinstance(statement["recordDetails"], dict)
             and "entityType" in statement["recordDetails"]
             and isinstance(statement["recordDetails"]["entityType"], str)
-            and statement["recordDetails"]["entityType"] in self.count_entity_statements_types
+            and statement["recordDetails"]["entityType"]
+            in self.count_entity_statements_types
         ):
-            self.count_entity_statements_types[statement["recordDetails"]["entityType"]] += 1
+            self.count_entity_statements_types[
+                statement["recordDetails"]["entityType"]
+            ] += 1
             if "identifiers" in statement and isinstance(
                 statement["identifiers"], list
             ):
@@ -127,12 +129,11 @@ class StatisticsCountEntityRecordStatements(AdditionalCheck):
         data = {
             "count_entity_statements": self.count_entity_statements,
             "count_entity_statements_types": self.count_entity_statements_types,
-            "count_entity_statements_types_with_any_identifier":
-                                             self.count_entity_statements_types_with_any_identifier,
-            "count_entity_statements_types_with_any_identifier_with_id_and_scheme":
-                          self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
+            "count_entity_statements_types_with_any_identifier": self.count_entity_statements_types_with_any_identifier,
+            "count_entity_statements_types_with_any_identifier_with_id_and_scheme": self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
         }
         return data
+
 
 class StatisticsCountPersonStatements(AdditionalCheck):
     @staticmethod
@@ -152,7 +153,6 @@ class StatisticsCountPersonStatements(AdditionalCheck):
             "personType" in statement
             and isinstance(statement["personType"], str)
             and statement["personType"] in self.count_person_statements_types
-
         ):
             self.count_person_statements_types[statement["personType"]] += 1
 
@@ -162,6 +162,7 @@ class StatisticsCountPersonStatements(AdditionalCheck):
             "count_person_statements_types": self.count_person_statements_types,
         }
         return data
+
 
 class StatisticsCountPersonRecordStatements(AdditionalCheck):
     @staticmethod
@@ -182,9 +183,12 @@ class StatisticsCountPersonRecordStatements(AdditionalCheck):
             and isinstance(statement["recordDetails"], dict)
             and "personType" in statement["recordDetails"]
             and isinstance(statement["recordDetails"]["personType"], str)
-            and statement["recordDetails"]["personType"] in self.count_person_statements_types
+            and statement["recordDetails"]["personType"]
+            in self.count_person_statements_types
         ):
-            self.count_person_statements_types[statement["recordDetails"]["personType"]] += 1
+            self.count_person_statements_types[
+                statement["recordDetails"]["personType"]
+            ] += 1
 
     def get_statistics(self):
         data = {
@@ -192,6 +196,7 @@ class StatisticsCountPersonRecordStatements(AdditionalCheck):
             "count_person_statements_types": self.count_person_statements_types,
         }
         return data
+
 
 class StatisticsCountOwnershipOrControlStatements(AdditionalCheck):
     @staticmethod
@@ -285,27 +290,21 @@ class StatisticsCountOwnershipOrControlStatements(AdditionalCheck):
     def get_statistics(self):
         data = {
             "count_ownership_or_control_statement": self.count_ownership_or_control_statement,
-            "count_ownership_or_control_statement_interested_party_with_person":
-                         self.count_ownership_or_control_statement_interested_party_with_person,
-            "count_ownership_or_control_statement_interested_party_with_entity":
-                         self.count_ownership_or_control_statement_interested_party_with_entity,
-            "count_ownership_or_control_statement_interested_party_with_unspecified":
-                    self.count_ownership_or_control_statement_interested_party_with_unspecified,
-            "count_ownership_or_control_statement_interest_statement_types":
-                             self.count_ownership_or_control_statement_interest_statement_types,
+            "count_ownership_or_control_statement_interested_party_with_person": self.count_ownership_or_control_statement_interested_party_with_person,
+            "count_ownership_or_control_statement_interested_party_with_entity": self.count_ownership_or_control_statement_interested_party_with_entity,
+            "count_ownership_or_control_statement_interested_party_with_unspecified": self.count_ownership_or_control_statement_interested_party_with_unspecified,
+            "count_ownership_or_control_statement_interest_statement_types": self.count_ownership_or_control_statement_interest_statement_types,
             "count_ownership_or_control_statement_by_year": self.count_ownership_or_control_statement_by_year,
             "count_ownership_or_control_statement_subject_by_year": {
                 year: len(year_set)
                 for year, year_set in self.subject_statement_ids_by_year.items()
             },
-            "count_ownership_or_control_statement_interested_party_with_entity_by_year":
-                  self.count_ownership_or_control_statement_interested_party_with_entity_by_year,
-            "count_ownership_or_control_statement_interested_party_with_person_by_year":
-                  self.count_ownership_or_control_statement_interested_party_with_person_by_year,
-            "count_ownership_or_control_statement_interested_party_with_unspecified_by_year":
-             self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year,
+            "count_ownership_or_control_statement_interested_party_with_entity_by_year": self.count_ownership_or_control_statement_interested_party_with_entity_by_year,
+            "count_ownership_or_control_statement_interested_party_with_person_by_year": self.count_ownership_or_control_statement_interested_party_with_person_by_year,
+            "count_ownership_or_control_statement_interested_party_with_unspecified_by_year": self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year,
         }
         return data
+
 
 class StatisticsCountOwnershipOrControlRecordStatements(AdditionalCheck):
     @staticmethod
@@ -327,8 +326,8 @@ class StatisticsCountOwnershipOrControlRecordStatements(AdditionalCheck):
             ] = 0
         self.count_ownership_or_control_statement_by_year = defaultdict(int)
         self.subject_statement_ids_by_year = defaultdict(set)
-        self.count_ownership_or_control_statement_interested_party_by_year = defaultdict(
-            int
+        self.count_ownership_or_control_statement_interested_party_by_year = (
+            defaultdict(int)
         )
 
     def check_ownership_or_control_statement_first_pass(self, statement):
@@ -337,13 +336,18 @@ class StatisticsCountOwnershipOrControlRecordStatements(AdditionalCheck):
         except (ValueError, AttributeError):
             year = None
         self.count_ownership_or_control_statement += 1
-        if "recordDetails" in statement and isinstance(statement["recordDetails"], dict):
+        if "recordDetails" in statement and isinstance(
+            statement["recordDetails"], dict
+        ):
             interested_party = statement["recordDetails"].get("interestedParty")
             if interested_party:
                 self.count_ownership_or_control_statement_interested_party += 1
-                self.count_ownership_or_control_statement_interested_party_by_year[year] += 1
-            if ("interests" in statement["recordDetails"] and
-                isinstance(statement["recordDetails"]["interests"], list)):
+                self.count_ownership_or_control_statement_interested_party_by_year[
+                    year
+                ] += 1
+            if "interests" in statement["recordDetails"] and isinstance(
+                statement["recordDetails"]["interests"], list
+            ):
                 for interest in statement["recordDetails"]["interests"]:
                     if isinstance(interest, dict):
                         if (
@@ -355,29 +359,29 @@ class StatisticsCountOwnershipOrControlRecordStatements(AdditionalCheck):
                             self.count_ownership_or_control_statement_interest_statement_types[
                                 interest["type"]
                             ] += 1
-            if ("subject" in statement["recordDetails"] and
-                isinstance(statement["recordDetails"]["subject"], str)):
-                self.subject_statement_ids_by_year[year].add(statement["recordDetails"]["subject"])
+            if "subject" in statement["recordDetails"] and isinstance(
+                statement["recordDetails"]["subject"], str
+            ):
+                self.subject_statement_ids_by_year[year].add(
+                    statement["recordDetails"]["subject"]
+                )
         if "statementDate" in statement:
             self.count_ownership_or_control_statement_by_year[year] += 1
 
     def get_statistics(self):
         data = {
             "count_ownership_or_control_statement": self.count_ownership_or_control_statement,
-            "count_ownership_or_control_statement_interested_party":
-                                   self.count_ownership_or_control_statement_interested_party,
-            "count_ownership_or_control_statement_interest_statement_types":
-                           self.count_ownership_or_control_statement_interest_statement_types,
-            "count_ownership_or_control_statement_by_year":
-                                            self.count_ownership_or_control_statement_by_year,
+            "count_ownership_or_control_statement_interested_party": self.count_ownership_or_control_statement_interested_party,
+            "count_ownership_or_control_statement_interest_statement_types": self.count_ownership_or_control_statement_interest_statement_types,
+            "count_ownership_or_control_statement_by_year": self.count_ownership_or_control_statement_by_year,
             "count_ownership_or_control_statement_subject_by_year": {
                 year: len(year_set)
                 for year, year_set in self.subject_statement_ids_by_year.items()
             },
-            "count_ownership_or_control_statement_interested_party_by_year":
-                           self.count_ownership_or_control_statement_interested_party_by_year,
+            "count_ownership_or_control_statement_interested_party_by_year": self.count_ownership_or_control_statement_interested_party_by_year,
         }
         return data
+
 
 class StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing(
     AdditionalCheck
@@ -462,8 +466,7 @@ class StatisticAddress(AdditionalCheck):
             "count_addresses": self.count_addresses,
             "count_addresses_with_postcode": self.count_addresses_with_postcode,
             "count_addresses_with_country": self.count_addresses_with_country,
-            "count_addresses_with_postcode_duplicated_in_address":
-                         self.count_addresses_with_postcode_duplicated_in_address,
+            "count_addresses_with_postcode_duplicated_in_address": self.count_addresses_with_postcode_duplicated_in_address,
         }
         return data
 
@@ -501,8 +504,7 @@ class StatisticOwnershipOrControlInterestDirectOrIndirect(AdditionalCheck):
 
     def get_statistics(self):
         return {
-            "count_ownership_or_control_statement_interest_direct_or_indirect":
-                           self.count_ownership_or_control_statement_interest_direct_or_indirect,
+            "count_ownership_or_control_statement_interest_direct_or_indirect": self.count_ownership_or_control_statement_interest_direct_or_indirect,
         }
 
 
@@ -537,9 +539,12 @@ class StatisticDeclarationSubjects(AdditionalCheck):
         self._declaration_subjects = {}
 
     def check_statement_first_pass(self, statement):
-        if ("recordId" in statement and "declarationSubject" in statement and
-            statement["recordId"] == statement["declarationSubject"]):
-                self._declaration_subjects[statement["recordId"]] = 1
+        if (
+            "recordId" in statement
+            and "declarationSubject" in statement
+            and statement["recordId"] == statement["declarationSubject"]
+        ):
+            self._declaration_subjects[statement["recordId"]] = 1
 
     def get_statistics(self):
         return {

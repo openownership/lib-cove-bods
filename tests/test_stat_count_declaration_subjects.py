@@ -13,11 +13,11 @@ def test_schema_0_4_count():
         os.path.dirname(os.path.realpath(__file__)),
         "fixtures",
         "0.4",
-        "statistic_count_declaration_subjects.json"
+        "statistic_count_declaration_subjects.json",
     )
 
     results = bods_json_output(cove_temp_folder, json_filename)
 
     assert results["schema_version"] == "0.4"
 
-    assert (results["statistics"]["count_declaration_subjects"] == 2)
+    assert results["statistics"]["count_declaration_subjects"] == 2

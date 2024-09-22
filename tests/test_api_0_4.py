@@ -70,13 +70,10 @@ def test_entity_sub_type_does_not_align_1():
     assert results["additional_checks_count"] == 0
 
     assert (
-        results["validation_errors"][0]["message"]
-        == "'trust' is not one of ['other']"
+        results["validation_errors"][0]["message"] == "'trust' is not one of ['other']"
     )
-    assert (
-        results["validation_errors"][0]['path_ending']
-        == 'subtype'
-    )
+    assert results["validation_errors"][0]["path_ending"] == "subtype"
+
 
 def test_entity_sub_type_does_align_1():
 

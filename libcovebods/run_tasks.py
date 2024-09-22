@@ -117,7 +117,7 @@ def process_additional_checks(
 
     # Second Pass
     for statement in all_data:
-        #statement_type = statement.get("statementType")
+        # statement_type = statement.get("statementType")
         statement_type = get_statement_type(statement, schema_object)
         for additional_check_instance in additional_check_instances:
             additional_check_instance.check_statement_second_pass(statement)

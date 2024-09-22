@@ -14,12 +14,17 @@ try:
 except ImportError:
     from cached_property import cached_property  # type: ignore
 
+
 def record_based_statement(statement):
-    if ("recordDetails" in statement or "recordId" in statement or
-        "recordType" in statement):
+    if (
+        "recordDetails" in statement
+        or "recordId" in statement
+        or "recordType" in statement
+    ):
         return True
     else:
         return False
+
 
 class SchemaBODS:
     def __init__(
@@ -110,7 +115,9 @@ class SchemaBODS:
             }
             # Use latest non-record version if not record based else latest version (revisit)
             if not record_based_statement(statement):
-                self.schema_version = self.config.config["schema_latest_nonrecord_version"]
+                self.schema_version = self.config.config[
+                    "schema_latest_nonrecord_version"
+                ]
                 self.pkg_schema_url = self.config.config["schema_versions"][
                     self.schema_version
                 ]["schema_url"]
@@ -136,7 +143,9 @@ class SchemaBODS:
             }
             # Use latest non-record version if not record based else latest version (revisit)
             if not record_based_statement(statement):
-                self.schema_version = self.config.config["schema_latest_nonrecord_version"]
+                self.schema_version = self.config.config[
+                    "schema_latest_nonrecord_version"
+                ]
                 self.pkg_schema_url = self.config.config["schema_versions"][
                     self.schema_version
                 ]["schema_url"]
@@ -171,8 +180,10 @@ class SchemaBODS:
                 ):
                     return statement_schema["properties"]["entityType"]["enum"]
         else:
-            entity_schema = get_scheme_file_data(self.pkg_schema_url, 'entity')
-            return entity_schema['properties']['entityType']['properties']['type']['enum']
+            entity_schema = get_scheme_file_data(self.pkg_schema_url, "entity")
+            return entity_schema["properties"]["entityType"]["properties"]["type"][
+                "enum"
+            ]
 
     def get_person_statement_types_list(self):
         if self.is_schema_version_equal_to_or_less_than("0.3"):
@@ -183,8 +194,8 @@ class SchemaBODS:
                 ):
                     return statement_schema["properties"]["personType"]["enum"]
         else:
-            person_schema = get_scheme_file_data(self.pkg_schema_url, 'person')
-            return person_schema['properties']['personType']['enum']
+            person_schema = get_scheme_file_data(self.pkg_schema_url, "person")
+            return person_schema["properties"]["personType"]["enum"]
 
     def get_ownership_or_control_statement_interest_statement_types_list(self):
         if self.is_schema_version_equal_to_or_less_than("0.3"):
@@ -193,10 +204,16 @@ class SchemaBODS:
                     statement_schema["properties"]["statementType"]["enum"][0]
                     == "ownershipOrControlStatement"
                 ):
-                    return statement_schema["properties"]["interests"]["items"]["properties"]["type"]["enum"]
+                    return statement_schema["properties"]["interests"]["items"][
+                        "properties"
+                    ]["type"]["enum"]
         else:
-            relationship_schema = get_scheme_file_data(self.pkg_schema_url, 'relationship')
-            return relationship_schema["$defs"]["Interest"]["properties"]["type"]["enum"]
+            relationship_schema = get_scheme_file_data(
+                self.pkg_schema_url, "relationship"
+            )
+            return relationship_schema["$defs"]["Interest"]["properties"]["type"][
+                "enum"
+            ]
 
     def get_ownership_or_control_statement_interest_direct_or_indirect_list(self):
         if self.is_schema_version_equal_to_or_less_than("0.3"):
@@ -207,15 +224,19 @@ class SchemaBODS:
                 ):
                     direct_or_indirect_json_schema = statement_schema["properties"][
                         "interests"
-                        ]["items"]["properties"].get("directOrIndirect")
+                    ]["items"]["properties"].get("directOrIndirect")
                     # This is only available in 0.3 and above.
                     if isinstance(direct_or_indirect_json_schema, dict):
                         return direct_or_indirect_json_schema.get("enum")
                     else:
                         return []
         else:
-            relationship_schema = get_scheme_file_data(self.pkg_schema_url, 'relationship')
-            return relationship_schema["$defs"]["Interest"]["properties"]["directOrIndirect"]["enum"]
+            relationship_schema = get_scheme_file_data(
+                self.pkg_schema_url, "relationship"
+            )
+            return relationship_schema["$defs"]["Interest"]["properties"][
+                "directOrIndirect"
+            ]["enum"]
 
     def get_person_statement_political_exposure_status_list(self):
         if self.is_schema_version_equal_to_or_less_than("0.3"):
@@ -233,8 +254,10 @@ class SchemaBODS:
                     else:
                         return []
         else:
-            person_schema = get_scheme_file_data(self.pkg_schema_url, 'person')
-            return person_schema['properties']["politicalExposure"]["properties"]["status"]["enum"]
+            person_schema = get_scheme_file_data(self.pkg_schema_url, "person")
+            return person_schema["properties"]["politicalExposure"]["properties"][
+                "status"
+            ]["enum"]
 
     def get_inconsistent_schema_version_used_for_statement(self, statement):
         # If version is not set at all, then we assume it's the default version
@@ -279,8 +302,12 @@ class SchemaBODS:
     def get_package_schema_fields(self) -> set:
         if self.is_schema_version_equal_to_or_greater_than("0.4"):
             print("Start:")
-            return set(schema_dict_fields_generator(self._pkg_schema_obj.contents("urn:statement"),
-                                                    registry=self._pkg_schema_obj))
+            return set(
+                schema_dict_fields_generator(
+                    self._pkg_schema_obj.contents("urn:statement"),
+                    registry=self._pkg_schema_obj,
+                )
+            )
         else:
             print("Start old:", self.schema_version)
             return set(schema_dict_fields_generator(self._pkg_schema_obj))

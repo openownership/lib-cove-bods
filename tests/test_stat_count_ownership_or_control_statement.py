@@ -17,7 +17,8 @@ def test_schema_0_2():
 
     assert results["schema_version"] == "0.2"
 
-    assert (results["statistics"]["count_ownership_or_control_statement"] == 1)
+    assert results["statistics"]["count_ownership_or_control_statement"] == 1
+
 
 def test_schema_0_3_basic_1():
 
@@ -32,7 +33,8 @@ def test_schema_0_3_basic_1():
 
     assert results["schema_version"] == "0.3"
 
-    assert (results["statistics"]["count_ownership_or_control_statement"] == 1)
+    assert results["statistics"]["count_ownership_or_control_statement"] == 1
+
 
 def test_schema_0_4_basic_1():
 
@@ -47,4 +49,4 @@ def test_schema_0_4_basic_1():
 
     assert results["schema_version"] == "0.4"
 
-    assert (results["statistics"]["count_ownership_or_control_statement"] == 1)
+    assert results["statistics"]["count_ownership_or_control_statement"] == 1

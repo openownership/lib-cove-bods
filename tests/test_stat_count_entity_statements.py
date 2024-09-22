@@ -17,10 +17,23 @@ def test_schema_0_2():
 
     assert results["schema_version"] == "0.2"
 
-    assert (results["statistics"]["count_entity_statements"] == 1)
-    assert (results["statistics"]["count_entity_statements_types"]['registeredEntity'] == 1)
-    assert (results["statistics"]["count_entity_statements_types_with_any_identifier"]['registeredEntity'] == 1)
-    assert (results["statistics"]["count_entity_statements_types_with_any_identifier_with_id_and_scheme"]['registeredEntity'] == 1)
+    assert results["statistics"]["count_entity_statements"] == 1
+    assert (
+        results["statistics"]["count_entity_statements_types"]["registeredEntity"] == 1
+    )
+    assert (
+        results["statistics"]["count_entity_statements_types_with_any_identifier"][
+            "registeredEntity"
+        ]
+        == 1
+    )
+    assert (
+        results["statistics"][
+            "count_entity_statements_types_with_any_identifier_with_id_and_scheme"
+        ]["registeredEntity"]
+        == 1
+    )
+
 
 def test_schema_0_3_basic_1():
 
@@ -35,10 +48,23 @@ def test_schema_0_3_basic_1():
 
     assert results["schema_version"] == "0.3"
 
-    assert (results["statistics"]["count_entity_statements"] == 1)
-    assert (results["statistics"]["count_entity_statements_types"]['registeredEntity'] == 1)
-    assert (results["statistics"]["count_entity_statements_types_with_any_identifier"]['registeredEntity'] == 1)
-    assert (results["statistics"]["count_entity_statements_types_with_any_identifier_with_id_and_scheme"]['registeredEntity'] == 1)
+    assert results["statistics"]["count_entity_statements"] == 1
+    assert (
+        results["statistics"]["count_entity_statements_types"]["registeredEntity"] == 1
+    )
+    assert (
+        results["statistics"]["count_entity_statements_types_with_any_identifier"][
+            "registeredEntity"
+        ]
+        == 1
+    )
+    assert (
+        results["statistics"][
+            "count_entity_statements_types_with_any_identifier_with_id_and_scheme"
+        ]["registeredEntity"]
+        == 1
+    )
+
 
 def test_schema_0_4_basic_1():
 
@@ -53,4 +79,4 @@ def test_schema_0_4_basic_1():
 
     assert results["schema_version"] == "0.4"
 
-    assert (results["statistics"]["count_entity_statements"] == 1)
+    assert results["statistics"]["count_entity_statements"] == 1

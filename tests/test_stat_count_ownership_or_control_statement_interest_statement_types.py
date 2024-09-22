@@ -208,4 +208,3 @@ def test_schema_0_2():
             "count_ownership_or_control_statement_interest_statement_types"
         ]["conditional-rights-granted-by-contract"]
     )  # noqa
-
