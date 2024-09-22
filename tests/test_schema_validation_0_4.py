@@ -1,6 +1,7 @@
 import json
 import csv
 import os
+import pathlib
 import pytest
 import tempfile
 
@@ -15,6 +16,10 @@ def expected_errors():
             expected.append(row)
     return expected
 
+@pytest.fixture
+def valid_statements():
+    return pathlib.Path('tests/fixtures/0.4/valid-schema').glob("*.json")
+
 def extract_elements(element_path):
     elems = [0 if elem == '$[0]' else elem for elem in element_path.split(".")]
     out = []
@@ -27,7 +32,7 @@ def extract_elements(element_path):
     if len(out) == 1 and out[0] == '$': out = []
     return out
 
-def test_all_schema_validation(expected_errors):
+def test_all_schema_validation_invalid(expected_errors):
 
     cove_temp_folder = tempfile.mkdtemp(
         prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
@@ -58,3 +63,17 @@ def test_all_schema_validation(expected_errors):
             print(expected)
             print(results['validation_errors'][0])
             assert False
+
+
+def test_all_schema_validation_valid(valid_statements):
+
+    cove_temp_folder = tempfile.mkdtemp(
+        prefix="lib-cove-bods-tests-", dir=tempfile.gettempdir()
+    )
+
+    for valid_statement in valid_statements:
+
+        results = bods_json_output(cove_temp_folder, valid_statement)
+
+        assert results["schema_version"] == "0.4"
+        assert results['validation_errors_count'] == 0
