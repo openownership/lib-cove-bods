@@ -1,4 +1,6 @@
 import datetime
+import httpx
+import json
 import re
 
 from dateutil import parser
@@ -40,19 +42,16 @@ def get_statement_type(statement, schema_object):
 
 def parse_date_field(date_str):
     print(date_str)
-    if "-" in date_str or len(date_str) == 4:
-        if "T" in date_str:
-            if "Z" in date_str:
-                return datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
-            else:
-                return datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
-        else:
+    if not isinstance(date_str, str):
+        return None
+    elif "-" in date_str or len(date_str) == 4:
+        if date_str.count("-") < 2:
             if re.match(r"^[0-9]{4}$", date_str):
-                return datetime.datetime.strptime(date_str, "%Y")
-            elif re.match(r"^[0-9]{4}-[0-9]{2}$", date_str):
-                return datetime.datetime.strptime(date_str, "%Y-%m")
-            else:
-                return datetime.datetime.strptime(date_str, "%Y-%m-%d")
+                return datetime.datetime.strptime(date_str, "%Y").date()
+            elif re.match(r"^[0-9]{4}-[0-9]{1,2}$", date_str):
+                return datetime.datetime.strptime(date_str, "%Y-%m").date()
+        else:
+            return datetime.datetime.fromisoformat(date_str).date()
     else:
         return None
 

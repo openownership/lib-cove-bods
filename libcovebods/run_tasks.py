@@ -29,6 +29,8 @@ TASK_CLASSES = [
     libcovebods.tasks.checks.CheckAnnotationStatementPointerTarget,
     libcovebods.tasks.checks.CheckStatementRelationshipInterests,
     libcovebods.tasks.checks.CheckStatementSerialisation,
+    libcovebods.tasks.checks.CheckStatementPersonIdentifiersHaveCorrectScheme,
+    libcovebods.tasks.checks.CheckStatementEntityIdentifiersHaveKnownScheme,
     libcovebods.tasks.statistics.StatisticsCountEntityStatements,
     libcovebods.tasks.statistics.StatisticsCountEntityRecordStatements,
     libcovebods.tasks.statistics.StatisticsCountPersonStatements,
@@ -39,6 +41,7 @@ TASK_CLASSES = [
     libcovebods.tasks.statistics.StatisticAddress,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlInterestDirectOrIndirect,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
+    libcovebods.tasks.statistics.StatisticDeclarationSubjects,
     libcovebods.tasks.peps.PEPForSchema02Only,
     libcovebods.tasks.peps.PEPForSchema03AndAbove,
 ]
@@ -62,6 +65,8 @@ TASK_CLASSES_IN_SAMPLE_MODE = [
     libcovebods.tasks.checks.CheckStatementDuplicateStatementId,
     libcovebods.tasks.checks.CheckAnnotationStatementPointerTarget,
     libcovebods.tasks.checks.CheckStatementRelationshipInterests,
+    libcovebods.tasks.checks.CheckStatementPersonIdentifiersHaveCorrectScheme,
+    libcovebods.tasks.checks.CheckStatementEntityIdentifiersHaveKnownScheme,
     libcovebods.tasks.statistics.StatisticsCountEntityStatements,
     libcovebods.tasks.statistics.StatisticsCountEntityRecordStatements,
     libcovebods.tasks.statistics.StatisticsCountPersonStatements,
@@ -69,6 +74,7 @@ TASK_CLASSES_IN_SAMPLE_MODE = [
     libcovebods.tasks.statistics.StatisticAddress,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlInterestDirectOrIndirect,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
+    libcovebods.tasks.statistics.StatisticDeclarationSubjects,
     libcovebods.tasks.peps.PEPForSchema02Only,
     libcovebods.tasks.peps.PEPForSchema03AndAbove,
 ]
