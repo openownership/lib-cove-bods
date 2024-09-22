@@ -12,7 +12,7 @@ setup(
     python_requires=">=3.8",
     install_requires=[
         "python-dateutil",
-        "libcove2",
+        "libcove2 @ git+https://github.com/OpenDataServices/lib-cove-2.git@handle_new_jsonschema",
         "packaging",
         # Jsonschema 4.10 breaks the message
         #     'missingPersonType' is a dependency of 'missingPersonReason'
