@@ -26,7 +26,7 @@ setup(
         # Required for jsonschema to validate date-time
         "rfc3339-validator",
         "jsonpointer",
-        "pycountry"
+        "pycountry",
     ],
     extras_require={"dev": ["pytest", "flake8", "black==22.3.0", "isort", "mypy"]},
     classifiers=[

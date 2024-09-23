@@ -51,7 +51,9 @@ def parse_date_field(date_str):
             elif re.match(r"^[0-9]{4}-[0-9]{1,2}$", date_str):
                 return datetime.datetime.strptime(date_str, "%Y-%m").date()
         else:
-            return datetime.datetime.fromisoformat(date_str.replace('Z', '+00:00')).date()
+            return datetime.datetime.fromisoformat(
+                date_str.replace("Z", "+00:00")
+            ).date()
     else:
         return None
 
