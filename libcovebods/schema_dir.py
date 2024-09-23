@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-from jscc.schema import is_json_schema
-from jscc.testing.filesystem import walk_json_data
+from jscc.schema import is_json_schema  # type: ignore
+from jscc.testing.filesystem import walk_json_data  # type: ignore
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
 

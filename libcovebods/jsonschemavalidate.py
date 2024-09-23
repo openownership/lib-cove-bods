@@ -1,5 +1,6 @@
 import json
 from decimal import Decimal
+from typing import Union
 
 from jsonschema import FormatChecker
 from jsonschema.exceptions import ValidationError
@@ -101,6 +102,7 @@ class JSONSchemaValidator:
 
     def validate(self, data_reader: libcovebods.data_reader.DataReader) -> list:
         """Call with data. Results are returned."""
+        validator: Union[Draft4Validator, Draft202012Validator]
         if self._schema.is_schema_version_equal_to_or_greater_than("0.4"):
             # Get the registry
             registry = self._schema._pkg_schema_obj

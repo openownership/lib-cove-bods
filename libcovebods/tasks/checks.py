@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import datetime
 
-import jsonpointer
+import jsonpointer  # type: ignore
 import pycountry
 from libcove2.common import get_orgids_prefixes  # type: ignore
 
