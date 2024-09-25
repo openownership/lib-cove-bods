@@ -107,7 +107,6 @@ class JSONSchemaValidator:
             # Get the registry
             registry = self._schema._pkg_schema_obj
 
-            print("Registry:", registry)
             # Make the validator
             statement_schema = registry.contents("urn:statement")
             validator = Draft202012Validator(

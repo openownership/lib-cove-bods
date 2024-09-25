@@ -1,1 +1,1 @@
-include libcovebods/data/*.json
+include libcovebods/data/schema-*
