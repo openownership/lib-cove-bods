@@ -91,19 +91,21 @@ class StatisticsCountEntityRecordStatements(AdditionalCheck):
             "recordDetails" in statement
             and isinstance(statement["recordDetails"], dict)
             and "entityType" in statement["recordDetails"]
-            and isinstance(statement["recordDetails"]["entityType"], str)
-            and statement["recordDetails"]["entityType"]
+            and isinstance(statement["recordDetails"]["entityType"], dict)
+            and "type" in statement["recordDetails"]["entityType"]
+            and isinstance(statement["recordDetails"]["entityType"]["type"], str)
+            and statement["recordDetails"]["entityType"]["type"]
             in self.count_entity_statements_types
         ):
             self.count_entity_statements_types[
-                statement["recordDetails"]["entityType"]
+                statement["recordDetails"]["entityType"]["type"]
             ] += 1
-            if "identifiers" in statement and isinstance(
-                statement["identifiers"], list
+            if "identifiers" in statement["recordDetails"] and isinstance(
+                statement["recordDetails"]["identifiers"], list
             ):
                 has_ids = False
                 has_ids_with_id_and_scheme = False
-                for identifier in statement["identifiers"]:
+                for identifier in statement["recordDetails"]["identifiers"]:
                     if isinstance(identifier, dict):
                         has_ids = True
                         if (
@@ -118,11 +120,11 @@ class StatisticsCountEntityRecordStatements(AdditionalCheck):
 
                 if has_ids:
                     self.count_entity_statements_types_with_any_identifier[
-                        statement["recordDetails"]["entityType"]
+                        statement["recordDetails"]["entityType"]["type"]
                     ] += 1
                     if has_ids_with_id_and_scheme:
                         self.count_entity_statements_types_with_any_identifier_with_id_and_scheme[
-                            statement["recordDetails"]["entityType"]
+                            statement["recordDetails"]["entityType"]["type"]
                         ] += 1
 
     def get_statistics(self):
@@ -386,6 +388,9 @@ class StatisticsCountOwnershipOrControlRecordStatements(AdditionalCheck):
 class StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing(
     AdditionalCheck
 ):
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_less_than("0.3")
+
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
         self.count_replaces_statements_missing = 0
@@ -418,6 +423,46 @@ class StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing(
                 self.current_statement_ids
             ),
             "count_replaces_statements_missing": self.count_replaces_statements_missing,
+        }
+        return data
+
+class StatisticsStatementsRecordStatus(
+    AdditionalCheck
+):
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.4")
+
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        #self.count_replaces_statements_missing = 0
+        #self.statement_ids = set()
+        #self.current_statement_ids = set()
+        self.records = {}
+        self.missing_new_records = {}
+        self.current_records_count = 0
+        self.missing_new_records_count = 0
+
+    def check_statement_first_pass(self, statement):
+        if (isinstance(statement.get("recordStatus"), str) and
+            isinstance(statement.get("recordId"), str) and
+            statement.get("recordStatus") in ('new', 'updated', 'closed')):
+            if not statement.get("recordId") in self.records:
+                if not statement.get("recordStatus") == 'new':
+                    self.missing_new_records[statement.get("recordId")] = statement.get("statementId")
+            self.records[statement.get("recordId")] = statement.get("recordStatus")
+
+    def final_checks(self):
+        for record_id in self.records:
+            if not self.records[record_id] == 'closed':
+                self.current_records_count += 1
+        for record_id in self.missing_new_records:
+            self.missing_new_records_count += 1
+
+    def get_statistics(self):
+        data = {
+            "count_records_current": self.current_records_count,
+            "count_new_records_missing": self.missing_new_records_count,
         }
         return data
 

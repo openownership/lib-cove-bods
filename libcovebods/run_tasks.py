@@ -42,6 +42,7 @@ TASK_CLASSES = [
     libcovebods.tasks.statistics.StatisticOwnershipOrControlInterestDirectOrIndirect,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
     libcovebods.tasks.statistics.StatisticDeclarationSubjects,
+    libcovebods.tasks.statistics.StatisticsStatementsRecordStatus,
     libcovebods.tasks.peps.PEPForSchema02Only,
     libcovebods.tasks.peps.PEPForSchema03AndAbove,
 ]
@@ -75,6 +76,7 @@ TASK_CLASSES_IN_SAMPLE_MODE = [
     libcovebods.tasks.statistics.StatisticOwnershipOrControlInterestDirectOrIndirect,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
     libcovebods.tasks.statistics.StatisticDeclarationSubjects,
+    libcovebods.tasks.statistics.StatisticsStatementsRecordStatus,
     libcovebods.tasks.peps.PEPForSchema02Only,
     libcovebods.tasks.peps.PEPForSchema03AndAbove,
 ]

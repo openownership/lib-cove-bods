@@ -1321,7 +1321,8 @@ class CheckStatementSeries(AdditionalCheck):
         return schema_object.is_schema_version_equal_to_or_greater_than("0.4")
 
     def check_statement_first_pass(self, statement):
-        if "recordId" in statement and "statementDate" in statement:
+        if ("recordId" in statement and "statementDate" in statement and
+            "statementDate" in statement and statement["statementDate"]):
             record_status = statement.get("recordStatus")
             record_type = statement.get("recordType")
             if statement["recordId"] in self._series:
