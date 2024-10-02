@@ -874,6 +874,7 @@ class CheckAnnotationCreationDateFutureDate(AdditionalCheck):
                             {
                                 "type": "statement_annotation_creation_date_is_future_date",
                                 "statement_type": None,
+                                "creation_date": creation_date.strftime("%Y-%m-%d"),
                                 "statement": statement.get("statementId"),
                             }
                         )
@@ -902,6 +903,7 @@ class CheckStatementPublicationDateFutureDate(AdditionalCheck):
                     {
                         "type": "statement_publication_date_is_future_date",
                         "statement_type": None,
+                        "publication_date": publication_date.strftime("%Y-%m-%d"),
                         "statement": statement.get("statementId"),
                     }
                 )
