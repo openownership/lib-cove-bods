@@ -824,6 +824,7 @@ class CheckSourceRetrievedAtFutureDate(AdditionalCheck):
                     {
                         "type": "statement_source_retrieved_at_future_date",
                         "statement_type": None,
+                        "retrieval_date": retrieved_at,
                         "statement": statement.get("statementId"),
                     }
                 )
@@ -845,6 +846,7 @@ class CheckStatementDateFutureDate(AdditionalCheck):
                     {
                         "type": "statement_date_is_future_date",
                         "statement_type": None,
+                        "statement_date": statement_date,
                         "statement": statement.get("statementId"),
                     }
                 )
@@ -985,6 +987,8 @@ class CheckStatementEntityFoundationDissolutionDates(AdditionalCheck):
                     {
                         "type": "statement_entity_dissolution_before_founding_date",
                         "statement_type": None,
+                        "founding_date": founding_date,
+                        "dissolution_date": dissolution_date,
                         "statement": statement.get("statementId"),
                     }
                 )
@@ -1012,6 +1016,7 @@ class CheckStatementPersonBirthDateSensible(AdditionalCheck):
                         {
                             "type": "statement_person_birth_date_in_future",
                             "statement_type": None,
+                            "birth_date": birth_date,
                             "statement": statement.get("statementId"),
                         }
                     )
@@ -1020,6 +1025,7 @@ class CheckStatementPersonBirthDateSensible(AdditionalCheck):
                         {
                             "type": "statement_person_birth_date_too_far_in_past",
                             "statement_type": None,
+                            "birth_date": birth_date,
                             "statement": statement.get("statementId"),
                         }
                     )
@@ -1055,6 +1061,8 @@ class CheckStatementRelationshipInterestsStartEndDates(AdditionalCheck):
                                 {
                                     "type": "statement_relationship_interests_start_after_end_date",
                                     "statement_type": None,
+                                    "start_date": start_end,
+                                    "end_start": end_date,
                                     "statement": statement.get("statementId"),
                                 }
                             )
@@ -1086,6 +1094,7 @@ class CheckStatementEntitySecuritiesListingsHasPublicListing(AdditionalCheck):
                     {
                         "type": "statement_entity_securities_listings_haspubliclisting_is_false",
                         "statement_type": None,
+                        "securities_listings": statement["recordDetails"]["publicListing"]["securitiesListings"],
                         "statement": statement.get("statementId"),
                     }
                 )
@@ -1117,6 +1126,7 @@ class CheckStatementRelationshipInterestsShareValues(AdditionalCheck):
                             {
                                 "type": "statement_relationship_interests_share_min_and_exclusivemin",
                                 "statement_type": None,
+                                "share": interest["share"],
                                 "statement": statement.get("statementId"),
                             }
                         )
@@ -1125,6 +1135,7 @@ class CheckStatementRelationshipInterestsShareValues(AdditionalCheck):
                             {
                                 "type": "statement_relationship_interests_share_max_and_exclusivemax",
                                 "statement_type": None,
+                                "share": interest["share"],
                                 "statement": statement.get("statementId"),
                             }
                         )
@@ -1185,6 +1196,8 @@ class CheckStatementRelationshipInterestsShareValues(AdditionalCheck):
                                 {
                                     "type": "statement_relationship_interests_not_exact_max_greater_than_min",
                                     "statement_type": None,
+                                    "minval": min_val,
+                                    "maxval": max_val,
                                     "statement": statement.get("statementId"),
                                 }
                             )
@@ -1193,6 +1206,8 @@ class CheckStatementRelationshipInterestsShareValues(AdditionalCheck):
                                 {
                                     "type": "statement_relationship_interests_exact_max_equals_min",
                                     "statement_type": None,
+                                    "minval": min_val,
+                                    "maxval": max_val,
                                     "statement": statement.get("statementId"),
                                 }
                             )
@@ -1221,6 +1236,7 @@ class CheckStatementDeclarationSubject(AdditionalCheck):
                     {
                         "type": "statement_declaration_subject_not_exist",
                         "statement_type": None,
+                        "declaration_subject": statement["declarationSubject"],
                         "statement": statement.get("statementId"),
                     }
                 )
@@ -1231,6 +1247,8 @@ class CheckStatementDeclarationSubject(AdditionalCheck):
                             {
                                 "type": "statement_declaration_subject_not_entity_person",
                                 "statement_type": None,
+                                "record_id": statement["declarationSubject"],
+                                "record_type": record_type,
                                 "statement": statement.get("statementId"),
                             }
                         )
@@ -1273,13 +1291,31 @@ class CheckStatementIsComponent(AdditionalCheck):
                     self._statements[statement["recordId"]]
                     < self._statements[self._components[statement["recordId"]]]
                 ):
-                    self._additional_check_results.append(
-                        {
-                            "type": "statement_entity_is_component_not_in_component_details",
-                            "statement_type": None,
-                            "statement": statement.get("statementId"),
-                        }
-                    )
+                    if "recordType" in statement:
+                        if statement["recordType"] == "entity":
+                            self._additional_check_results.append(
+                                {
+                                    "type": "statement_entity_is_component_not_in_component_details",
+                                    "statement_type": None,
+                                    "statement": statement.get("statementId"),
+                                }
+                            )
+                        elif statement["recordType"] == "person":
+                            self._additional_check_results.append(
+                                {
+                                    "type": "statement_person_is_component_not_in_component_details",
+                                    "statement_type": None,
+                                    "statement": statement.get("statementId"),
+                                }
+                            )
+                        elif statement["recordType"] == "relationship":
+                            self._additional_check_results.append(
+                                {
+                                    "type": "statement_relationship_is_component_not_in_component_details",
+                                    "statement_type": None,
+                                    "statement": statement.get("statementId"),
+                                }
+                            )
 
 
 class CheckStatementDuplicateStatementId(AdditionalCheck):
@@ -1327,13 +1363,14 @@ class CheckStatementSeries(AdditionalCheck):
             "statementDate" in statement and statement["statementDate"]):
             record_status = statement.get("recordStatus")
             record_type = statement.get("recordType")
+            statement_id = statement.get("statementId")
             if statement["recordId"] in self._series:
                 self._series[statement["recordId"]].append(
-                    [statement["statementDate"], record_status, record_type]
+                    [statement["statementDate"], record_status, record_type, statement_id]
                 )
             else:
                 self._series[statement["recordId"]] = [
-                    [statement["statementDate"], record_status, record_type]
+                    [statement["statementDate"], record_status, record_type, statement_id]
                 ]
 
     def final_checks(self):
@@ -1346,7 +1383,7 @@ class CheckStatementSeries(AdditionalCheck):
                     {
                         "type": "multiple_statements_in_series_with_record_status_new",
                         "statement_type": None,
-                        "record": series,
+                        "record_id": series,
                     }
                 )
             elif "new" in statuses and statuses[0] != "new":
@@ -1354,7 +1391,8 @@ class CheckStatementSeries(AdditionalCheck):
                     {
                         "type": "statement_with_record_status_new_must_be_first",
                         "statement_type": None,
-                        "record": series,
+                        "record_id": series,
+                        "statement_id": sorted_series[0][-1],
                     }
                 )
             elif len([s for s in statuses if s == "closed"]) > 1:
@@ -1362,7 +1400,7 @@ class CheckStatementSeries(AdditionalCheck):
                     {
                         "type": "multiple_statements_in_series_with_record_status_closed",
                         "statement_type": None,
-                        "record": series,
+                        "record_id": series,
                     }
                 )
             elif "closed" in statuses and statuses[-1] != "closed":
@@ -1370,7 +1408,8 @@ class CheckStatementSeries(AdditionalCheck):
                     {
                         "type": "statement_with_record_status_closed_must_be_last",
                         "statement_type": None,
-                        "record": series,
+                        "record_id": series,
+                        "statement_id": sorted_series[0][-1],
                     }
                 )
             elif len(set(types)) > 1:
@@ -1378,7 +1417,7 @@ class CheckStatementSeries(AdditionalCheck):
                     {
                         "type": "statements_in_series_with_different_record_types",
                         "statement_type": None,
-                        "record": series,
+                        "record_id": series,
                     }
                 )
 
@@ -1414,6 +1453,7 @@ class CheckComponentRecordsRecordIds(AdditionalCheck):
                                     "type": "component_record_is_statement_id",
                                     "statement_type": None,
                                     "statement": statement.get("statementId"),
+                                    "compoment_id": component,
                                 }
                             )
                         else:
@@ -1422,6 +1462,7 @@ class CheckComponentRecordsRecordIds(AdditionalCheck):
                                     "type": "component_record_id_not_in_dataset",
                                     "statement_type": None,
                                     "statement": statement.get("statementId"),
+                                    "compoment_id": component,
                                 }
                             )
 
@@ -1453,6 +1494,7 @@ class CheckStatementRelationshipParties(AdditionalCheck):
                             "type": "subject_must_be_record_id",
                             "statement_type": None,
                             "statement": statement.get("statementId"),
+                            "subject": statement["recordDetails"]["subject"],
                         }
                     )
                 elif (
@@ -1463,6 +1505,7 @@ class CheckStatementRelationshipParties(AdditionalCheck):
                             "type": "subject_can_only_refer_to_entity",
                             "statement_type": None,
                             "statement": statement.get("statementId"),
+                            "subject": statement["recordDetails"]["subject"],
                         }
                     )
             if "interestedParty" in statement["recordDetails"] and isinstance(
@@ -1474,6 +1517,7 @@ class CheckStatementRelationshipParties(AdditionalCheck):
                             "type": "interested_party_must_be_record_id",
                             "statement_type": None,
                             "statement": statement.get("statementId"),
+                            "interested_party": statement["recordDetails"]["interestedParty"],
                         }
                     )
                 elif self._records[
@@ -1484,6 +1528,7 @@ class CheckStatementRelationshipParties(AdditionalCheck):
                             "type": "interested_party_can_only_refer_to_entity_or_person",
                             "statement_type": None,
                             "statement": statement.get("statementId"),
+                            "interested_party": statement["recordDetails"]["interestedParty"],
                         }
                     )
                 else:
@@ -1515,6 +1560,7 @@ class CheckStatementRelationshipParties(AdditionalCheck):
                                             "type": "interest_beneficial_ownership_interested_party_not_person",
                                             "statement_type": None,
                                             "statement": statement.get("statementId"),
+                                            "interested_party": statement["recordDetails"]["interestedParty"],
                                         }
                                     )
 
@@ -1541,6 +1587,7 @@ class CheckAnnotationStatementPointerTarget(AdditionalCheck):
                                 "type": "annotation_statement_pointer_target_invalid",
                                 "statement_type": None,
                                 "statement": statement.get("statementId"),
+                                "pointer": annotation["statementPointerTarget"],
                             }
                         )
 
@@ -1604,6 +1651,8 @@ class CheckStatementRelationshipInterests(AdditionalCheck):
                                         "type": "relationship_interests_subject_should_be_entity_nomination_arrangement",
                                         "statement_type": None,
                                         "statement": statement.get("statementId"),
+                                        "subject_record_type": self._records[statement["recordDetails"]["subject"]][0],
+                                        "subject_record_subtype": self._records[statement["recordDetails"]["subject"]][1],
                                     }
                                 )
                             else:
@@ -1624,6 +1673,8 @@ class CheckStatementRelationshipInterests(AdditionalCheck):
                                             "type": "relationship_interests_subject_should_be_entity_nomination_arrangement",
                                             "statement_type": None,
                                             "statement": statement.get("statementId"),
+                                            "subject_record_type": self._records[statement["recordDetails"]["subject"]][0],
+                                            "subject_record_subtype": self._records[statement["recordDetails"]["subject"]][1],
                                         }
                                     )
                     elif "type" in interest and interest["type"] in (
@@ -1650,6 +1701,8 @@ class CheckStatementRelationshipInterests(AdditionalCheck):
                                         "type": "relationship_interests_subject_should_be_entity_trust",
                                         "statement_type": None,
                                         "statement": statement.get("statementId"),
+                                        "subject_record_type": self._records[statement["recordDetails"]["subject"]][0],
+                                        "subject_record_subtype": self._records[statement["recordDetails"]["subject"]][1],
                                     }
                                 )
                             else:
@@ -1668,6 +1721,8 @@ class CheckStatementRelationshipInterests(AdditionalCheck):
                                             "type": "relationship_interests_subject_should_be_entity_trust",
                                             "statement_type": None,
                                             "statement": statement.get("statementId"),
+                                            "subject_record_type": self._records[statement["recordDetails"]["subject"]][0],
+                                            "subject_record_subtype": self._records[statement["recordDetails"]["subject"]][1],
                                         }
                                     )
 
@@ -1708,6 +1763,7 @@ class CheckStatementSerialisation(AdditionalCheck):
                                 "type": "relationship_subject_not_before_relationship_in_dataset",
                                 "statement_type": None,
                                 "statement": statement.get("statementId"),
+                                "subject_id": statement["recordDetails"]["subject"],
                             }
                         )
         if (
@@ -1736,6 +1792,7 @@ class CheckStatementSerialisation(AdditionalCheck):
                                 "type": "relationship_interested_party_not_before_relationship_in_dataset",
                                 "statement_type": None,
                                 "statement": statement.get("statementId"),
+                                "interested_party_id": statement["recordDetails"]["interestedParty"],
                             }
                         )
 
@@ -1771,6 +1828,7 @@ class CheckStatementPersonIdentifiersHaveCorrectScheme(AdditionalCheck):
                             "type": "person_identifiers_invalid_composition",
                             "statement_type": None,
                             "statement": statement.get("statementId"),
+                            "scheme": identifier["scheme"],
                         }
                     )
                 else:
@@ -1810,6 +1868,7 @@ class CheckStatementPersonIdentifiersHaveCorrectScheme(AdditionalCheck):
                                 "type": "person_identifiers_no_valid_iso_3166_1_alpha_3_code",
                                 "statement_type": None,
                                 "statement": statement.get("statementId"),
+                                "scheme": identifier["scheme"],
                             }
                         )
                     elif identifier["scheme"].split("-")[1] not in (
@@ -1822,6 +1881,7 @@ class CheckStatementPersonIdentifiersHaveCorrectScheme(AdditionalCheck):
                                 "type": "person_identifiers_not_passport_taxid_idcard",
                                 "statement_type": None,
                                 "statement": statement.get("statementId"),
+                                "scheme": identifier["scheme"],
                             }
                         )
 
@@ -1852,5 +1912,6 @@ class CheckStatementEntityIdentifiersHaveKnownScheme(AdditionalCheck):
                             "type": "entity_identifiers_not_known_scheme",
                             "statement_type": None,
                             "statement": statement.get("statementId"),
+                            "scheme": identifier["scheme"] if "scheme" in identifier else None,
                         }
                     )
