@@ -1061,7 +1061,7 @@ class CheckStatementRelationshipInterestsStartEndDates(AdditionalCheck):
                                 {
                                     "type": "statement_relationship_interests_start_after_end_date",
                                     "statement_type": None,
-                                    "start_date": start_end,
+                                    "start_date": start_date,
                                     "end_start": end_date,
                                     "statement": statement.get("statementId"),
                                 }
@@ -1828,7 +1828,7 @@ class CheckStatementPersonIdentifiersHaveCorrectScheme(AdditionalCheck):
                             "type": "person_identifiers_invalid_composition",
                             "statement_type": None,
                             "statement": statement.get("statementId"),
-                            "scheme": identifier["scheme"],
+                            "scheme": identifier["scheme"] if "scheme" in identifier else None,
                         }
                     )
                 else:
