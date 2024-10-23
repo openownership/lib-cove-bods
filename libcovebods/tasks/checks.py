@@ -824,7 +824,7 @@ class CheckSourceRetrievedAtFutureDate(AdditionalCheck):
                     {
                         "type": "statement_source_retrieved_at_future_date",
                         "statement_type": None,
-                        "retrieval_date": retrieved_at,
+                        "retrieval_date": str(retrieved_at),
                         "statement": statement.get("statementId"),
                     }
                 )
@@ -846,7 +846,7 @@ class CheckStatementDateFutureDate(AdditionalCheck):
                     {
                         "type": "statement_date_is_future_date",
                         "statement_type": None,
-                        "statement_date": statement_date,
+                        "statement_date": str(statement_date),
                         "statement": statement.get("statementId"),
                     }
                 )
@@ -987,8 +987,8 @@ class CheckStatementEntityFoundationDissolutionDates(AdditionalCheck):
                     {
                         "type": "statement_entity_dissolution_before_founding_date",
                         "statement_type": None,
-                        "founding_date": founding_date,
-                        "dissolution_date": dissolution_date,
+                        "founding_date": str(founding_date),
+                        "dissolution_date": str(dissolution_date),
                         "statement": statement.get("statementId"),
                     }
                 )
@@ -1016,7 +1016,7 @@ class CheckStatementPersonBirthDateSensible(AdditionalCheck):
                         {
                             "type": "statement_person_birth_date_in_future",
                             "statement_type": None,
-                            "birth_date": birth_date,
+                            "birth_date": str(birth_date),
                             "statement": statement.get("statementId"),
                         }
                     )
@@ -1025,7 +1025,7 @@ class CheckStatementPersonBirthDateSensible(AdditionalCheck):
                         {
                             "type": "statement_person_birth_date_too_far_in_past",
                             "statement_type": None,
-                            "birth_date": birth_date,
+                            "birth_date": str(birth_date),
                             "statement": statement.get("statementId"),
                         }
                     )
@@ -1061,8 +1061,8 @@ class CheckStatementRelationshipInterestsStartEndDates(AdditionalCheck):
                                 {
                                     "type": "statement_relationship_interests_start_after_end_date",
                                     "statement_type": None,
-                                    "start_date": start_date,
-                                    "end_start": end_date,
+                                    "start_date": str(start_date),
+                                    "end_start": str(end_date),
                                     "statement": statement.get("statementId"),
                                 }
                             )
