@@ -12,9 +12,12 @@ def bods_json_output(
     file_type=None,
     json_data=None,
     lib_cove_bods_config=None,
+    sample_mode=False,
 ):
     # Data Reader
-    data_reader = libcovebods.data_reader.DataReader(input_file_name)
+    data_reader = libcovebods.data_reader.DataReader(
+        input_file_name, sample_mode=sample_mode
+    )
 
     # classes
     if not lib_cove_bods_config:

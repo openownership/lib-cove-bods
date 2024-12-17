@@ -1,0 +1,34 @@
+[
+ {
+        "statementId": "GB-COH-00844529-noBeneficialOwners-20240918",
+        "statementDate": "2024-09-18",
+        "publicationDetails": {
+            "publicationDate": "2024-09-18",
+            "bodsVersion": "0.4",
+            "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+            "publisher": {
+                "name": "Open Ownership",
+                "url": "https://www.openownership.org/"
+            }
+        },
+        "recordId": "00844529",
+        "recordType": "relationship",
+        "recordStatus": "new",
+        "source": {
+            "type": [
+                "officialRegister"
+            ],
+            "url": "https://link-to-source.org/",
+            "retrievedAt": "2024-09-18"
+        },
+        "declarationSubject": "00844529",
+        "recordDetails": {
+            "isComponent": false,
+            "subject": "00844529",
+            "interestedParty": {
+                "reason": "noBeneficialOwners",
+                "description": "no-individual-or-entity-with-signficant-control"
+            }
+        }
+    }
+]

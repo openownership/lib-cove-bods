@@ -71,10 +71,7 @@ class TestIsInterestCurrent:
 
     def test_this_YYYY_MM(self):
         today = dateutil.utils.today(UTC)
-        assert (
-            is_interest_current({"endDate": "{}-{}".format(today.year, today.month)})
-            is True
-        )
+        assert is_interest_current({"endDate": f"{today.year}-{today.month}"}) is True
 
     def test_this_date(self):
         assert (

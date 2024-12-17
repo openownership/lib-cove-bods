@@ -35,6 +35,9 @@ class AdditionalCheck:
     def check_ownership_or_control_statement_first_pass(self, statement):
         pass
 
+    def check_statement_second_pass(self, statement):
+        pass
+
     def check_entity_statement_second_pass(self, statement):
         pass
 

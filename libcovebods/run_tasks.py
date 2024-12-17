@@ -2,18 +2,47 @@ import libcovebods.data_reader
 import libcovebods.tasks.checks
 import libcovebods.tasks.peps
 import libcovebods.tasks.statistics
+from libcovebods.utils import get_statement_type
 
 TASK_CLASSES = [
     libcovebods.tasks.checks.LegacyChecks,
     libcovebods.tasks.checks.LegacyChecksNeedingHistory,
     libcovebods.tasks.checks.CheckHasPublicListing,
+    libcovebods.tasks.checks.CheckHasPublicListingRecord,
     libcovebods.tasks.checks.CheckEntityTypeAndEntitySubtypeAlign,
     libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodes,
-    libcovebods.tasks.statistics.LegacyStatistics,
+    libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodesRecord,
+    libcovebods.tasks.checks.CheckSourceRetrievedAtFutureDate,
+    libcovebods.tasks.checks.CheckStatementDateFutureDate,
+    libcovebods.tasks.checks.CheckAnnotationCreationDateFutureDate,
+    libcovebods.tasks.checks.CheckStatementPublicationDateFutureDate,
+    libcovebods.tasks.checks.CheckStatementPersonDateOfDeathSane,
+    libcovebods.tasks.checks.CheckStatementEntityFoundationDissolutionDates,
+    libcovebods.tasks.checks.CheckStatementPersonBirthDateSensible,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterestsStartEndDates,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterestsShareValues,
+    libcovebods.tasks.checks.CheckStatementDeclarationSubject,
+    libcovebods.tasks.checks.CheckStatementIsComponent,
+    libcovebods.tasks.checks.CheckStatementDuplicateStatementId,
+    libcovebods.tasks.checks.CheckStatementSeries,
+    libcovebods.tasks.checks.CheckStatementRelationshipParties,
+    libcovebods.tasks.checks.CheckAnnotationStatementPointerTarget,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterests,
+    libcovebods.tasks.checks.CheckStatementSerialisation,
+    libcovebods.tasks.checks.CheckStatementPersonIdentifiersHaveCorrectScheme,
+    libcovebods.tasks.checks.CheckStatementEntityIdentifiersHaveKnownScheme,
+    libcovebods.tasks.statistics.StatisticsCountEntityStatements,
+    libcovebods.tasks.statistics.StatisticsCountEntityRecordStatements,
+    libcovebods.tasks.statistics.StatisticsCountPersonStatements,
+    libcovebods.tasks.statistics.StatisticsCountPersonRecordStatements,
+    libcovebods.tasks.statistics.StatisticsCountOwnershipOrControlStatements,
+    libcovebods.tasks.statistics.StatisticsCountOwnershipOrControlRecordStatements,
     libcovebods.tasks.statistics.StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing,
     libcovebods.tasks.statistics.StatisticAddress,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlInterestDirectOrIndirect,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
+    libcovebods.tasks.statistics.StatisticDeclarationSubjects,
+    libcovebods.tasks.statistics.StatisticsStatementsRecordStatus,
     libcovebods.tasks.peps.PEPForSchema02Only,
     libcovebods.tasks.peps.PEPForSchema03AndAbove,
 ]
@@ -21,12 +50,35 @@ TASK_CLASSES = [
 TASK_CLASSES_IN_SAMPLE_MODE = [
     libcovebods.tasks.checks.LegacyChecks,
     libcovebods.tasks.checks.CheckHasPublicListing,
+    libcovebods.tasks.checks.CheckHasPublicListingRecord,
     libcovebods.tasks.checks.CheckEntityTypeAndEntitySubtypeAlign,
     libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodes,
-    libcovebods.tasks.statistics.LegacyStatistics,
+    libcovebods.tasks.checks.CheckEntitySecurityListingsMICSCodesRecord,
+    libcovebods.tasks.checks.CheckSourceRetrievedAtFutureDate,
+    libcovebods.tasks.checks.CheckStatementDateFutureDate,
+    libcovebods.tasks.checks.CheckAnnotationCreationDateFutureDate,
+    libcovebods.tasks.checks.CheckStatementPublicationDateFutureDate,
+    libcovebods.tasks.checks.CheckStatementPersonDateOfDeathSane,
+    libcovebods.tasks.checks.CheckStatementEntityFoundationDissolutionDates,
+    libcovebods.tasks.checks.CheckStatementPersonBirthDateSensible,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterestsStartEndDates,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterestsShareValues,
+    libcovebods.tasks.checks.CheckStatementDuplicateStatementId,
+    libcovebods.tasks.checks.CheckAnnotationStatementPointerTarget,
+    libcovebods.tasks.checks.CheckStatementRelationshipInterests,
+    libcovebods.tasks.checks.CheckStatementPersonIdentifiersHaveCorrectScheme,
+    libcovebods.tasks.checks.CheckStatementEntityIdentifiersHaveKnownScheme,
+    libcovebods.tasks.statistics.StatisticsCountEntityStatements,
+    libcovebods.tasks.statistics.StatisticsCountEntityRecordStatements,
+    libcovebods.tasks.statistics.StatisticsCountPersonStatements,
+    libcovebods.tasks.statistics.StatisticsCountPersonRecordStatements,
+    libcovebods.tasks.statistics.StatisticsCountOwnershipOrControlStatements,
+    libcovebods.tasks.statistics.StatisticsCountOwnershipOrControlRecordStatements,
     libcovebods.tasks.statistics.StatisticAddress,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlInterestDirectOrIndirect,
     libcovebods.tasks.statistics.StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial,
+    libcovebods.tasks.statistics.StatisticDeclarationSubjects,
+    libcovebods.tasks.statistics.StatisticsStatementsRecordStatus,
     libcovebods.tasks.peps.PEPForSchema02Only,
     libcovebods.tasks.peps.PEPForSchema03AndAbove,
 ]
@@ -45,9 +97,14 @@ def process_additional_checks(
     ]
     all_data = data_reader.get_all_data()
 
+    # If not list of statements put in list so that additional checks
+    # can be run (jsonschema validation will handle reporting error)
+    if not isinstance(all_data, list):
+        all_data = [all_data]
+
     # First pass
     for statement in all_data:
-        statement_type = statement.get("statementType")
+        statement_type = get_statement_type(statement, schema_object)
         for additional_check_instance in additional_check_instances:
             additional_check_instance.check_statement_first_pass(statement)
         if statement_type == "entityStatement":
@@ -64,7 +121,10 @@ def process_additional_checks(
 
     # Second Pass
     for statement in all_data:
-        statement_type = statement.get("statementType")
+        # statement_type = statement.get("statementType")
+        statement_type = get_statement_type(statement, schema_object)
+        for additional_check_instance in additional_check_instances:
+            additional_check_instance.check_statement_second_pass(statement)
         if statement_type == "entityStatement":
             for additional_check_instance in additional_check_instances:
                 additional_check_instance.check_entity_statement_second_pass(statement)

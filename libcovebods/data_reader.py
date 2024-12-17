@@ -2,6 +2,22 @@ import json
 
 import ijson  # type: ignore
 
+STATEMENT_MAPPING = {
+    "entity": "entityStatement",
+    "person": "personStatement",
+    "relationship": "ownershipOrControlStatement",
+}
+
+
+def get_statement_type(statement):
+    if isinstance(statement, dict):
+        if isinstance(statement.get("statementType"), str):
+            return statement.get("statementType")
+        if isinstance(statement.get("recordType"), str):
+            if statement.get("recordType") in STATEMENT_MAPPING:
+                return STATEMENT_MAPPING[statement.get("recordType")]
+    return "unknown"
+
 
 class DataReader:
     """Class to hold information on where to get data and provides methods to access it.
@@ -40,12 +56,13 @@ class DataReader:
 
             with open(self._filename, "rb") as fp:
                 for statement in ijson.items(fp, "item"):
-                    statementType = (
-                        statement.get("statementType")
-                        if isinstance(statement, dict)
-                        and isinstance(statement.get("statementType"), str)
-                        else "unknown"
-                    )
+                    statementType = get_statement_type(statement)
+                    # statementType = (
+                    #    statement.get("statementType")
+                    #    if isinstance(statement, dict)
+                    #    and isinstance(statement.get("statementType"), str)
+                    #    else "unknown"
+                    # )
                     if statementType in count_statement_types:
                         if (
                             count_statement_types[statementType]

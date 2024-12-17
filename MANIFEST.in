@@ -1,1 +1,3 @@
 include libcovebods/data/*.json
+include libcovebods/data/schema-0-4-0/*.json
+include libcovebods/data/schema-0-4-0/codelists/*.csv

@@ -587,7 +587,6 @@ def test_basic_statement_id_and_type_errors():
     assert validation_error["path"] == [3]
 
     validation_error = results["validation_errors"][4]
-    print(validation_error)
     assert "Invalid code found in statementType" == validation_error["message"]
     assert validation_error["path"] == [4, "statementType"]
 
@@ -1239,7 +1238,8 @@ def test_badfile_all_validation_errors():
         "badfile_all_validation_errors.json",
     )
     # This file is generated with
-    #  libcovebods jsv tests/fixtures/0.1/badfile_all_validation_errors.json  > tests/fixtures/0.1/badfile_all_validation_errors.expected.json
+    #  libcovebods jsv tests/fixtures/0.1/badfile_all_validation_errors.json  >
+    #  tests/fixtures/0.1/badfile_all_validation_errors.expected.json
     expected_json_filename = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
         "fixtures",
