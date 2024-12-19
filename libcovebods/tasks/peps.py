@@ -84,7 +84,9 @@ class PEPForSchema03AndAbove(AdditionalCheck):
 
     @staticmethod
     def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
-        return schema_object.is_schema_version_equal_to_or_greater_than("0.3")
+        return schema_object.is_schema_version_equal_to_or_greater_than(
+            "0.3"
+        ) and schema_object.is_schema_version_less_than("0.4")
 
     @staticmethod
     def get_additional_check_types_possible(
@@ -134,6 +136,85 @@ class PEPForSchema03AndAbove(AdditionalCheck):
                         "statement": statement.get("statementID"),
                     }
                 )
+
+    def get_statistics(self):
+        return {
+            "count_person_statements_have_pep_status": self.count_person_statements_have_pep_status,
+            "count_person_statements_have_pep_status_statuses": self.count_person_statements_have_pep_status_statuses,
+        }
+
+
+class PEPForSchema04AndAbove(AdditionalCheck):
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_person_statements_have_pep_status = 0
+        self.count_person_statements_have_pep_status_statuses = {}
+        for (
+            value
+        ) in schema_object.get_person_statement_political_exposure_status_list():
+            self.count_person_statements_have_pep_status_statuses[value] = 0
+
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_greater_than("0.4")
+
+    @staticmethod
+    def get_additional_check_types_possible(
+        lib_cove_bods_config, schema_object
+    ) -> list:
+        return (
+            [
+                "has_pep_details_with_missing_info_but_incorrect_pep_status",
+                "has_pep_details_but_incorrect_pep_status",
+            ]
+            if schema_object.is_schema_version_equal_to_or_greater_than("0.4")
+            else []
+        )
+
+    def check_person_statement_first_pass(self, statement):
+        if "recordDetails" in statement and isinstance(
+            statement["recordDetails"], dict
+        ):
+            if isinstance(statement["recordDetails"].get("politicalExposure"), dict):
+                status = statement["recordDetails"]["politicalExposure"].get("status")
+                if (
+                    status
+                    in self.count_person_statements_have_pep_status_statuses.keys()
+                ):
+                    self.count_person_statements_have_pep_status += 1
+                    self.count_person_statements_have_pep_status_statuses[status] += 1
+                has_pep_details_with_missing_info_but_incorrect_pep_status = False
+                details = statement["recordDetails"]["politicalExposure"].get("details")
+                if isinstance(details, list):
+                    details_with_missing_info = [
+                        x for x in details if x.get("missingInfoReason")
+                    ]
+                    if details_with_missing_info and status != "unknown":
+                        has_pep_details_with_missing_info_but_incorrect_pep_status = (
+                            True
+                        )
+                        self._additional_check_results.append(
+                            {
+                                "type": "has_pep_details_with_missing_info_but_incorrect_pep_status",
+                                "statement_type": "person",
+                                "statement": statement.get("statementID"),
+                            }
+                        )
+                if (
+                    details
+                    and (not status or status == "isNotPep")
+                    and not has_pep_details_with_missing_info_but_incorrect_pep_status
+                ):
+                    # This check is a less specific version of
+                    # has_pep_details_with_missing_info_but_incorrect_pep_status
+                    # so if that one has already been issued then we want to skip this one.
+                    self._additional_check_results.append(
+                        {
+                            "type": "has_pep_details_but_incorrect_pep_status",
+                            "statement_type": "person",
+                            "statement": statement.get("statementID"),
+                        }
+                    )
 
     def get_statistics(self):
         return {

@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="libcovebods",
-    version="0.16.0",
+    version="0.15.0",
     author="Open Data Services",
     author_email="code@opendataservices.coop",
     url="https://github.com/openownership/lib-cove-bods",
@@ -14,10 +14,7 @@ setup(
         "python-dateutil",
         "libcove2>=0.2.1",
         "packaging",
-        # Jsonschema 4.10 breaks the message
-        #     'missingPersonType' is a dependency of 'missingPersonReason'
-        # in tests/fixtures/0.1/badfile_all_validation_errors.json
-        "jsonschema==4.23.0",
+        "jsonschema>=4.23",
         "jscc==0.2.4",
         "pytz",
         "ijson",

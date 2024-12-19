@@ -58,7 +58,8 @@ class SchemaBODS:
             self.schema_version = self.config.config["schema_version"]
             return
 
-        # If bad data passed, then we assume it's the default version
+        # If bad data passed, then we assume it's the default version,
+        # or latest version if is record based data
         all_data = data_reader.get_all_data()
         if not isinstance(all_data, list) or len(all_data) == 0:
             if not isinstance(all_data, list):
@@ -87,7 +88,7 @@ class SchemaBODS:
             or not isinstance(statement["publicationDetails"], dict)
             or "bodsVersion" not in statement["publicationDetails"]
         ):
-            # Use default version if not record based else latest version (revisit)
+            # Use default version if not record based else latest version
             if not record_based_statement(statement):
                 self.pkg_schema_url = self.config.config["schema_url"]
                 self.schema_host = self.config.config["schema_url_host"]
@@ -113,7 +114,7 @@ class SchemaBODS:
                 "type": "unknown_schema_version_used",
                 "schema_version": str(self.schema_version_attempted),
             }
-            # Use latest non-record version if not record based else latest version (revisit)
+            # Use latest non-record version if not record based else latest version
             if not record_based_statement(statement):
                 self.schema_version = self.config.config[
                     "schema_latest_nonrecord_version"
@@ -141,7 +142,7 @@ class SchemaBODS:
                 "type": "unknown_schema_version_used",
                 "schema_version": self.schema_version_attempted,
             }
-            # Use latest non-record version if not record based else latest version (revisit)
+            # Use latest non-record version if not record based else latest version
             if not record_based_statement(statement):
                 self.schema_version = self.config.config[
                     "schema_latest_nonrecord_version"

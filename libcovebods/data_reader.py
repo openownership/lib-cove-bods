@@ -57,12 +57,6 @@ class DataReader:
             with open(self._filename, "rb") as fp:
                 for statement in ijson.items(fp, "item"):
                     statementType = get_statement_type(statement)
-                    # statementType = (
-                    #    statement.get("statementType")
-                    #    if isinstance(statement, dict)
-                    #    and isinstance(statement.get("statementType"), str)
-                    #    else "unknown"
-                    # )
                     if statementType in count_statement_types:
                         if (
                             count_statement_types[statementType]
