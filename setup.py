@@ -15,7 +15,7 @@ setup(
         "libcove2>=0.2.1",
         "packaging",
         "jsonschema>=4.23",
-        "jscc==0.2.4",
+        "jscc>=0.2.4",
         "pytz",
         "ijson",
         # Required for jsonschema to validate URIs

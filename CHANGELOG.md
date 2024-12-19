@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Update to handle new jsonschema version (Draft202012Validator)
 - Adapt infrastructure to handle BODS 0.4 (structure, statement types etc.)
+- Default config value for bods_additional_checks_person_birthdate_min_year
+  has been increase from 1 to 1800
 
 ### Added
 
