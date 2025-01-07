@@ -11,6 +11,10 @@ class LegacyChecks(AdditionalCheck):
     Ones that need to store history are in LegacyChecksNeedingHistory."""
 
     @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_less_than("0.4")
+
+    @staticmethod
     def get_additional_check_types_possible(
         lib_cove_bods_config, schema_object
     ) -> list:
@@ -30,7 +34,8 @@ class LegacyChecks(AdditionalCheck):
         self.orgids_prefixes = get_orgids_prefixes()
 
     def check_entity_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         identifiers = statement.get("identifiers")
@@ -40,7 +45,7 @@ class LegacyChecks(AdditionalCheck):
                     if (
                         "scheme" in identifier
                         and identifier["scheme"]
-                        and not identifier["scheme"] in self.orgids_prefixes
+                        and identifier["scheme"] not in self.orgids_prefixes
                     ):
                         self._additional_check_results.append(
                             {
@@ -83,7 +88,8 @@ class LegacyChecks(AdditionalCheck):
                         )
 
     def check_person_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         if "birthDate" in statement:
@@ -151,7 +157,8 @@ class LegacyChecks(AdditionalCheck):
                         )
 
     def check_ownership_or_control_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         (
@@ -242,6 +249,10 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
     Ones that don't need to store history are in LegacyChecks."""
 
     @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_less_than("0.4")
+
+    @staticmethod
     def get_additional_check_types_possible(
         lib_cove_bods_config, schema_object
     ) -> list:
@@ -270,7 +281,8 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
         self.statement_ids_counted = {}
 
     def check_entity_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.entity_statements_seen.append(statement.get("statementID"))
@@ -290,13 +302,15 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
                 )
 
     def check_person_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.person_statements_seen.append(statement.get("statementID"))
 
     def check_ownership_or_control_statement_first_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         self.ownership_or_control_statements_seen.append(statement.get("statementID"))
@@ -391,7 +405,8 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
                 )
 
     def check_entity_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         if (
@@ -420,7 +435,8 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
                 )
 
     def check_person_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         if (
@@ -449,7 +465,8 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
                 )
 
     def check_ownership_or_control_statement_second_pass(self, statement):
-        # Not doing any work if no statementID preserves the old behaviour of the code, but this should be evaluated.
+        # Not doing any work if no statementID preserves the old behaviour of the code,
+        # but this should be evaluated.
         if not statement.get("statementID"):
             return
         interested_party = statement.get("interestedParty")
@@ -592,106 +609,3 @@ class LegacyChecksNeedingHistory(AdditionalCheck):
                 self.statement_ids_counted[statement_id] += 1
             else:
                 self.statement_ids_counted[statement_id] = 1
-
-
-class CheckHasPublicListing(AdditionalCheck):
-    @staticmethod
-    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
-        return schema_object.is_schema_version_equal_to_or_greater_than("0.3")
-
-    @staticmethod
-    def get_additional_check_types_possible(
-        lib_cove_bods_config, schema_object
-    ) -> list:
-        return ["has_public_listing_information_but_has_public_listing_is_false"]
-
-    def check_entity_statement_first_pass(self, statement):
-        if isinstance(statement.get("publicListing"), dict):
-            pl = statement.get("publicListing")
-            if pl.get("companyFilingsURLs") or pl.get("securitiesListings"):
-                if not pl.get("hasPublicListing"):
-                    self._additional_check_results.append(
-                        {
-                            "type": "has_public_listing_information_but_has_public_listing_is_false",
-                            "statement_type": "entity",
-                            "statement": statement.get("statementID"),
-                        }
-                    )
-
-
-class CheckEntityTypeAndEntitySubtypeAlign(AdditionalCheck):
-    @staticmethod
-    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
-        return schema_object.is_schema_version_equal_to_or_greater_than("0.3")
-
-    @staticmethod
-    def get_additional_check_types_possible(
-        lib_cove_bods_config, schema_object
-    ) -> list:
-        return ["statement_entity_type_and_entity_sub_type_do_not_align"]
-
-    def check_entity_statement_first_pass(self, statement):
-        if isinstance(statement.get("entitySubtype"), dict):
-            entitySubtype = statement["entitySubtype"].get("generalCategory")
-            if entitySubtype and isinstance(entitySubtype, str):
-                entityType = statement.get("entityType")
-                entitySubtypeFirstBit = entitySubtype.split("-").pop(0)
-                if entityType != entitySubtypeFirstBit:
-                    self._additional_check_results.append(
-                        {
-                            "type": "statement_entity_type_and_entity_sub_type_do_not_align",
-                            "statement_type": "entity",
-                            "statement": statement.get("statementID"),
-                        }
-                    )
-
-
-class CheckEntitySecurityListingsMICSCodes(AdditionalCheck):
-    def __init__(self, lib_cove_bods_config, schema_object):
-        super().__init__(lib_cove_bods_config, schema_object)
-
-    @staticmethod
-    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
-        return schema_object.is_schema_version_equal_to_or_greater_than("0.3")
-
-    @staticmethod
-    def get_additional_check_types_possible(
-        lib_cove_bods_config, schema_object
-    ) -> list:
-        return (
-            [
-                "entity_security_listing_market_identifier_code_set_but_not_operating_market_identifier_code",
-                "entity_security_listing_operating_market_identifier_code_set_but_not_market_identifier_code",
-            ]
-            if schema_object.is_schema_version_equal_to_or_greater_than("0.3")
-            else []
-        )
-
-    def check_entity_statement_first_pass(self, statement):
-        if isinstance(statement.get("publicListing"), dict) and isinstance(
-            statement["publicListing"].get("securitiesListings"), list
-        ):
-            for securitiesListing in statement["publicListing"].get(
-                "securitiesListings"
-            ):
-                if isinstance(securitiesListing, dict):
-                    marketIdentifierCode = securitiesListing.get("marketIdentifierCode")
-                    operatingMarketIdentifierCode = securitiesListing.get(
-                        "operatingMarketIdentifierCode"
-                    )
-                    if marketIdentifierCode and not operatingMarketIdentifierCode:
-                        self._additional_check_results.append(
-                            {
-                                "type": "entity_security_listing_market_identifier_code_set_but_not_operating_market_identifier_code",
-                                "statement_type": "entity",
-                                "statement": statement.get("statementID"),
-                            }
-                        )
-                    elif operatingMarketIdentifierCode and not marketIdentifierCode:
-                        self._additional_check_results.append(
-                            {
-                                "type": "entity_security_listing_operating_market_identifier_code_set_but_not_market_identifier_code",
-                                "statement_type": "entity",
-                                "statement": statement.get("statementID"),
-                            }
-                        )

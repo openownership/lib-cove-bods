@@ -17,14 +17,16 @@ def test_schema_0_1():
 
     assert results["schema_version"] == "0.1"
 
-    # Schema v0.1 and Schema v0.2 have different enum options, make sure that is reflected in data
+    # Schema v0.1 and Schema v0.2 have different enum options, make sure that
+    # is reflected in data
     keys = results["statistics"][
         "count_ownership_or_control_statement_interest_statement_types"
     ].keys()
     assert 12 == len(keys)
 
     # We want to test the dict has the correct keys!
-    # So these tests are deliberately written so they will error if the specified key is not in that dict
+    # So these tests are deliberately written so they will error if the specified
+    # key is not in that dict
     assert (
         1
         == results["statistics"][
@@ -112,14 +114,16 @@ def test_schema_0_2():
 
     assert results["schema_version"] == "0.2"
 
-    # Schema v0.1 and Schema v0.2 have different enum options, make sure that is reflected in data
+    # Schema v0.1 and Schema v0.2 have different enum options, make sure that
+    # is reflected in data
     keys = results["statistics"][
         "count_ownership_or_control_statement_interest_statement_types"
     ].keys()
     assert 14 == len(keys)
 
     # We want to test the dict has the correct keys!
-    # So these tests are deliberately written so they will error if the specified key is not in that dict
+    # So these tests are deliberately written so they will error if the specified key
+    # is not in that dict
     assert (
         1
         == results["statistics"][

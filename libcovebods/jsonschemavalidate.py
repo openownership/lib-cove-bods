@@ -1,9 +1,10 @@
 import json
 from decimal import Decimal
+from typing import Union
 
 from jsonschema import FormatChecker
 from jsonschema.exceptions import ValidationError
-from jsonschema.validators import Draft4Validator
+from jsonschema.validators import Draft4Validator, Draft202012Validator
 
 import libcovebods.data_reader
 from libcovebods.schema import SchemaBODS
@@ -101,10 +102,23 @@ class JSONSchemaValidator:
 
     def validate(self, data_reader: libcovebods.data_reader.DataReader) -> list:
         """Call with data. Results are returned."""
-        validator = Draft4Validator(
-            schema=self._schema._pkg_schema_obj, format_checker=FormatChecker()
-        )
-        validator.VALIDATORS["oneOf"] = oneOf_draft4
+        validator: Union[Draft4Validator, Draft202012Validator]
+        if self._schema.is_schema_version_equal_to_or_greater_than("0.4"):
+            # Get the registry
+            registry = self._schema._pkg_schema_obj
+
+            # Make the validator
+            statement_schema = registry.contents("urn:statement")
+            validator = Draft202012Validator(
+                schema=statement_schema,
+                registry=registry,
+                format_checker=FormatChecker(),
+            )
+        else:
+            validator = Draft4Validator(
+                schema=self._schema._pkg_schema_obj, format_checker=FormatChecker()
+            )
+            validator.VALIDATORS["oneOf"] = oneOf_draft4
         output = []
         all_data = data_reader.get_all_data()
         for e in validator.iter_errors(all_data):
@@ -141,12 +155,15 @@ class BODSValidationError:
     def json(self):
         """Return representation of this error in JSON."""
 
-        path_ending = self._path[-1]
-        if isinstance(self._path[-1], int) and len(self._path) >= 2:
-            # We're dealing with elements in an array of items at this point
-            path_ending = "{}/[number]".format(self._path[-2])
-        elif isinstance(self._path[0], int) and len(self._path) == 1:
-            path_ending = "[number]"
+        if self._path:
+            path_ending = self._path[-1]
+            if isinstance(self._path[-1], int) and len(self._path) >= 2:
+                # We're dealing with elements in an array of items at this point
+                path_ending = f"{self._path[-2]}/[number]"
+            elif isinstance(self._path[0], int) and len(self._path) == 1:
+                path_ending = "[number]"
+        else:
+            path_ending = "$"
 
         return {
             "message": self._message,

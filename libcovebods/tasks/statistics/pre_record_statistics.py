@@ -4,14 +4,13 @@ from libcovebods.base_task import AdditionalCheck
 from libcovebods.utils import is_interest_current
 
 
-class LegacyStatistics(AdditionalCheck):
-    """Before the AdditionalCheck system was implemented, all this code was together in one class.
-    As we work on statistics in this class, we should move them to seperate classes if possible."""
+class StatisticsCountEntityStatements(AdditionalCheck):
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_less_than("0.3")
 
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
-
-        # Entity
         self.count_entity_statements = 0
         self.count_entity_statements_types = {}
         for value in schema_object.get_entity_statement_types_list():
@@ -21,36 +20,6 @@ class LegacyStatistics(AdditionalCheck):
         )
         self.count_entity_statements_types_with_any_identifier_with_id_and_scheme = (
             self.count_entity_statements_types.copy()
-        )
-        # People
-        self.count_person_statements = 0
-        self.count_person_statements_types = {}
-        for value in schema_object.get_person_statement_types_list():
-            self.count_person_statements_types[value] = 0
-        # Ownership or control
-        self.count_ownership_or_control_statement = 0
-        self.count_ownership_or_control_statement_interested_party_with_person = 0
-        self.count_ownership_or_control_statement_interested_party_with_entity = 0
-        self.count_ownership_or_control_statement_interested_party_with_unspecified = 0
-        self.count_ownership_or_control_statement_interest_statement_types = {}
-        for (
-            value
-        ) in (
-            schema_object.get_ownership_or_control_statement_interest_statement_types_list()
-        ):
-            self.count_ownership_or_control_statement_interest_statement_types[
-                value
-            ] = 0
-        self.count_ownership_or_control_statement_by_year = defaultdict(int)
-        self.subject_statement_ids_by_year = defaultdict(set)
-        self.count_ownership_or_control_statement_interested_party_with_entity_by_year = defaultdict(
-            int
-        )
-        self.count_ownership_or_control_statement_interested_party_with_person_by_year = defaultdict(
-            int
-        )
-        self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(
-            int
         )
 
     def check_entity_statement_first_pass(self, statement):
@@ -88,6 +57,28 @@ class LegacyStatistics(AdditionalCheck):
                             statement["entityType"]
                         ] += 1
 
+    def get_statistics(self):
+        data = {
+            "count_entity_statements": self.count_entity_statements,
+            "count_entity_statements_types": self.count_entity_statements_types,
+            "count_entity_statements_types_with_any_identifier": self.count_entity_statements_types_with_any_identifier,
+            "count_entity_statements_types_with_any_identifier_with_id_and_scheme": self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
+        }
+        return data
+
+
+class StatisticsCountPersonStatements(AdditionalCheck):
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_less_than("0.3")
+
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_person_statements = 0
+        self.count_person_statements_types = {}
+        for value in schema_object.get_person_statement_types_list():
+            self.count_person_statements_types[value] = 0
+
     def check_person_statement_first_pass(self, statement):
         self.count_person_statements += 1
         if (
@@ -96,6 +87,46 @@ class LegacyStatistics(AdditionalCheck):
             and statement["personType"] in self.count_person_statements_types
         ):
             self.count_person_statements_types[statement["personType"]] += 1
+
+    def get_statistics(self):
+        data = {
+            "count_person_statements": self.count_person_statements,
+            "count_person_statements_types": self.count_person_statements_types,
+        }
+        return data
+
+
+class StatisticsCountOwnershipOrControlStatements(AdditionalCheck):
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_less_than("0.3")
+
+    def __init__(self, lib_cove_bods_config, schema_object):
+        super().__init__(lib_cove_bods_config, schema_object)
+        self.count_ownership_or_control_statement = 0
+        self.count_ownership_or_control_statement_interested_party_with_person = 0
+        self.count_ownership_or_control_statement_interested_party_with_entity = 0
+        self.count_ownership_or_control_statement_interested_party_with_unspecified = 0
+        self.count_ownership_or_control_statement_interest_statement_types = {}
+        for (
+            value
+        ) in (
+            schema_object.get_ownership_or_control_statement_interest_statement_types_list()
+        ):
+            self.count_ownership_or_control_statement_interest_statement_types[
+                value
+            ] = 0
+        self.count_ownership_or_control_statement_by_year = defaultdict(int)
+        self.subject_statement_ids_by_year = defaultdict(set)
+        self.count_ownership_or_control_statement_interested_party_with_entity_by_year = defaultdict(
+            int
+        )
+        self.count_ownership_or_control_statement_interested_party_with_person_by_year = defaultdict(
+            int
+        )
+        self.count_ownership_or_control_statement_interested_party_with_unspecified_by_year = defaultdict(
+            int
+        )
 
     def check_ownership_or_control_statement_first_pass(self, statement):
         try:
@@ -156,12 +187,6 @@ class LegacyStatistics(AdditionalCheck):
 
     def get_statistics(self):
         data = {
-            "count_entity_statements": self.count_entity_statements,
-            "count_entity_statements_types": self.count_entity_statements_types,
-            "count_entity_statements_types_with_any_identifier": self.count_entity_statements_types_with_any_identifier,
-            "count_entity_statements_types_with_any_identifier_with_id_and_scheme": self.count_entity_statements_types_with_any_identifier_with_id_and_scheme,
-            "count_person_statements": self.count_person_statements,
-            "count_person_statements_types": self.count_person_statements_types,
             "count_ownership_or_control_statement": self.count_ownership_or_control_statement,
             "count_ownership_or_control_statement_interested_party_with_person": self.count_ownership_or_control_statement_interested_party_with_person,
             "count_ownership_or_control_statement_interested_party_with_entity": self.count_ownership_or_control_statement_interested_party_with_entity,
@@ -182,6 +207,10 @@ class LegacyStatistics(AdditionalCheck):
 class StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing(
     AdditionalCheck
 ):
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_less_than("0.3")
+
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
         self.count_replaces_statements_missing = 0
@@ -219,6 +248,10 @@ class StatisticsCurrentOwnershipOrControlStatementsAndReplacesStatementsMissing(
 
 
 class StatisticAddress(AdditionalCheck):
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_less_than("0.3")
+
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
         self.count_addresses = 0
@@ -305,6 +338,10 @@ class StatisticOwnershipOrControlInterestDirectOrIndirect(AdditionalCheck):
 
 
 class StatisticOwnershipOrControlWithAtLeastOneInterestBeneficial(AdditionalCheck):
+    @staticmethod
+    def does_apply_to_schema(lib_cove_bods_config, schema_object) -> bool:
+        return schema_object.is_schema_version_equal_to_or_less_than("0.3")
+
     def __init__(self, lib_cove_bods_config, schema_object):
         super().__init__(lib_cove_bods_config, schema_object)
         self.stat = 0

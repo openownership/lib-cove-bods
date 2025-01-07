@@ -19,6 +19,21 @@ def test_full_get_all_data_1():
     assert expected == actual
 
 
+def test_full_get_all_data_2():
+
+    json_filename = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "fixtures", "0.4", "basic_1.json"
+    )
+
+    with open(json_filename) as fp:
+        expected = json.load(fp)
+
+    data_reader = libcovebods.data_reader.DataReader(json_filename)
+    actual = data_reader.get_all_data()
+
+    assert expected == actual
+
+
 def test_sample_but_no_change_get_all_data_1():
 
     json_filename = os.path.join(

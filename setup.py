@@ -12,18 +12,18 @@ setup(
     python_requires=">=3.8",
     install_requires=[
         "python-dateutil",
-        "libcove2",
+        "libcove2>=0.2.1",
         "packaging",
-        # Jsonschema 4.10 breaks the message
-        #     'missingPersonType' is a dependency of 'missingPersonReason'
-        # in tests/fixtures/0.1/badfile_all_validation_errors.json
-        "jsonschema<4.10",
+        "jsonschema>=4.23",
+        "jscc>=0.2.4",
         "pytz",
         "ijson",
         # Required for jsonschema to validate URIs
         "rfc3987",
         # Required for jsonschema to validate date-time
         "rfc3339-validator",
+        "jsonpointer",
+        "pycountry",
     ],
     extras_require={"dev": ["pytest", "flake8", "black==22.3.0", "isort", "mypy"]},
     classifiers=[

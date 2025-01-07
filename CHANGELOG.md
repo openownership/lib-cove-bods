@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Update to handle new jsonschema version (Draft202012Validator)
+- Adapt infrastructure to handle BODS 0.4 (structure, statement types etc.)
+- Default config value for bods_additional_checks_person_birthdate_min_year
+  has been increase from 1 to 1800
+
+### Added
+
+- Include the BODS 0.4 schema
+- Include BODS 0.4 specific additional checks
+- Include BODS 0.4 specific statistics
+- Add tests for BODS 0.4 schema validation
+- Add tests for BODS 0.4 specific additional checks
+
 ## [0.15.0] - 2023-06-16
 
 This Release marks a very big refactoring to use with new cove and new libcove2 library.
