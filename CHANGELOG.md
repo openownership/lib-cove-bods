@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.16.0] - 2025-01-07
+
+This release adds support for the 0.4 version of the Beneficial Ownership Data Standard
+
 ### Changed
 
 - Update to handle new jsonschema version (Draft202012Validator)
