@@ -9,7 +9,7 @@ setup(
     description="A data review library",
     packages=find_packages(),
     long_description="A data review library",
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     install_requires=[
         "python-dateutil",
         "libcove2>=0.2.1",
