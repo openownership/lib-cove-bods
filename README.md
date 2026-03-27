@@ -42,7 +42,7 @@ Then run:
 
 The library configuration (`libcovebods/tasks/config.py`) contains various schema versions.
 These include `schema_version` (e.g. 0.1) which is the default for
-older data, the latest schema version `schema_latest_version` ( e.g. 0.4), or latest version
+older data, the latest schema version `schema_latest_version` ( e.g. 0.4), and the latest version
 before change to record-based schema `schema_latest_nonrecord_version` (e.g. 0.3). If the data
 does not specify a BODS version the library will attempt to identify whether the data is
 record-based (0.4 or newer), and use a default version based on this.
