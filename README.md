@@ -78,7 +78,7 @@ ie. To update the `libcovebods/data/schema-0-4-0` directory, check out `0.4.0`.
 
 Remove any existing directory (e.g. `rm -r openownership-lib-cove-bods/libcovebods/data/schema-0-4-0`) and copy the schema directory over
 (e.g. `cp -r openownership-data-standard/schema openownership-lib-cove-bods/libcovebods/data/schema-0-4-0`).
-No conversion of the files is needed, unlike for per BODS 0.4 versions.
+No conversion of the files is needed, unlike for pre-BODS 0.4 versions.
 
 ### BODS Schema before 0.4
 
