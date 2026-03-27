@@ -36,7 +36,16 @@ Then run:
     black libcovebods/ tests/ setup.py
     flake8 libcovebods/ tests/ setup.py
 
-## Changes  BODS 0.4
+## Changes for BODS 0.4
+
+## Version Identification
+
+The library configuration (`libcovebods/tasks/config.py`) contains various schema versions
+which control affect the  These include `schema_version` (e.g. 0.1) which is the default for
+older data, the latest schema version `schema_latest_version` ( e.g. 0.4), or latest version
+before change to record-based schema `schema_latest_nonrecord_version` (e.g. 0.3). If the data
+does not specify a BODS version the library will attempt to identify whether the data is
+record-based (0.4 or newer), and use a default version based on this.
 
 ### Changes to standard
 
@@ -47,7 +56,7 @@ The library loads the BODS schema files into a JSON Schema registry, so the vali
 
 ### Refactoring of checks
 
-The various (in `libcovebods/tasks/checks/`) have been broken up into legacy_checks, pre_record_checks and record_based_checks.
+The various checks (in `libcovebods/tasks/checks`) have been broken up into legacy_checks, pre_record_checks and record_based_checks.
 The legacy_checks and pre_record_checks only apply to pre 0.4 data, whereas the record_based_checks only apply to BODS data with
 version 0.4 onwards.
 
